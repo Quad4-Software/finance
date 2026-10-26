@@ -40,7 +40,7 @@ def changed_jobs():
                 backend = True
             elif path.startswith(b"frontend/"):
                 frontend = True
-            elif path.startswith(b"charts/securo/"):
+            elif path.startswith(b"charts/quad4/"):
                 helm = True
             elif path in PROSE or (path.startswith(b"docs/") and path.endswith(b".md")):
                 continue

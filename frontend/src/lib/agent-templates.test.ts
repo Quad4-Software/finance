@@ -79,7 +79,7 @@ describe('agent templates', () => {
   })
 
   it('only references tools that exist on the built-in MCP server', () => {
-    expect(BUILTIN_MCP_SERVER).toBe('securo')
+    expect(BUILTIN_MCP_SERVER).toBe('quad4')
     for (const tpl of AGENT_TEMPLATES) {
       for (const tool of tpl.tools) {
         expect(KNOWN_BUILTIN_TOOLS.has(tool), `${tpl.id} -> ${tool}`).toBe(true)

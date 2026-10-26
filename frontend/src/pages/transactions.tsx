@@ -98,7 +98,7 @@ function parseHashtags(notes: string | null): string[] {
   return matches ?? []
 }
 
-const HIDE_IGNORED_STORAGE_KEY = 'securo.transactions.hideIgnored'
+const HIDE_IGNORED_STORAGE_KEY = 'quad4.transactions.hideIgnored'
 
 export default function TransactionsPage() {
   const { t, i18n } = useTranslation()
@@ -117,7 +117,7 @@ export default function TransactionsPage() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState<number>(() => {
     try {
-      const stored = localStorage.getItem('securo.transactions.pageSize')
+      const stored = localStorage.getItem('quad4.transactions.pageSize')
       return stored ? Number(stored) : 20
     } catch {
       return 20
@@ -377,15 +377,15 @@ export default function TransactionsPage() {
     if (!el) return
     const raf = requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      el.classList.add('securo-highlight-flash')
+      el.classList.add('quad4-highlight-flash')
     })
     const timer = setTimeout(() => {
-      el.classList.remove('securo-highlight-flash')
+      el.classList.remove('quad4-highlight-flash')
     }, 2500)
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(timer)
-      el.classList.remove('securo-highlight-flash')
+      el.classList.remove('quad4-highlight-flash')
     }
   }, [highlightId, searchQuery, filterPayee, filterCategoryIds, page])
 
@@ -1887,7 +1887,7 @@ export default function TransactionsPage() {
                 setLimit(nextLimit)
                 setPage(1)
                 try {
-                  localStorage.setItem('securo.transactions.pageSize', String(nextLimit))
+                  localStorage.setItem('quad4.transactions.pageSize', String(nextLimit))
                 } catch {
                   // ignored
                 }

@@ -100,10 +100,10 @@ async def test_agents_info_returns_configured_external_mcp_url(
     from app.agents import config
 
     config.get_agent_settings.cache_clear()
-    monkeypatch.setenv("AGENTS_EXTERNAL_MCP_URL", "  https://securo.example.com/mcp  ")
+    monkeypatch.setenv("AGENTS_EXTERNAL_MCP_URL", "  https://quad4.example.com/mcp  ")
     try:
         r = await client.get("/api/agents/info", headers=auth_headers)
-        assert r.json()["external_mcp_url"] == "https://securo.example.com/mcp"
+        assert r.json()["external_mcp_url"] == "https://quad4.example.com/mcp"
     finally:
         monkeypatch.delenv("AGENTS_EXTERNAL_MCP_URL", raising=False)
         config.get_agent_settings.cache_clear()
@@ -471,8 +471,8 @@ async def test_put_tools_persists_selection(
     r = await client.put(
         f"/api/agents/{a.id}/tools",
         json=[
-            {"server": "securo", "tool_name": "list_transactions", "enabled": True},
-            {"server": "securo", "tool_name": "propose_categorize", "enabled": False},
+            {"server": "quad4", "tool_name": "list_transactions", "enabled": True},
+            {"server": "quad4", "tool_name": "propose_categorize", "enabled": False},
         ],
         headers=auth_headers,
     )
@@ -483,7 +483,7 @@ async def test_put_tools_persists_selection(
     from app.agents.services import agent_service
 
     pairs = await agent_service.allowed_tool_pairs(session, a.id)
-    assert pairs == {("securo", "list_transactions")}
+    assert pairs == {("quad4", "list_transactions")}
 
 
 async def test_create_with_tools_scopes_the_agent_in_one_step(
@@ -496,13 +496,13 @@ async def test_create_with_tools_scopes_the_agent_in_one_step(
     resp = await client.post("/api/agents", headers=auth_headers, json={
         "name": "1188 Scoped",
         "tools": [
-            {"server": "securo", "tool_name": "list_budgets", "enabled": True},
-            {"server": "securo", "tool_name": "get_budget_vs_actual", "enabled": True},
+            {"server": "quad4", "tool_name": "list_budgets", "enabled": True},
+            {"server": "quad4", "tool_name": "get_budget_vs_actual", "enabled": True},
         ],
     })
     assert resp.status_code == 201, resp.text
     allowed = await allowed_tool_pairs(session, uuid.UUID(resp.json()["id"]))
-    assert allowed == {("securo", "list_budgets"), ("securo", "get_budget_vs_actual")}
+    assert allowed == {("quad4", "list_budgets"), ("quad4", "get_budget_vs_actual")}
 
 
 async def test_create_with_tools_is_atomic(
@@ -517,7 +517,7 @@ async def test_create_with_tools_is_atomic(
     from app.agents.schemas.agent import AgentCreate, AgentToolToggle
     from app.agents.services.agent_service import create_agent
 
-    duplicate = AgentToolToggle(server="securo", tool_name="list_budgets", enabled=True)
+    duplicate = AgentToolToggle(server="quad4", tool_name="list_budgets", enabled=True)
     data = AgentCreate(name="1188 Atomic", tools=[duplicate, duplicate])
     with pytest.raises(IntegrityError):
         await create_agent(session, test_workspace.id, test_user.id, data)

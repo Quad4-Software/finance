@@ -552,7 +552,7 @@ export interface RuleExportItem {
 }
 
 export interface RuleExportPayload {
-  format: 'securo-categorization-rules'
+  format: 'quad4-categorization-rules'
   version: number
   rules: RuleExportItem[]
 }

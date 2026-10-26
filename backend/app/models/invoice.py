@@ -87,7 +87,7 @@ INVOICE_DIRECTIONS = ("receivable", "payable")
 
 #: Who authored the document. `imported` rows are reconstructed from an
 #: external system (a payment gateway, a CSV): that system owns the document,
-#: and Securo owns the cash that settled it.
+#: and Quad4 Finance owns the cash that settled it.
 INVOICE_ORIGINS = ("local", "imported")
 
 #: How an allocation came to exist.

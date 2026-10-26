@@ -1041,7 +1041,7 @@ export const groups = {
 export type { TransactionSplitsInput }
 
 // User lookup: exact-match resolution for linking group members to
-// existing Securo users. Returns null on miss (404).
+// existing Quad4 Finance users. Returns null on miss (404).
 export interface UserLookupResult {
   id: string
   email: string
@@ -1107,7 +1107,7 @@ export const rules = {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `securo-categorization-rules-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = `quad4-categorization-rules-${new Date().toISOString().slice(0, 10)}.json`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -1201,7 +1201,7 @@ export const reconciliation = {
     // The set in the filename, so two exports do not overwrite each
     // other in the downloads folder on the same day.
     const set = node ? `-${node.split('.').pop()}` : ''
-    a.download = `securo-reconciliation-rules${set}-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = `quad4-reconciliation-rules${set}-${new Date().toISOString().slice(0, 10)}.json`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -1473,7 +1473,7 @@ export const assets = {
     const url = URL.createObjectURL(new Blob([data], { type: 'text/csv;charset=utf-8;' }))
     const a = document.createElement('a')
     a.href = url
-    a.download = 'securo-asset-orders.csv'
+    a.download = 'quad4-asset-orders.csv'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -1636,7 +1636,7 @@ export const backup = {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `securo-backup-${new Date().toISOString().slice(0, 10)}.zip`
+    a.download = `quad4-backup-${new Date().toISOString().slice(0, 10)}.zip`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

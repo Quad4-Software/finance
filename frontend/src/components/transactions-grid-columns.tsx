@@ -53,9 +53,9 @@ export function getColumn(id: ColumnId): ColumnDef {
   return COL_BY_ID[id]
 }
 
-const STORAGE_KEY_ORDER = 'securo.transactions.columns.order'
-const STORAGE_KEY_WIDTHS = 'securo.transactions.columns.widths'
-const STORAGE_KEY_SORT = 'securo.transactions.sort'
+const STORAGE_KEY_ORDER = 'quad4.transactions.columns.order'
+const STORAGE_KEY_WIDTHS = 'quad4.transactions.columns.widths'
+const STORAGE_KEY_SORT = 'quad4.transactions.sort'
 
 function loadOrder(): ColumnId[] {
   try {

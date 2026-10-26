@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug to help us improve Securo
+about: Report a bug to help us improve Quad4 Finance
 title: "[Bug] "
 labels: bug
 assignees: ""

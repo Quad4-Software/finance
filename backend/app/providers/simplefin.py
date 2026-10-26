@@ -2,8 +2,8 @@
 
 SimpleFIN (https://www.simplefin.org) is a read-only financial interchange
 protocol. The user gets a Setup Token from a SimpleFIN server (typically the
-SimpleFIN Bridge at https://bridge.simplefin.org), pastes it into Securo,
-and Securo claims an Access URL that embeds Basic Auth credentials. From then
+SimpleFIN Bridge at https://bridge.simplefin.org), pastes it into Quad4 Finance,
+and Quad4 Finance claims an Access URL that embeds Basic Auth credentials. From then
 on, ``GET {access_url}/accounts?version=2`` returns accounts + transactions
 + holdings in a single JSON document.
 
@@ -218,7 +218,7 @@ class SimpleFinProvider(BankProvider):
             timeout=SIMPLEFIN_HTTP_TIMEOUT,
             headers={
                 "Accept": "application/json",
-                "User-Agent": "Securo/0.1 (+https://usesecuro.com)",
+                "User-Agent": "Quad4Finance/1.0 (+https://quad4.io)",
             },
         )
 
@@ -474,7 +474,7 @@ class SimpleFinProvider(BankProvider):
         payee_source: str = "auto",
     ) -> list[TransactionData]:
         # SimpleFIN request windows are epoch-based and use UTC boundaries,
-        # independent of Securo's configurable application calendar.
+        # independent of Quad4 Finance's configurable application calendar.
         end_date = datetime.now(timezone.utc).date()
         if since is None:
             start_date = end_date - timedelta(days=SIMPLEFIN_INITIAL_HISTORY_DAYS)

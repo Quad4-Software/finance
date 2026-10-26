@@ -312,7 +312,7 @@ async def export_rules(
     return JSONResponse(
         content=payload,
         headers={
-            "Content-Disposition": 'attachment; filename="securo-reconciliation-rules.json"',
+            "Content-Disposition": 'attachment; filename="quad4-reconciliation-rules.json"',
         },
     )
 

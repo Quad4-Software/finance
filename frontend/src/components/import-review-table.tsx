@@ -75,7 +75,7 @@ export function ImportReviewTable({
   const { t } = useTranslation()
   const [pageSize, setPageSize] = useState<number>(() => {
     try {
-      const stored = localStorage.getItem('securo.import.pageSize')
+      const stored = localStorage.getItem('quad4.import.pageSize')
       return stored ? Number(stored) : 50
     } catch {
       return 50
@@ -278,7 +278,7 @@ export function ImportReviewTable({
                 setPageSize(nextSize)
                 onPageChange(1)
                 try {
-                  localStorage.setItem('securo.import.pageSize', String(nextSize))
+                  localStorage.setItem('quad4.import.pageSize', String(nextSize))
                 } catch {
                   // ignored
                 }

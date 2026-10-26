@@ -91,7 +91,7 @@ describe('agents page templates', () => {
     // The tool scope is part of the create call, never a second request
     // that could fail and leave the agent with every tool allowed.
     const items = payload.tools as { server: string; tool_name: string; enabled: boolean }[]
-    expect(items).toContainEqual({ server: 'securo', tool_name: 'propose_create_budget', enabled: true })
+    expect(items).toContainEqual({ server: 'quad4', tool_name: 'propose_create_budget', enabled: true })
     expect(items).toHaveLength(AGENT_TEMPLATES[0].tools.length)
     expect(api.setTools).not.toHaveBeenCalled()
   })

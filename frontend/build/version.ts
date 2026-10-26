@@ -1,7 +1,7 @@
 import { execSync, execFileSync } from 'node:child_process'
-const officialReleaseRepo = 'https://github.com/securo-finance/securo.git'
+const officialReleaseRepo = 'https://github.com/Quad4-Software/quad4-finance.git'
 const officialLatestReleaseApi =
-  'https://api.github.com/repos/securo-finance/securo/releases/latest'
+  'https://api.github.com/repos/Quad4-Software/quad4-finance/releases/latest'
 const semverPattern =
   /^v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 
@@ -194,7 +194,7 @@ async function getLatestOfficialReleaseTagFromApi() {
     const response = await fetch(officialLatestReleaseApi, {
       headers: {
         Accept: 'application/vnd.github+json',
-        'User-Agent': 'securo-frontend-build',
+        'User-Agent': 'quad4-frontend-build',
       },
       signal: AbortSignal.timeout(3000),
     })

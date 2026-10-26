@@ -244,15 +244,15 @@ async def test_chat_helper_aggregates_text_and_tool_calls():
 # so the client keeps sending both.
 
 
-def test_openai_headers_identify_securo_and_omit_session_by_default():
+def test_openai_headers_identify_quad4_and_omit_session_by_default():
     provider = OpenAIProvider(api_key="k")
     h = provider._headers()
     assert h["Content-Type"] == "application/json"
     assert h["Authorization"] == "Bearer k"
-    # The client identifies as securo; the version suffix is present when
+    # The client identifies as quad4; the version suffix is present when
     # the distribution metadata is available and the bare name otherwise.
     ua = h["User-Agent"]
-    assert ua == "securo" or ua.startswith("securo/")
+    assert ua == "quad4" or ua.startswith("quad4/")
     assert "x-opencode-session" not in h
 
 
@@ -267,7 +267,7 @@ def test_openai_user_agent_falls_back_without_distribution(monkeypatch):
     import app.agents.providers.openai as mod
 
     def _missing(*args, **kwargs):
-        raise mod.PackageNotFoundError("securo-backend")
+        raise mod.PackageNotFoundError("quad4-backend")
 
     monkeypatch.setattr(mod, "_pkg_version", _missing)
-    assert mod._app_user_agent() == "securo"
+    assert mod._app_user_agent() == "quad4"

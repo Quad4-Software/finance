@@ -18,7 +18,7 @@ import type { LucideIcon } from 'lucide-react'
 import { CalendarCheck2, Gauge, PiggyBank, Repeat } from 'lucide-react'
 
 /** Name of the built-in MCP server that ships with the agents feature. */
-export const BUILTIN_MCP_SERVER = 'securo'
+export const BUILTIN_MCP_SERVER = 'quad4'
 
 export interface AgentTemplate {
   /** Stable id, used as React key and for future per-template state. */
@@ -34,7 +34,7 @@ export interface AgentTemplate {
   tools: string[]
 }
 
-const SAVINGS_ADVISOR_PROMPT = `You are the user's savings advisor, working with their Securo data.
+const SAVINGS_ADVISOR_PROMPT = `You are the user's savings advisor, working with their Quad4 Finance data.
 
 Your job is to find where the user can keep more of their money and turn each finding into a concrete suggestion.
 
@@ -50,7 +50,7 @@ Rules:
 - Keep the answer focused: at most five suggestions, ordered by how much money each one frees up.
 - If the data covers too little time to compare (a month or two at most), say so before drawing conclusions.`
 
-const MONTHLY_REVIEW_PROMPT = `You run a monthly review of the user's finances with their Securo data.
+const MONTHLY_REVIEW_PROMPT = `You run a monthly review of the user's finances with their Quad4 Finance data.
 
 Your job is a clear summary of how the period went, with the numbers that matter.
 
@@ -65,7 +65,7 @@ Rules:
 - Name the exact period you covered (month and year) so the user knows what the summary refers to.
 - Keep the summary compact enough to read in under a minute.`
 
-const BUDGET_WATCHER_PROMPT = `You watch the user's budgets against actual spending, using their Securo data.
+const BUDGET_WATCHER_PROMPT = `You watch the user's budgets against actual spending, using their Quad4 Finance data.
 
 Your job is to say which budgets are safe, which are close to their limit, and which are already over.
 
@@ -79,7 +79,7 @@ Rules:
 - Only use numbers returned by your tools. Never invent or estimate figures.
 - Percentages and remaining amounts must come from the budget comparison, not from mental math.`
 
-const RECURRING_AUDITOR_PROMPT = `You audit the user's recurring charges (subscriptions and similar repeated payments) using their Securo data.
+const RECURRING_AUDITOR_PROMPT = `You audit the user's recurring charges (subscriptions and similar repeated payments) using their Quad4 Finance data.
 
 Your job is to list what the user pays on a recurring basis, and flag anything forgotten, duplicated, or increased.
 

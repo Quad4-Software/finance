@@ -21,7 +21,7 @@ class CIChangesTest(unittest.TestCase):
         self.git("init", "-q", "-b", "base")
         self.git("config", "user.name", "CI Test")
         self.git("config", "user.email", "ci@example.invalid")
-        for name in ("README.md", "docs/guide.md", "backend/old.py", "frontend/old.ts", "charts/securo/old.yaml"):
+        for name in ("README.md", "docs/guide.md", "backend/old.py", "frontend/old.ts", "charts/quad4/old.yaml"):
             self.write(name, "original\n")
         self.git("add", ".")
         self.git("commit", "-qm", "base")
@@ -76,8 +76,8 @@ class CIChangesTest(unittest.TestCase):
             ({"backend/new.py": "code"}, ("true", "false", "false")),
             ({"backend/README.md": "fixture"}, ("true", "false", "false")),
             ({"backend/new.py": "code", "frontend/new.ts": "code"}, ("true", "true", "false")),
-            ({"charts/securo/new.yaml": "chart"}, ("false", "false", "true")),
-            ({"charts/securo/README.md": "docs"}, ("false", "false", "true")),
+            ({"charts/quad4/new.yaml": "chart"}, ("false", "false", "true")),
+            ({"charts/quad4/README.md": "docs"}, ("false", "false", "true")),
         ]
         for name in (".github/workflows/ci.yml", ".github/ci/changes.py",
                      ".github/ci/test_changes.py", "charts/other/Chart.yaml", "docker-compose.yml", "mise.toml",
@@ -95,9 +95,9 @@ class CIChangesTest(unittest.TestCase):
             ("backend/old.py", "docs/moved.md", ("true", "false", "false")),
             ("frontend/old.ts", "docs/moved.md", ("false", "true", "false")),
             ("backend/old.py", "frontend/moved.ts", ("true", "true", "false")),
-            ("charts/securo/old.yaml", None, ("false", "false", "true")),
-            ("charts/securo/old.yaml", "docs/moved.md", ("false", "false", "true")),
-            ("charts/securo/old.yaml", "backend/moved.py", ("true", "false", "true")),
+            ("charts/quad4/old.yaml", None, ("false", "false", "true")),
+            ("charts/quad4/old.yaml", "docs/moved.md", ("false", "false", "true")),
+            ("charts/quad4/old.yaml", "backend/moved.py", ("true", "false", "true")),
             ("docs/guide.md", "backend/moved.py", ("true", "false", "false")),
         ):
             with self.subTest(old=old, new=new):

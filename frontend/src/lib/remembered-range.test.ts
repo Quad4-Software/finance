@@ -50,14 +50,14 @@ describe('remembered date range', () => {
   })
 
   it('ignores unreadable or tampered storage', () => {
-    localStorage.setItem('securo.dateRange.transactions', '{not json')
+    localStorage.setItem('quad4.dateRange.transactions', '{not json')
     expect(loadRange('transactions')).toBeNull()
-    localStorage.setItem('securo.dateRange.transactions', JSON.stringify({ kind: 'range', from: 'yesterday', to: '' }))
+    localStorage.setItem('quad4.dateRange.transactions', JSON.stringify({ kind: 'range', from: 'yesterday', to: '' }))
     expect(loadRange('transactions')).toBeNull()
   })
 
   it('rejects impossible calendar dates', () => {
-    localStorage.setItem('securo.dateRange.transactions', JSON.stringify({ kind: 'range', from: '2026-02-30', to: '' }))
+    localStorage.setItem('quad4.dateRange.transactions', JSON.stringify({ kind: 'range', from: '2026-02-30', to: '' }))
     expect(loadRange('transactions')).toBeNull()
     saveRange('transactions', '2028-02-29', '2028-03-01')
     expect(loadRange('transactions')).toEqual({ from: '2028-02-29', to: '2028-03-01' })
@@ -81,7 +81,7 @@ describe('remembered date range', () => {
     expect(loadReportsRange('net_worth')?.periodOffset).toBe(0)
 
     localStorage.setItem(
-      'securo.dateRange.reports',
+      'quad4.dateRange.reports',
       JSON.stringify({ net_worth: { rangeKey: '1y', from: '', to: '', interval: 'monthly', periodOffset: 'nope' } }),
     )
     expect(loadReportsRange('net_worth')?.periodOffset).toBe(0)

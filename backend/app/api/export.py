@@ -96,7 +96,7 @@ def _as_download(archive: bytes) -> StreamingResponse:
     return StreamingResponse(
         iter([archive]),
         media_type="application/zip",
-        headers={"Content-Disposition": f'attachment; filename="securo-backup-{today}.zip"'},
+        headers={"Content-Disposition": f'attachment; filename="quad4-backup-{today}.zip"'},
     )
 
 
@@ -123,7 +123,7 @@ async def backup_protected(
     """The same archive, encrypted with AES-256 when a password is given.
 
     A POST because the password belongs in a body: a query string is written
-    to browser history, proxy logs and server access logs. Securo never stores
+    to browser history, proxy logs and server access logs. Quad4 Finance never stores
     the password and cannot recover the archive without it.
     """
     password = body.password.get_secret_value() if body.password else None

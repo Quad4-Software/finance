@@ -33,7 +33,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.IMAGE_PREFIX }}/securo-backend
+          images: ${{ env.IMAGE_PREFIX }}/quad4-backend
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
@@ -73,7 +73,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.IMAGE_PREFIX }}/securo-frontend
+          images: ${{ env.IMAGE_PREFIX }}/quad4-frontend
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
@@ -121,16 +121,16 @@ jobs:
           VERSION="${VERSION#v}"
 
           echo "Injecting version $VERSION into artifacthub.io/images annotation"
-          sed -i "s|ghcr.io/securo-finance/securo-backend:latest|ghcr.io/securo-finance/securo-backend:${VERSION}|g" charts/securo/Chart.yaml
-          sed -i "s|ghcr.io/securo-finance/securo-frontend:latest|ghcr.io/securo-finance/securo-frontend:${VERSION}|g" charts/securo/Chart.yaml
+          sed -i "s|ghcr.io/quad4-software/quad4-backend:latest|ghcr.io/quad4-software/quad4-backend:${VERSION}|g" charts/quad4/Chart.yaml
+          sed -i "s|ghcr.io/quad4-software/quad4-frontend:latest|ghcr.io/quad4-software/quad4-frontend:${VERSION}|g" charts/quad4/Chart.yaml
 
           echo "Injecting version $VERSION into values.yaml"
-          sed -i "s|tag: latest|tag: ${VERSION}|g" charts/securo/values.yaml
+          sed -i "s|tag: latest|tag: ${VERSION}|g" charts/quad4/values.yaml
 
           echo "Packaging chart version $VERSION"
-          helm package charts/securo --version "$VERSION" --app-version "$VERSION"
+          helm package charts/quad4 --version "$VERSION" --app-version "$VERSION"
 
-          helm push securo-$VERSION.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
+          helm push quad4-$VERSION.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
 
       - name: Set up ORAS
         uses: oras-project/setup-oras@v1
@@ -138,8 +138,8 @@ jobs:
       - name: Push Artifact Hub Metadata
         run: |
           # Artifact Hub reads this from the chart's own path, not the parent
-          # namespace: `helm push ... /charts` publishes to /charts/securo, so
+          # namespace: `helm push ... /charts` publishes to /charts/quad4, so
           # the metadata has to carry the same prefix or it is never found.
-          oras push ${{ env.REGISTRY }}/${{ github.repository_owner }}/charts/securo:artifacthub.io \
+          oras push ${{ env.REGISTRY }}/${{ github.repository_owner }}/charts/quad4:artifacthub.io \
             --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml \
-            charts/securo/artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml
+            charts/quad4/artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml

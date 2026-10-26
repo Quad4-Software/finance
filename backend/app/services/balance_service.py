@@ -1,7 +1,7 @@
 """Group balance computation.
 
 Each split transaction was paid by one member: the member linked to the
-Securo user who recorded it (`Transaction.user_id`), falling back to the
+Quad4 Finance user who recorded it (`Transaction.user_id`), falling back to the
 group's stored `is_self` member and then to the member linked to the group
 owner. Every other member's split share is a debt from that member to the
 payer. Settlements reduce the debt of `from` towards `to`.

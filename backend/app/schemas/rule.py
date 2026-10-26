@@ -119,7 +119,7 @@ class RuleExportItem(BaseModel):
 
 
 class RuleExportPayload(BaseModel):
-    format: str = "securo-categorization-rules"
+    format: str = "quad4-categorization-rules"
     version: int = 1
     rules: list[RuleExportItem]
 

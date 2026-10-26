@@ -2606,7 +2606,7 @@ wheels = [
 ]
 
 [[package]]
-name = "securo-backend"
+name = "quad4-backend"
 version = "0.16.5"
 source = { virtual = "." }
 dependencies = [

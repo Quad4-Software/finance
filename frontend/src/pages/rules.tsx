@@ -340,7 +340,7 @@ export default function RulesPage() {
   async function handleImportFile(file: File) {
     try {
       const parsed = JSON.parse(await file.text()) as RuleExportPayload
-      if (parsed.format !== 'securo-categorization-rules' || !Array.isArray(parsed.rules)) {
+      if (parsed.format !== 'quad4-categorization-rules' || !Array.isArray(parsed.rules)) {
         toast.error(t('rules.invalidImportFile'))
         return
       }

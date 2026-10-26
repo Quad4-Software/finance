@@ -130,7 +130,7 @@ async def test_opening_balance_source_and_raw_description_survive_locale_changes
         # Includes every persisted column, not just source/description.
         assert await reread() == before
 
-    fixture_path = os.environ.get("SECURO_1022_WIRE_FIXTURE_OUT")
+    fixture_path = os.environ.get("QUAD4_1022_WIRE_FIXTURE_OUT")
     if fixture_path:
         Path(fixture_path).write_text(
             json.dumps(

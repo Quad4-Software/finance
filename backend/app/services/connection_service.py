@@ -63,7 +63,7 @@ LOCAL_IMPORT_SOURCES = {"import", "csv", "ofx", "qif", "camt"}
 
 settings = get_settings()
 
-_PROVIDER_SELL_DATE_METADATA_KEY = "_securo_provider_sell_date"
+_PROVIDER_SELL_DATE_METADATA_KEY = "_quad4_provider_sell_date"
 
 
 def _clean_logo_url(value: object) -> Optional[str]:

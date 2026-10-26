@@ -1,4 +1,4 @@
-name: securo
+name: quad4
 
 # podman-compose groups all services into a single pod by default, which
 # interferes with per-service port mapping and networking. Disabling it makes
@@ -8,7 +8,7 @@ x-podman:
   in_pod: false
 
 x-backend-env: &backend-env
-  DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/securo
+  DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/quad4
   SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-production}
   DEBUG: ${DEBUG:-false}
   FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
@@ -55,7 +55,7 @@ x-backend-env: &backend-env
   AGENTS_EXTRA_MCP_SERVERS: ${AGENTS_EXTRA_MCP_SERVERS:-}
   AGENTS_MCP_JWT_SECRET: ${AGENTS_MCP_JWT_SECRET:-dev-mcp-secret-change-in-production}
   # TTL for tokens minted from /agents/connections → "External MCP access".
-  # Used by Claude Desktop, n8n, custom clients plugging into Securo.
+  # Used by Claude Desktop, n8n, custom clients plugging into Quad4 Finance.
   AGENTS_MCP_EXTERNAL_TTL_DAYS: ${AGENTS_MCP_EXTERNAL_TTL_DAYS:-90}
   # LLM provider config: only the provider you actually use needs setting.
   AGENTS_DEFAULT_PROVIDER: ${AGENTS_DEFAULT_PROVIDER:-ollama}
@@ -72,7 +72,7 @@ x-backend-env: &backend-env
   AGENTS_EMBEDDING_MODEL: ${AGENTS_EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
 
 x-backend-base: &backend-base
-  image: ghcr.io/securo-finance/securo-backend:latest
+  image: ghcr.io/quad4-software/quad4-backend:latest
   environment: *backend-env
   # Lets a connection point at a model server running on the host (LM Studio,
   # Ollama, llama.cpp) as http://host.docker.internal:<port>. Docker Desktop
@@ -108,7 +108,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: securo
+      POSTGRES_DB: quad4
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -124,7 +124,7 @@ services:
       - "${BACKEND_PORT:-8000}:8000"
 
   frontend:
-    image: ghcr.io/securo-finance/securo-frontend:latest
+    image: ghcr.io/quad4-software/quad4-frontend:latest
     ports:
       - "${FRONTEND_PORT:-3000}:8080"
     environment:
@@ -139,10 +139,10 @@ services:
       # labels on this compose file. Opt-in only: set TRAEFIK_ENABLE=true
       # and FRONTEND_DOMAIN (bare domain, no protocol) to use them.
       # TRAEFIK_RESOURCE_NAME must be unique per deployment if multiple
-      # Securo instances share the same Traefik/Coolify proxy, otherwise
+      # Quad4 Finance instances share the same Traefik/Coolify proxy, otherwise
       # their router/service names collide.
       # TRAEFIK_NETWORK has no default: the Docker network Traefik and this
-      # stack share isn't guaranteed to be named `securo_default` (it isn't,
+      # stack share isn't guaranteed to be named `quad4_default` (it isn't,
       # under some Coolify setups). Find it with `docker network ls` or
       # `docker inspect <traefik-container> --format '{{json .NetworkSettings.Networks}}'`
       # and set it explicitly. Left unset (the empty value below is
@@ -153,17 +153,17 @@ services:
       # set TRAEFIK_NETWORK, or Traefik's choice among them is undefined.
       - traefik.enable=${TRAEFIK_ENABLE:-false}
       - traefik.docker.network=${TRAEFIK_NETWORK:-}
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-http.rule=Host(`${FRONTEND_DOMAIN:-localhost}`)
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-http.entrypoints=http
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-http.middlewares=${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https-redirect
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-http.service=${TRAEFIK_RESOURCE_NAME:-securo-frontend}
-      - traefik.http.middlewares.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https-redirect.redirectscheme.scheme=https
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https.rule=Host(`${FRONTEND_DOMAIN:-localhost}`)
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https.entrypoints=https
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https.tls=true
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}
-      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-securo-frontend}-https.service=${TRAEFIK_RESOURCE_NAME:-securo-frontend}
-      - traefik.http.services.${TRAEFIK_RESOURCE_NAME:-securo-frontend}.loadbalancer.server.port=8080
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-http.rule=Host(`${FRONTEND_DOMAIN:-localhost}`)
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-http.entrypoints=http
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-http.middlewares=${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https-redirect
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-http.service=${TRAEFIK_RESOURCE_NAME:-quad4-frontend}
+      - traefik.http.middlewares.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https.rule=Host(`${FRONTEND_DOMAIN:-localhost}`)
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https.entrypoints=https
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https.tls=true
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}
+      - traefik.http.routers.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}-https.service=${TRAEFIK_RESOURCE_NAME:-quad4-frontend}
+      - traefik.http.services.${TRAEFIK_RESOURCE_NAME:-quad4-frontend}.loadbalancer.server.port=8080
 
   celery-worker:
     <<: *backend-base
@@ -174,7 +174,7 @@ services:
     <<: *backend-base
     command: celery -A app.worker beat --loglevel=info
 
-  # Optional: Securo built-in MCP server. Only starts under the `agents`
+  # Optional: Quad4 Finance built-in MCP server. Only starts under the `agents`
   # profile (`docker compose -f docker-compose.prod.yml --profile agents up`).
   # Reuses the backend image, just runs a different uvicorn entry point.
   # Modular by design: users not using the agents feature pay zero cost.

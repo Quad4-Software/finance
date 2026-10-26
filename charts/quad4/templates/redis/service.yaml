@@ -1,0 +1,19 @@
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "quad4.fullname" . }}-redis-master
+  labels:
+    {{- include "quad4.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: tcp-redis
+      protocol: TCP
+      name: tcp-redis
+  selector:
+    {{- include "quad4.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+{{- end }}

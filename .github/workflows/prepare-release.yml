@@ -76,10 +76,10 @@ jobs:
           # injected from the tag at build time, but the manifest should still match.
           npm --prefix frontend version "$VERSION" --no-git-tag-version --allow-same-version
 
-          # charts/securo/Chart.yaml: release.yml repackages the chart with
+          # charts/quad4/Chart.yaml: release.yml repackages the chart with
           # --version/--app-version, this keeps the checked-in chart honest.
-          sed -i -E "0,/^version:/s|^version:.*|version: $VERSION|" charts/securo/Chart.yaml
-          sed -i -E "0,/^appVersion:/s|^appVersion:.*|appVersion: \"$VERSION\"|" charts/securo/Chart.yaml
+          sed -i -E "0,/^version:/s|^version:.*|version: $VERSION|" charts/quad4/Chart.yaml
+          sed -i -E "0,/^appVersion:/s|^appVersion:.*|appVersion: \"$VERSION\"|" charts/quad4/Chart.yaml
 
       - name: Regenerate uv.lock
         run: |
@@ -100,10 +100,10 @@ jobs:
 
           grep -qx "version = \"$VERSION\"" backend/pyproject.toml
           # the project's own entry in the lock, not one of its dependencies
-          grep -A1 -x 'name = "securo-backend"' backend/uv.lock | grep -qx "version = \"$VERSION\""
+          grep -A1 -x 'name = "quad4-backend"' backend/uv.lock | grep -qx "version = \"$VERSION\""
           grep -qx "  \"version\": \"$VERSION\"," frontend/package.json
-          grep -qx "version: $VERSION" charts/securo/Chart.yaml
-          grep -qx "appVersion: \"$VERSION\"" charts/securo/Chart.yaml
+          grep -qx "version: $VERSION" charts/quad4/Chart.yaml
+          grep -qx "appVersion: \"$VERSION\"" charts/quad4/Chart.yaml
 
           if git diff --quiet; then
             echo "::error::nothing changed. Is $VERSION already the current version?"
@@ -126,7 +126,7 @@ jobs:
           git push -u origin "$BRANCH"
 
           {
-            echo "Version bump for v$VERSION: \`backend/pyproject.toml\`, \`frontend/package.json\`, \`charts/securo/Chart.yaml\`."
+            echo "Version bump for v$VERSION: \`backend/pyproject.toml\`, \`frontend/package.json\`, \`charts/quad4/Chart.yaml\`."
             echo
             echo "After merging, publish the \`v$VERSION\` GitHub release targeting \`main\` to build and push the images."
           } > /tmp/pr-body.md

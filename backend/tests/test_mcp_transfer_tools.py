@@ -25,7 +25,7 @@ from mcp_server.registry import REGISTRY
 
 @pytest_asyncio.fixture
 async def ctx(test_user) -> CallContext:
-    """Internal runtime context (Securo's own agent): can never apply."""
+    """Internal runtime context (Quad4 Finance's own agent): can never apply."""
     return CallContext(user_id=test_user.id, conversation_id=uuid.uuid4())
 
 

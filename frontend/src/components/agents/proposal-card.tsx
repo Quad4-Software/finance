@@ -23,7 +23,7 @@ interface Props {
   data: ProposalData
 }
 
-const APPLIED_KEY = 'securo:agent-proposal-applied'
+const APPLIED_KEY = 'quad4:agent-proposal-applied'
 
 function loadApplied(): Record<string, { ts: number; ref?: string }> {
   try {
@@ -307,7 +307,7 @@ function SplitPreview({ proposed }: { proposed?: Record<string, unknown> }) {
   )
 }
 
-// Each kind maps to one Securo endpoint already exposed via lib/api.ts.
+// Each kind maps to one Quad4 Finance endpoint already exposed via lib/api.ts.
 // Returns a string ref (id of the new entity) when available — used as a
 // breadcrumb in the localStorage record so a future "view created entity"
 // affordance can deep-link to it.

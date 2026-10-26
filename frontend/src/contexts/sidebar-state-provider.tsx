@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, type ReactNode } from 'react'
 
 import { SidebarStateContext, type SidebarStateValue } from '@/contexts/sidebar-state-context'
 
-export const SIDEBAR_COLLAPSED_STORAGE_KEY = 'securo.sidebar.collapsed'
+export const SIDEBAR_COLLAPSED_STORAGE_KEY = 'quad4.sidebar.collapsed'
 
 export function SidebarStateProvider({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(

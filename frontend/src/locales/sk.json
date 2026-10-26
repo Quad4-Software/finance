@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Pracovný priestor „{{name}}“ sa odstráni z tvojho zoznamu. Údaje zostanú zachované a správca ho môže neskôr obnoviť."
   },
   "app": {
-    "name": "Securo",
+    "name": "Quad4 Finance",
     "versionAriaLabel": "Spustená verzia {{version}}",
     "versionLabel": "Verzia {{version}}",
     "updateAvailable": "Dostupná aktualizácia",
@@ -247,7 +247,7 @@
       "presetTracking": "Sledovať platby",
       "presetDocument": "Vystavovať dokumenty",
       "presetTrackingHint": "Fakturujete inde. Tu sledujete, kto vám dlží a či peniaze prišli.",
-      "presetDocumentHint": "Securo píše faktúru, ktorú klient dostane. Potrebuje vedieť, čo účtujete.",
+      "presetDocumentHint": "Quad4 Finance píše faktúru, ktorú klient dostane. Potrebuje vedieť, čo účtujete.",
       "numberPrefix": "Predpona čísla",
       "paymentTerms": "Splatnosť (dni)",
       "issuerName": "Názov vašej firmy",
@@ -426,7 +426,7 @@
       "notOurs": "Dokument bol vystavený inde",
       "notOursHint": "Priložte prijatý súbor a zobrazí sa tu presne tak, ako prišiel.",
       "ourPage": "Faktúra",
-      "rendered": "Vygenerované Securom · {{date}}",
+      "rendered": "Vygenerované Quad4 Financem · {{date}}",
       "kindLabel": "Typ dokumentu",
       "fromSystem": "Z {{source}} · {{date}}",
       "fromUpload": "Nahrané · {{date}}"
@@ -800,9 +800,9 @@
     "passkeysCleanupDescription": "Lokálne prihlásenie je vypnuté. Uložené prístupové kľúče môžete odstrániť, ale nemôžete pridávať nové.",
     "passkeyLoadError": "Passkey sa nepodarilo načítať",
     "passkeyUnsupported": "Tento prehliadač nepodporuje passkey.",
-    "passkeyInsecureContext": "Passkey vyžadujú zabezpečené pripojenie. Otvor Securo cez HTTPS alebo na http://localhost.",
-    "passkeyIpAddress": "Passkey nefungujú na IP adrese. Otvor Securo na doménovom mene cez HTTPS alebo na http://localhost.",
-    "passkeyDomainError": "Prehliadač odmietol túto doménu pre passkey. Otvor Securo cez HTTPS na doméne, pre ktorú je nakonfigurované.",
+    "passkeyInsecureContext": "Passkey vyžadujú zabezpečené pripojenie. Otvor Quad4 Finance cez HTTPS alebo na http://localhost.",
+    "passkeyIpAddress": "Passkey nefungujú na IP adrese. Otvor Quad4 Finance na doménovom mene cez HTTPS alebo na http://localhost.",
+    "passkeyDomainError": "Prehliadač odmietol túto doménu pre passkey. Otvor Quad4 Finance cez HTTPS na doméne, pre ktorú je nakonfigurované.",
     "passkeyDomainMismatch": "Táto adresa je mimo domény passkey nastavenej na serveri (WEBAUTHN_RP_ID).",
     "passkeyDuplicate": "Toto zariadenie už má passkey pre tvoj účet.",
     "passkeyWaiting": "Čaká sa na tvoje zariadenie...",
@@ -1354,7 +1354,7 @@
       "openBridge": "Vygenerovať token v SimpleFIN Bridge",
       "tokenLabel": "Setup token",
       "tokenPlaceholder": "Vlož prijatý token…",
-      "tokenHelp": "Setup token je na jedno použitie. Securo si z neho vyžiada súkromnú prístupovú URL a uloží ju zašifrovanú.",
+      "tokenHelp": "Setup token je na jedno použitie. Quad4 Finance si z neho vyžiada súkromnú prístupovú URL a uloží ju zašifrovanú.",
       "connect": "Prepojiť",
       "connecting": "Prepája sa…",
       "simplefin": {
@@ -1398,7 +1398,7 @@
     "syncAssets": "Importovať investičné aktíva",
     "syncAssetsHint": "Ak je vypnuté, prepojenie synchronizuje účty a transakcie, ale investičné pozície od poskytovateľa nechá nedotknuté.",
     "initialSyncSettings": "Možnosti synchronizácie",
-    "initialSyncSettingsDesc": "Vyber, čo má Securo importovať, skôr než otvoríš konektor.",
+    "initialSyncSettingsDesc": "Vyber, čo má Quad4 Finance importovať, skôr než otvoríš konektor.",
     "continueToConnector": "Pokračovať ku konektoru"
   },
   "settings": {
@@ -1835,9 +1835,9 @@
     "outflowColumn": "Stĺpec výdavkov",
     "selectColumn": "Vybrať stĺpec...",
     "columnMapping": "Priradenie stĺpcov",
-    "columnMappingHint": "Priraď stĺpce svojho CSV k poliam Securo. Nechaj automatické rozpoznanie, ak chceš zachovať rozpoznaný stĺpec.",
+    "columnMappingHint": "Priraď stĺpce svojho CSV k poliam Quad4 Finance. Nechaj automatické rozpoznanie, ak chceš zachovať rozpoznaný stĺpec.",
     "columnAutoDetect": "Rozpoznať automaticky",
-    "mappingNeeded": "Stĺpce tvojho CSV sa nepodarilo rozpoznať automaticky. Pokračuj tak, že ich nižšie priradíš k poliam Securo.",
+    "mappingNeeded": "Stĺpce tvojho CSV sa nepodarilo rozpoznať automaticky. Pokračuj tak, že ich nižšie priradíš k poliam Quad4 Finance.",
     "failedRowsWarning": "{{count}} riadok(ov) v tomto súbore sa nepodarilo spracovať a boli preskočené.",
     "viewDetails": "Zobraziť podrobnosti",
     "failedRowsTitle": "Nespracované riadky CSV",
@@ -2432,11 +2432,11 @@
     "you": "ty",
     "memberName": "Meno",
     "memberEmail": "E-mail",
-    "memberEmailHint": "Voliteľné — hodí sa, ak ich neskôr pozveš ako používateľa Securo.",
-    "linkedUser": "Prepojený používateľ Securo",
+    "memberEmailHint": "Voliteľné — hodí sa, ak ich neskôr pozveš ako používateľa Quad4 Finance.",
+    "linkedUser": "Prepojený používateľ Quad4 Finance",
     "linkedUserNone": "— Neprepojené (nie je používateľ) —",
-    "linkedUserHint": "Vyber existujúceho používateľa Securo na prepojenie člena, alebo nechaj neprepojené a pridaj nepoužívateľa (napr. niekoho, kto ešte nemá účet).",
-    "willLinkToUser": "Prepojí sa s existujúcim používateľom Securo {{email}}",
+    "linkedUserHint": "Vyber existujúceho používateľa Quad4 Finance na prepojenie člena, alebo nechaj neprepojené a pridaj nepoužívateľa (napr. niekoho, kto ešte nemá účet).",
+    "willLinkToUser": "Prepojí sa s existujúcim používateľom Quad4 Finance {{email}}",
     "sharedWithYou": "Zdieľané s tebou",
     "sharedRowBadge": "Zdieľané · {{group}}",
     "sharedRowBadgeAuthor": "{{author}} · {{group}}",
@@ -2521,7 +2521,7 @@
     "show": "Zobraziť hodnoty"
   },
   "setup": {
-    "title": "Vitaj v Securo",
+    "title": "Vitaj v Quad4 Finance",
     "description": "Začni vytvorením účtu administrátora.",
     "confirmPassword": "Potvrď heslo",
     "createAdmin": "Vytvoriť účet administrátora",
@@ -2549,14 +2549,14 @@
     "passwordLabel": "Heslo (voliteľné)",
     "passwordPlaceholder": "Nechaj prázdne pre nešifrovanú zálohu",
     "passwordTooShort": "Použi aspoň {{min}} znakov",
-    "encryptionNote": "Archív je šifrovaný pomocou AES-256 a otvorí sa v ktoromkoľvek bežnom archivátore. Securo toto heslo neukladá a bez neho súbor nedokáže obnoviť.",
+    "encryptionNote": "Archív je šifrovaný pomocou AES-256 a otvorí sa v ktoromkoľvek bežnom archivátore. Quad4 Finance toto heslo neukladá a bez neho súbor nedokáže obnoviť.",
     "successEncrypted": "Šifrovaná záloha úspešne stiahnutá"
   },
   "update": {
     "title": "Aktualizácia servera",
     "runningLabel": "beží",
     "newVersionAvailable": "Dostupná nová verzia:",
-    "description": "Je dostupná nová verzia Securo. Zváž aktualizáciu, ak:",
+    "description": "Je dostupná nová verzia Quad4 Finance. Zváž aktualizáciu, ak:",
     "reasonFeatures": "chceš mať prístup k najnovším funkciám a vylepšeniam",
     "reasonBugs": "máš problémy, ktoré môžu byť v novej verzii vyriešené",
     "releaseNotesHintBefore": "Pred aktualizáciou odporúčame prezrieť",
@@ -2683,7 +2683,7 @@
       }
     },
     "title": "Agenti",
-    "subtitle": "Vytváraj konverzačných asistentov nad svojimi dátami v Securo. Každý agent môže mať vlastnú znalostnú bázu, nástroje a poskytovateľa.",
+    "subtitle": "Vytváraj konverzačných asistentov nad svojimi dátami v Quad4 Finance. Každý agent môže mať vlastnú znalostnú bázu, nástroje a poskytovateľa.",
     "newAgent": "Nový agent",
     "newConversation": "Nová konverzácia",
     "conversationsCount": "Konverzácie",
@@ -2863,14 +2863,14 @@
     },
     "mcpExternal": {
       "title": "Externý MCP prístup",
-      "subtitle": "Pripoj externého agenta (Claude Desktop, ChatGPT, n8n, vlastný klient) k vstavanému MCP serveru Securo. Token nižšie je viazaný na tvojho používateľa a jeho platnosť vyprší o {{days}} dní.",
+      "subtitle": "Pripoj externého agenta (Claude Desktop, ChatGPT, n8n, vlastný klient) k vstavanému MCP serveru Quad4 Finance. Token nižšie je viazaný na tvojho používateľa a jeho platnosť vyprší o {{days}} dní.",
       "copy": "Kopírovať",
       "copied": "Skopírované",
       "copyFailed": "Kopírovanie zlyhalo",
       "mint": "Vygenerovať token",
       "minting": "Generuje sa…",
       "mintFailed": "Token sa nepodarilo vygenerovať",
-      "warning": "Skopíruj ho teraz — Securo token neukladá, takže ho už znova nezobrazíme. Zrušíš ho rotáciou AGENTS_MCP_JWT_SECRET.",
+      "warning": "Skopíruj ho teraz — Quad4 Finance token neukladá, takže ho už znova nezobrazíme. Zrušíš ho rotáciou AGENTS_MCP_JWT_SECRET.",
       "regenerate": "Vygenerovať ďalší",
       "snippets": {
         "token": "Token",
@@ -2921,7 +2921,7 @@
       "optional": "voliteľné",
       "empty": {
         "title": "Zatiaľ žiadne pripojenia",
-        "subtitle": "Pridaj pripojenie a nasmeruj Securo na lokálnu Ollamu, OpenAI, Anthropic alebo ľubovoľný OpenAI-compatible endpoint."
+        "subtitle": "Pridaj pripojenie a nasmeruj Quad4 Finance na lokálnu Ollamu, OpenAI, Anthropic alebo ľubovoľný OpenAI-compatible endpoint."
       }
     }
   },

@@ -13,7 +13,7 @@ type AsgiFixture = {
   responses: Record<string, { items: Transaction[]; total: number; [key: string]: unknown }>
 }
 
-const asgiFixturePath = process.env.SECURO_1022_ASGI_FIXTURE
+const asgiFixturePath = process.env.QUAD4_1022_ASGI_FIXTURE
 const asgiFixture = asgiFixturePath
   ? JSON.parse(readFileSync(asgiFixturePath, 'utf8')) as AsgiFixture
   : null
@@ -74,7 +74,7 @@ const manual = {
 const items: Transaction[] = asgiFixture?.responses.en.items ?? [opening, manual]
 
 function captureAsgiRender(locale: string) {
-  const directory = process.env.SECURO_1022_RENDERED_DOM_DIR
+  const directory = process.env.QUAD4_1022_RENDERED_DOM_DIR
   if (!asgiFixture || !directory) return
   mkdirSync(directory, { recursive: true })
   const device = viewport.mobile ? 'mobile' : 'desktop'

@@ -122,7 +122,7 @@ def test_local_auth_enabled_defaults_true(secrets: Path):
 def test_local_auth_can_be_disabled_when_oidc_is_enabled(secrets: Path):
     settings = Settings(
         oidc_enabled=True,
-        oidc_client_id="securo",
+        oidc_client_id="quad4",
         oidc_discovery_url="https://id.example.com/.well-known/openid-configuration",
         local_auth_enabled=False,
         _secrets_dir=str(secrets),
@@ -144,7 +144,7 @@ def test_local_auth_disabled_requires_oidc(secrets: Path):
             "",
             "https://id.example.com/.well-known/openid-configuration",
         ),
-        ("OIDC_DISCOVERY_URL", "securo", ""),
+        ("OIDC_DISCOVERY_URL", "quad4", ""),
     ],
 )
 def test_local_auth_disabled_requires_complete_oidc_configuration(
@@ -192,7 +192,7 @@ def test_empty_frontend_url_uses_frontend_port(monkeypatch):
 
 
 def test_set_frontend_url_is_used_as_is(monkeypatch):
-    monkeypatch.setenv("FRONTEND_URL", "https://securo.example.com")
+    monkeypatch.setenv("FRONTEND_URL", "https://quad4.example.com")
     monkeypatch.setenv("FRONTEND_PORT", "3132")
 
-    assert Settings(_env_file=None).frontend_url == "https://securo.example.com"
+    assert Settings(_env_file=None).frontend_url == "https://quad4.example.com"

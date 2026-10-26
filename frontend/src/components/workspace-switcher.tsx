@@ -66,7 +66,7 @@ const ROLE_LABEL_KEY: Record<string, string> = {
 const DEFAULT_COLOR = '#6366F1'
 
 // The help documentation, opened only when the user asks for it.
-export const DOCS_URL = 'https://docs.usesecuro.com'
+export const DOCS_URL = 'https://github.com/Quad4-Software/quad4-finance'
 
 function workspaceIcon(w: Workspace): string {
   return w.icon || WORKSPACE_KIND_ICON[w.kind as WorkspaceKind] || 'briefcase'

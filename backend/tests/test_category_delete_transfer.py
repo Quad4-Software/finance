@@ -1,6 +1,6 @@
 """Deleting a category and handing what it held over to another one.
 
-Any category can be deleted now, including the ones Securo seeds. What made
+Any category can be deleted now, including the ones Quad4 Finance seeds. What made
 that safe to allow is this: nothing a category holds is thrown away, and
 nothing is left pointing at an id that stopped existing.
 """

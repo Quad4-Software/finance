@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Робочий простір «{{name}}» буде видалено з вашого списку. Дані зберігаються, адміністратор зможе відновити його пізніше."
   },
   "app": {
-    "name": "Securo",
+    "name": "Quad4 Finance",
     "versionAriaLabel": "Запущено версію {{version}}",
     "versionLabel": "Версія {{version}}",
     "updateAvailable": "Доступне оновлення",
@@ -247,7 +247,7 @@
       "presetTracking": "Track payments",
       "presetDocument": "Issue documents",
       "presetTrackingHint": "Рахунки ви виставляєте деінде. Тут стежите, хто винен і чи надійшли гроші.",
-      "presetDocumentHint": "Securo пише рахунок, який отримає клієнт. Для цього потрібно, за що ви виставляєте.",
+      "presetDocumentHint": "Quad4 Finance пише рахунок, який отримає клієнт. Для цього потрібно, за що ви виставляєте.",
       "numberPrefix": "Number prefix",
       "paymentTerms": "Payment terms (days)",
       "issuerName": "Your business name",
@@ -426,7 +426,7 @@
       "notOurs": "Документ виписано в іншому місці",
       "notOursHint": "Прикріпіть отриманий файл — його буде показано тут саме в тому вигляді, у якому він надійшов.",
       "ourPage": "Рахунок",
-      "rendered": "Сформована в Securo · {{date}}",
+      "rendered": "Сформована в Quad4 Finance · {{date}}",
       "kindLabel": "Тип документа",
       "fromSystem": "Із {{source}} · {{date}}",
       "fromUpload": "Завантажено · {{date}}"
@@ -800,9 +800,9 @@
     "passkeysCleanupDescription": "Локальний вхід вимкнено. Ви можете видаляти збережені ключі доступу, але не додавати нові.",
     "passkeyLoadError": "Не вдалося завантажити ключі доступу",
     "passkeyUnsupported": "Цей браузер не підтримує passkey.",
-    "passkeyInsecureContext": "Для passkey потрібне захищене з'єднання. Відкрийте Securo через HTTPS або на http://localhost.",
-    "passkeyIpAddress": "Passkey не працюють за IP-адресою. Відкрийте Securo на домені через HTTPS або на http://localhost.",
-    "passkeyDomainError": "Браузер відхилив цей домен для passkey. Відкрийте Securo на налаштованому домені через HTTPS.",
+    "passkeyInsecureContext": "Для passkey потрібне захищене з'єднання. Відкрийте Quad4 Finance через HTTPS або на http://localhost.",
+    "passkeyIpAddress": "Passkey не працюють за IP-адресою. Відкрийте Quad4 Finance на домені через HTTPS або на http://localhost.",
+    "passkeyDomainError": "Браузер відхилив цей домен для passkey. Відкрийте Quad4 Finance на налаштованому домені через HTTPS.",
     "passkeyDomainMismatch": "Ця адреса поза доменом passkey, налаштованим на сервері (WEBAUTHN_RP_ID).",
     "passkeyDuplicate": "На цьому пристрої вже є passkey для вашого облікового запису.",
     "passkeyWaiting": "Очікування пристрою...",
@@ -1303,7 +1303,7 @@
       "openBridge": "Згенерувати токен у SimpleFIN Bridge",
       "tokenLabel": "Установчий токен",
       "tokenPlaceholder": "Вставте отриманий токен…",
-      "tokenHelp": "Установчий токен одноразовий. Securo отримує з нього приватний URL доступу та зберігає його зашифрованим.",
+      "tokenHelp": "Установчий токен одноразовий. Quad4 Finance отримує з нього приватний URL доступу та зберігає його зашифрованим.",
       "connect": "Підключити",
       "connecting": "Підключення…",
       "simplefin": {
@@ -1347,7 +1347,7 @@
     "syncAssets": "Імпортувати інвестиційні активи",
     "syncAssetsHint": "Якщо вимкнено, це підключення синхронізує рахунки й транзакції, але не змінює інвестиційні активи провайдера.",
     "initialSyncSettings": "Параметри синхронізації",
-    "initialSyncSettingsDesc": "Виберіть, що Securo має імпортувати перед відкриттям конектора.",
+    "initialSyncSettingsDesc": "Виберіть, що Quad4 Finance має імпортувати перед відкриттям конектора.",
     "continueToConnector": "Перейти до конектора"
   },
   "settings": {
@@ -1760,9 +1760,9 @@
     "outflowColumn": "Стовпець витрат",
     "selectColumn": "Оберіть стовпець...",
     "columnMapping": "Зіставлення стовпців",
-    "columnMappingHint": "Зіставте стовпці вашого CSV з полями Securo. Залиште автовизначення, щоб зберегти виявлений стовпець.",
+    "columnMappingHint": "Зіставте стовпці вашого CSV з полями Quad4 Finance. Залиште автовизначення, щоб зберегти виявлений стовпець.",
     "columnAutoDetect": "Автовизначення",
-    "mappingNeeded": "Ми не змогли автоматично розпізнати стовпці вашого CSV. Зіставте їх з полями Securo нижче, щоб продовжити.",
+    "mappingNeeded": "Ми не змогли автоматично розпізнати стовпці вашого CSV. Зіставте їх з полями Quad4 Finance нижче, щоб продовжити.",
     "failedRowsWarning": "Не вдалося розпізнати {{count}} рядків у цьому файлі (пропущено).",
     "viewDetails": "Показати деталі",
     "failedRowsTitle": "Нерозпізнані рядки CSV",
@@ -2317,11 +2317,11 @@
     "you": "ви",
     "memberName": "Ім'я",
     "memberEmail": "Email",
-    "memberEmailHint": "Необов'язково — корисно, якщо ви пізніше запросите його як користувача Securo.",
-    "linkedUser": "Пов'язаний користувач Securo",
+    "memberEmailHint": "Необов'язково — корисно, якщо ви пізніше запросите його як користувача Quad4 Finance.",
+    "linkedUser": "Пов'язаний користувач Quad4 Finance",
     "linkedUserNone": "— Не пов'язаний (не користувач) —",
-    "linkedUserHint": "Оберіть наявного користувача Securo, щоб пов'язати учасника, або залиште непов'язаним, щоб додати не-користувача (наприклад, того, у кого ще немає акаунта).",
-    "willLinkToUser": "Буде пов'язаний з наявним користувачем Securo {{email}}",
+    "linkedUserHint": "Оберіть наявного користувача Quad4 Finance, щоб пов'язати учасника, або залиште непов'язаним, щоб додати не-користувача (наприклад, того, у кого ще немає акаунта).",
+    "willLinkToUser": "Буде пов'язаний з наявним користувачем Quad4 Finance {{email}}",
     "sharedWithYou": "Розділено з вами",
     "sharedRowBadge": "Розділено · {{group}}",
     "sharedRowBadgeAuthor": "{{author}} · {{group}}",
@@ -2402,7 +2402,7 @@
     "show": "Показати суми"
   },
   "setup": {
-    "title": "Ласкаво просимо до Securo",
+    "title": "Ласкаво просимо до Quad4 Finance",
     "description": "Створіть обліковий запис адміністратора, щоб почати.",
     "confirmPassword": "Підтвердьте пароль",
     "createAdmin": "Створити обліковий запис адміністратора",
@@ -2430,14 +2430,14 @@
     "passwordLabel": "Пароль (необов'язково)",
     "passwordPlaceholder": "Залиште порожнім для копії без шифрування",
     "passwordTooShort": "Використайте щонайменше {{min}} символів",
-    "encryptionNote": "Архів шифрується алгоритмом AES-256 і відкривається будь-яким архіватором. Securo не зберігає цей пароль і не зможе відновити файл без нього.",
+    "encryptionNote": "Архів шифрується алгоритмом AES-256 і відкривається будь-яким архіватором. Quad4 Finance не зберігає цей пароль і не зможе відновити файл без нього.",
     "successEncrypted": "Зашифровану резервну копію успішно завантажено"
   },
   "update": {
     "title": "Оновлення сервера",
     "runningLabel": "працює",
     "newVersionAvailable": "Доступна нова версія:",
-    "description": "Доступна нова версія Securo. Розгляньте оновлення, якщо ви:",
+    "description": "Доступна нова версія Quad4 Finance. Розгляньте оновлення, якщо ви:",
     "reasonFeatures": "Хочете отримати доступ до нових функцій та покращень",
     "reasonBugs": "Стикаєтеся з проблемами, які можуть бути виправлені в новій версії",
     "releaseNotesHintBefore": "Рекомендуємо ознайомитися з",
@@ -2564,7 +2564,7 @@
       }
     },
     "title": "Агенти",
-    "subtitle": "Створюйте розмовних асистентів на основі ваших даних Securo. Кожен агент може мати свою базу знань, інструменти та провайдера.",
+    "subtitle": "Створюйте розмовних асистентів на основі ваших даних Quad4 Finance. Кожен агент може мати свою базу знань, інструменти та провайдера.",
     "newAgent": "Новий агент",
     "newConversation": "Нова розмова",
     "conversationsCount": "Розмови",
@@ -2736,14 +2736,14 @@
     },
     "mcpExternal": {
       "title": "Зовнішній MCP-доступ",
-      "subtitle": "Підключіть зовнішнього агента (Claude Desktop, ChatGPT, n8n або свій клієнт) до вбудованого MCP-сервера Securo. Токен нижче прив'язаний до вашого користувача та дійсний {{days}} днів.",
+      "subtitle": "Підключіть зовнішнього агента (Claude Desktop, ChatGPT, n8n або свій клієнт) до вбудованого MCP-сервера Quad4 Finance. Токен нижче прив'язаний до вашого користувача та дійсний {{days}} днів.",
       "copy": "Копіювати",
       "copied": "Скопійовано",
       "copyFailed": "Не вдалося скопіювати",
       "mint": "Згенерувати токен",
       "minting": "Генерація…",
       "mintFailed": "Не вдалося згенерувати токен",
-      "warning": "Скопіюйте зараз — Securo не зберігає токен і не зможе показати його повторно. Для відкликання змініть AGENTS_MCP_JWT_SECRET.",
+      "warning": "Скопіюйте зараз — Quad4 Finance не зберігає токен і не зможе показати його повторно. Для відкликання змініть AGENTS_MCP_JWT_SECRET.",
       "regenerate": "Згенерувати новий",
       "snippets": {
         "token": "Токен",
@@ -2794,7 +2794,7 @@
       "optional": "необов'язково",
       "empty": {
         "title": "Підключень поки немає",
-        "subtitle": "Додайте підключення, щоб направити Securo на ваш локальний Ollama, OpenAI, Anthropic або будь-який сумісний з OpenAI ендпоінт."
+        "subtitle": "Додайте підключення, щоб направити Quad4 Finance на ваш локальний Ollama, OpenAI, Anthropic або будь-який сумісний з OpenAI ендпоінт."
       }
     }
   },

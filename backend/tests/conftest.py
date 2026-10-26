@@ -233,7 +233,7 @@ def oidc_only_settings():
     }
     settings.oidc_enabled = True
     settings.oidc_discovery_url = "https://id.example.com/.well-known/openid-configuration"
-    settings.oidc_client_id = "securo"
+    settings.oidc_client_id = "quad4"
     settings.local_auth_enabled = False
     yield settings
     for key, value in previous.items():

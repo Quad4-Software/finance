@@ -247,7 +247,7 @@ async def asset_import_template(
     return Response(
         content=asset_import_service.csv_template(),
         media_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="securo-asset-orders.csv"'},
+        headers={"Content-Disposition": 'attachment; filename="quad4-asset-orders.csv"'},
     )
 
 

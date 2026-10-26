@@ -11,7 +11,7 @@
  */
 import { currentMonth, monthFromRange, monthRange } from '@/lib/month-utils'
 
-const PREFIX = 'securo.dateRange.'
+const PREFIX = 'quad4.dateRange.'
 
 export type RememberedPage = 'transactions' | 'reports'
 

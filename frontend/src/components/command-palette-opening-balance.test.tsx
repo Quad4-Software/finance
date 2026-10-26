@@ -55,7 +55,7 @@ it('translates only source-qualified transaction hits and keeps future recents l
   expect(within(option('Synthetic')).getByText(/100\.00/).textContent).toBe(amount)
   await user.click(option('Synthetic'))
   await waitFor(() => expect(screen.queryByRole('combobox')).not.toBeInTheDocument())
-  const recent = JSON.parse(localStorage.getItem('securo.cmdk.recent')!)[0]
+  const recent = JSON.parse(localStorage.getItem('quad4.cmdk.recent')!)[0]
   expect(recent).toMatchObject({ label: 'Saldo inicial', source: 'opening_balance', icon: 'transaction' })
   await user.click(screen.getByRole('button', { name: 'Open palette' }))
   expect(screen.getByText('Openingsbalans')).toBeVisible()

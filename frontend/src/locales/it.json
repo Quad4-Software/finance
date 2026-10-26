@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "L'area di lavoro \"{{name}}\" sarà rimossa dal tuo elenco. I dati vengono conservati e un amministratore potrà ripristinarla in seguito."
   },
   "app": {
-    "name": "Securo",
+    "name": "Quad4 Finance",
     "versionAriaLabel": "Versione in esecuzione {{version}}",
     "versionLabel": "Versione {{version}}",
     "updateAvailable": "Aggiornamento disponibile",
@@ -247,7 +247,7 @@
       "presetTracking": "Track payments",
       "presetDocument": "Issue documents",
       "presetTrackingHint": "Fatturi altrove. Qui segui chi ti deve e se il denaro è arrivato.",
-      "presetDocumentHint": "Securo scrive la fattura che il cliente riceve. Gli serve sapere cosa stai fatturando.",
+      "presetDocumentHint": "Quad4 Finance scrive la fattura che il cliente riceve. Gli serve sapere cosa stai fatturando.",
       "numberPrefix": "Number prefix",
       "paymentTerms": "Payment terms (days)",
       "issuerName": "Your business name",
@@ -426,7 +426,7 @@
       "notOurs": "Il documento è stato emesso altrove",
       "notOursHint": "Allega il file che hai ricevuto e verrà mostrato qui, esattamente come è arrivato.",
       "ourPage": "Fattura",
-      "rendered": "Generata da Securo · {{date}}",
+      "rendered": "Generata da Quad4 Finance · {{date}}",
       "kindLabel": "Tipo di documento",
       "fromSystem": "Da {{source}} · {{date}}",
       "fromUpload": "Caricato · {{date}}"
@@ -794,9 +794,9 @@
     "passkeysCleanupDescription": "L’accesso locale è disattivato. Puoi rimuovere le passkey salvate, ma non aggiungerne di nuove.",
     "passkeyLoadError": "Impossibile caricare le passkey",
     "passkeyUnsupported": "Questo browser non supporta le passkey.",
-    "passkeyInsecureContext": "Le passkey richiedono una connessione sicura. Apri Securo tramite HTTPS o su http://localhost.",
-    "passkeyIpAddress": "Le passkey non funzionano con un indirizzo IP. Apri Securo su un dominio tramite HTTPS o su http://localhost.",
-    "passkeyDomainError": "Il browser ha rifiutato questo dominio per le passkey. Apri Securo sul dominio configurato, tramite HTTPS.",
+    "passkeyInsecureContext": "Le passkey richiedono una connessione sicura. Apri Quad4 Finance tramite HTTPS o su http://localhost.",
+    "passkeyIpAddress": "Le passkey non funzionano con un indirizzo IP. Apri Quad4 Finance su un dominio tramite HTTPS o su http://localhost.",
+    "passkeyDomainError": "Il browser ha rifiutato questo dominio per le passkey. Apri Quad4 Finance sul dominio configurato, tramite HTTPS.",
     "passkeyDomainMismatch": "Questo indirizzo è fuori dal dominio delle passkey configurato sul server (WEBAUTHN_RP_ID).",
     "passkeyDuplicate": "Questo dispositivo ha già una passkey per il tuo account.",
     "passkeyWaiting": "In attesa del dispositivo...",
@@ -1290,7 +1290,7 @@
       "openBridge": "Genera token su SimpleFIN Bridge",
       "tokenLabel": "Token di configurazione",
       "tokenPlaceholder": "Incolla il token che hai ricevuto…",
-      "tokenHelp": "Il token di configurazione è monouso. Securo ne ricava un URL di accesso privato e lo memorizza cifrato.",
+      "tokenHelp": "Il token di configurazione è monouso. Quad4 Finance ne ricava un URL di accesso privato e lo memorizza cifrato.",
       "connect": "Collega",
       "connecting": "Connessione…",
       "simplefin": {
@@ -1334,7 +1334,7 @@
     "syncAssets": "Importa asset di investimento",
     "syncAssetsHint": "Se disattivato, questa connessione sincronizza conti e transazioni ma lascia invariati gli investimenti del provider.",
     "initialSyncSettings": "Opzioni di sincronizzazione",
-    "initialSyncSettingsDesc": "Scegli cosa deve importare Securo prima di aprire il connettore.",
+    "initialSyncSettingsDesc": "Scegli cosa deve importare Quad4 Finance prima di aprire il connettore.",
     "continueToConnector": "Continua al connettore"
   },
   "settings": {
@@ -1747,9 +1747,9 @@
     "outflowColumn": "Colonna uscite",
     "selectColumn": "Seleziona colonna...",
     "columnMapping": "Mappatura colonne",
-    "columnMappingHint": "Associa le colonne del tuo CSV ai campi di Securo. Lascia su rilevamento automatico per mantenere la colonna rilevata.",
+    "columnMappingHint": "Associa le colonne del tuo CSV ai campi di Quad4 Finance. Lascia su rilevamento automatico per mantenere la colonna rilevata.",
     "columnAutoDetect": "Rilevamento automatico",
-    "mappingNeeded": "Non siamo riusciti a riconoscere automaticamente le colonne del tuo CSV. Associale ai campi di Securo qui sotto per continuare.",
+    "mappingNeeded": "Non siamo riusciti a riconoscere automaticamente le colonne del tuo CSV. Associale ai campi di Quad4 Finance qui sotto per continuare.",
     "failedRowsWarning": "{{count}} riga/he in questo file non è stato possibile analizzare e sono state saltate.",
     "viewDetails": "Visualizza dettagli",
     "failedRowsTitle": "Righe CSV non analizzate",
@@ -2304,11 +2304,11 @@
     "you": "tu",
     "memberName": "Nome",
     "memberEmail": "Email",
-    "memberEmailHint": "Facoltativo — utile se in seguito lo inviti come utente Securo.",
-    "linkedUser": "Utente Securo collegato",
+    "memberEmailHint": "Facoltativo — utile se in seguito lo inviti come utente Quad4 Finance.",
+    "linkedUser": "Utente Quad4 Finance collegato",
     "linkedUserNone": "— Non collegato (non utente) —",
-    "linkedUserHint": "Scegli un utente Securo esistente per collegare il membro, oppure lascialo non collegato per aggiungere un non utente (es. qualcuno che non ha ancora un account).",
-    "willLinkToUser": "Verrà collegato all'utente Securo esistente {{email}}",
+    "linkedUserHint": "Scegli un utente Quad4 Finance esistente per collegare il membro, oppure lascialo non collegato per aggiungere un non utente (es. qualcuno che non ha ancora un account).",
+    "willLinkToUser": "Verrà collegato all'utente Quad4 Finance esistente {{email}}",
     "sharedWithYou": "Condiviso con te",
     "sharedRowBadge": "Condiviso · {{group}}",
     "sharedRowBadgeAuthor": "{{author}} · {{group}}",
@@ -2389,7 +2389,7 @@
     "show": "Mostra valori"
   },
   "setup": {
-    "title": "Benvenuto in Securo",
+    "title": "Benvenuto in Quad4 Finance",
     "description": "Crea il tuo account amministratore per iniziare.",
     "confirmPassword": "Conferma password",
     "createAdmin": "Crea account amministratore",
@@ -2417,14 +2417,14 @@
     "passwordLabel": "Password (facoltativa)",
     "passwordPlaceholder": "Lascia vuoto per un backup non cifrato",
     "passwordTooShort": "Usa almeno {{min}} caratteri",
-    "encryptionNote": "L'archivio è cifrato con AES-256 e si apre con qualsiasi programma di compressione. Securo non conserva questa password e non può recuperare il file senza di essa.",
+    "encryptionNote": "L'archivio è cifrato con AES-256 e si apre con qualsiasi programma di compressione. Quad4 Finance non conserva questa password e non può recuperare il file senza di essa.",
     "successEncrypted": "Backup cifrato scaricato con successo"
   },
   "update": {
     "title": "Aggiornamento del server",
     "runningLabel": "in esecuzione",
     "newVersionAvailable": "Nuova versione disponibile:",
-    "description": "È disponibile una nuova versione di Securo. Valuta l'aggiornamento se:",
+    "description": "È disponibile una nuova versione di Quad4 Finance. Valuta l'aggiornamento se:",
     "reasonFeatures": "Vuoi accedere alle ultime funzionalità e migliorie",
     "reasonBugs": "Stai riscontrando problemi che potrebbero essere risolti nella nuova versione",
     "releaseNotesHintBefore": "Ti consigliamo di consultare le",
@@ -2551,7 +2551,7 @@
       }
     },
     "title": "Agenti",
-    "subtitle": "Crea assistenti conversazionali basati sui tuoi dati Securo. Ogni agente può avere la propria knowledge base, i propri strumenti e il proprio provider.",
+    "subtitle": "Crea assistenti conversazionali basati sui tuoi dati Quad4 Finance. Ogni agente può avere la propria knowledge base, i propri strumenti e il proprio provider.",
     "newAgent": "Nuovo agente",
     "loading": "Caricamento…",
     "instanceDefault": "predefinito dell'istanza",
@@ -2743,7 +2743,7 @@
       "optional": "facoltativo",
       "empty": {
         "title": "Ancora nessuna connessione",
-        "subtitle": "Aggiungi una connessione per puntare Securo al tuo Ollama locale, OpenAI, Anthropic o qualsiasi endpoint compatibile con OpenAI."
+        "subtitle": "Aggiungi una connessione per puntare Quad4 Finance al tuo Ollama locale, OpenAI, Anthropic o qualsiasi endpoint compatibile con OpenAI."
       }
     },
     "newConversation": "Nuova conversazione",
@@ -2764,14 +2764,14 @@
     },
     "mcpExternal": {
       "title": "Accesso MCP esterno",
-      "subtitle": "Collega un agente esterno (Claude Desktop, ChatGPT, n8n, un client personalizzato) al server MCP integrato di Securo. Il token qui sotto è limitato al tuo utente e scade tra {{days}} giorni.",
+      "subtitle": "Collega un agente esterno (Claude Desktop, ChatGPT, n8n, un client personalizzato) al server MCP integrato di Quad4 Finance. Il token qui sotto è limitato al tuo utente e scade tra {{days}} giorni.",
       "copy": "Copia",
       "copied": "Copiato",
       "copyFailed": "Copia non riuscita",
       "mint": "Genera token",
       "minting": "Generazione…",
       "mintFailed": "Impossibile generare il token",
-      "warning": "Copialo ora: Securo non memorizza il token, quindi non potremo più mostrarlo. Per revocarlo, ruota AGENTS_MCP_JWT_SECRET.",
+      "warning": "Copialo ora: Quad4 Finance non memorizza il token, quindi non potremo più mostrarlo. Per revocarlo, ruota AGENTS_MCP_JWT_SECRET.",
       "regenerate": "Genera un altro",
       "snippets": {
         "token": "Token",

@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Ez a munkaterület kikerül a listádból: „{{name}}”. Az adatok megmaradnak, és egy adminisztrátor később visszaállíthatja."
   },
   "app": {
-    "name": "Securo",
+    "name": "Quad4 Finance",
     "versionAriaLabel": "Futó verzió: {{version}}",
     "versionLabel": "Verzió: {{version}}",
     "updateAvailable": "Frissítés érhető el",
@@ -247,7 +247,7 @@
       "presetTracking": "Befizetések követése",
       "presetDocument": "Dokumentumok kiállítása",
       "presetTrackingHint": "Máshol számlázol. Itt azt követed, ki tartozik neked, és megérkezett-e a pénz.",
-      "presetDocumentHint": "A Securo készíti el a számlát, amit az ügyfeled megkap. Ehhez meg kell adnod, mit számlázol.",
+      "presetDocumentHint": "A Quad4 Finance készíti el a számlát, amit az ügyfeled megkap. Ehhez meg kell adnod, mit számlázol.",
       "numberPrefix": "Sorszám előtagja",
       "paymentTerms": "Fizetési határidő (nap)",
       "issuerName": "Vállalkozásod neve",
@@ -426,7 +426,7 @@
       "notOurs": "A dokumentumot máshol állították ki",
       "notOursHint": "Csatold a kapott fájlt, és itt pontosan úgy jelenik meg, ahogy megérkezett.",
       "ourPage": "Számla",
-      "rendered": "Készítette: Securo · {{date}}",
+      "rendered": "Készítette: Quad4 Finance · {{date}}",
       "kindLabel": "Dokumentum típusa",
       "fromSystem": "Forrás: {{source}} · {{date}}",
       "fromUpload": "Feltöltve · {{date}}"
@@ -1286,7 +1286,7 @@
       "openBridge": "Token generálása a SimpleFIN Bridge-en",
       "tokenLabel": "Beállítási token",
       "tokenPlaceholder": "Illeszd be a kapott tokent…",
-      "tokenHelp": "A beállítási token egyszer használható. A Securo egy privát hozzáférési URL-t kér le vele, és azt titkosítva tárolja.",
+      "tokenHelp": "A beállítási token egyszer használható. A Quad4 Finance egy privát hozzáférési URL-t kér le vele, és azt titkosítva tárolja.",
       "connect": "Csatlakozás",
       "connecting": "Csatlakozás…",
       "simplefin": {
@@ -1330,7 +1330,7 @@
     "syncAssets": "Befektetési eszközök importálása",
     "syncAssetsHint": "Ha ki van kapcsolva, ez a kapcsolat szinkronizálja a számlákat és tranzakciókat, de a szolgáltatónál lévő befektetési állományt érintetlenül hagyja.",
     "initialSyncSettings": "Szinkronizálási beállítások",
-    "initialSyncSettingsDesc": "Válaszd ki, mit importáljon a Securo, mielőtt megnyitja a csatlakozót.",
+    "initialSyncSettingsDesc": "Válaszd ki, mit importáljon a Quad4 Finance, mielőtt megnyitja a csatlakozót.",
     "continueToConnector": "Tovább a csatlakozóhoz"
   },
   "settings": {
@@ -1743,9 +1743,9 @@
     "outflowColumn": "Kimenő oszlop",
     "selectColumn": "Válassz oszlopot...",
     "columnMapping": "Oszlopok hozzárendelése",
-    "columnMappingHint": "Rendeld hozzá a CSV-oszlopaidat a Securo mezőihez. Hagyd automatikus felismerésen, ha a felismert oszlopot szeretnéd megtartani.",
+    "columnMappingHint": "Rendeld hozzá a CSV-oszlopaidat a Quad4 Finance mezőihez. Hagyd automatikus felismerésen, ha a felismert oszlopot szeretnéd megtartani.",
     "columnAutoDetect": "Automatikus felismerés",
-    "mappingNeeded": "Nem sikerült automatikusan felismerni a CSV-oszlopaidat. A folytatáshoz rendeld hozzá őket lent a Securo mezőihez.",
+    "mappingNeeded": "Nem sikerült automatikusan felismerni a CSV-oszlopaidat. A folytatáshoz rendeld hozzá őket lent a Quad4 Finance mezőihez.",
     "failedRowsWarning": "A fájl {{count}} sorát nem sikerült feldolgozni, ezért kihagytuk.",
     "viewDetails": "Részletek",
     "failedRowsTitle": "Fel nem dolgozott CSV-sorok",
@@ -2300,11 +2300,11 @@
     "you": "te",
     "memberName": "Név",
     "memberEmail": "E-mail",
-    "memberEmailHint": "Nem kötelező — hasznos, ha később meghívod Securo-felhasználónak.",
-    "linkedUser": "Kapcsolt Securo-felhasználó",
+    "memberEmailHint": "Nem kötelező — hasznos, ha később meghívod Quad4 Finance-felhasználónak.",
+    "linkedUser": "Kapcsolt Quad4 Finance-felhasználó",
     "linkedUserNone": "— Nincs kapcsolva (nem felhasználó) —",
-    "linkedUserHint": "Válassz egy meglévő Securo-felhasználót, akihez a tagot kapcsolod, vagy hagyd kapcsolat nélkül, ha nem felhasználót adsz hozzá (pl. valakit, akinek még nincs fiókja).",
-    "willLinkToUser": "Kapcsolva lesz a meglévő Securo-felhasználóhoz: {{email}}",
+    "linkedUserHint": "Válassz egy meglévő Quad4 Finance-felhasználót, akihez a tagot kapcsolod, vagy hagyd kapcsolat nélkül, ha nem felhasználót adsz hozzá (pl. valakit, akinek még nincs fiókja).",
+    "willLinkToUser": "Kapcsolva lesz a meglévő Quad4 Finance-felhasználóhoz: {{email}}",
     "sharedWithYou": "Megosztva veled",
     "sharedRowBadge": "Megosztott · {{group}}",
     "sharedRowBadgeAuthor": "{{author}} · {{group}}",
@@ -2385,7 +2385,7 @@
     "show": "Értékek megjelenítése"
   },
   "setup": {
-    "title": "Üdvözöl a Securo",
+    "title": "Üdvözöl a Quad4 Finance",
     "description": "Hozd létre az adminisztrátori fiókodat a kezdéshez.",
     "confirmPassword": "Jelszó megerősítése",
     "createAdmin": "Adminisztrátori fiók létrehozása",
@@ -2413,14 +2413,14 @@
     "passwordLabel": "Jelszó (nem kötelező)",
     "passwordPlaceholder": "Hagyd üresen titkosítatlan mentéshez",
     "passwordTooShort": "Legalább {{min}} karaktert adj meg",
-    "encryptionNote": "Az archívum AES-256 titkosítású, és bármely szabványos tömörítőprogrammal megnyitható. A Securo nem tárolja ezt a jelszót, és nélküle nem tudja helyreállítani a fájlt.",
+    "encryptionNote": "Az archívum AES-256 titkosítású, és bármely szabványos tömörítőprogrammal megnyitható. A Quad4 Finance nem tárolja ezt a jelszót, és nélküle nem tudja helyreállítani a fájlt.",
     "successEncrypted": "A titkosított biztonsági mentés sikeresen letöltve"
   },
   "update": {
     "title": "Szerverfrissítés",
     "runningLabel": "futó verzió",
     "newVersionAvailable": "Új verzió érhető el:",
-    "description": "Elérhető a Securo új verziója. Érdemes frissítened, ha:",
+    "description": "Elérhető a Quad4 Finance új verziója. Érdemes frissítened, ha:",
     "reasonFeatures": "Szeretnéd elérni a legújabb funkciókat és fejlesztéseket",
     "reasonBugs": "Olyan problémákba ütközöl, amelyeket az új verzió megoldhat",
     "releaseNotesHintBefore": "Frissítés előtt javasoljuk, hogy nézd át a",
@@ -2547,7 +2547,7 @@
       }
     },
     "title": "Ügynökök",
-    "subtitle": "Építs beszélgetős asszisztenseket a Securo-adataidra. Minden ügynöknek saját tudásbázisa, eszközei és szolgáltatója lehet.",
+    "subtitle": "Építs beszélgetős asszisztenseket a Quad4 Finance-adataidra. Minden ügynöknek saját tudásbázisa, eszközei és szolgáltatója lehet.",
     "newAgent": "Új ügynök",
     "newConversation": "Új beszélgetés",
     "conversationsCount": "Beszélgetések",
@@ -2719,14 +2719,14 @@
     },
     "mcpExternal": {
       "title": "Külső MCP-hozzáférés",
-      "subtitle": "Csatlakoztass egy külső ügynököt (Claude Desktop, ChatGPT, n8n, saját kliens) a Securo beépített MCP-szerveréhez. Az alábbi token a felhasználódhoz kötött, és {{days}} nap múlva lejár.",
+      "subtitle": "Csatlakoztass egy külső ügynököt (Claude Desktop, ChatGPT, n8n, saját kliens) a Quad4 Finance beépített MCP-szerveréhez. Az alábbi token a felhasználódhoz kötött, és {{days}} nap múlva lejár.",
       "copy": "Másolás",
       "copied": "Másolva",
       "copyFailed": "A másolás nem sikerült",
       "mint": "Token generálása",
       "minting": "Generálás…",
       "mintFailed": "Nem sikerült tokent generálni",
-      "warning": "Másold ki most — a Securo nem tárolja a tokent, ezért később nem tudjuk újra megmutatni. Visszavonni az AGENTS_MCP_JWT_SECRET lecserélésével lehet.",
+      "warning": "Másold ki most — a Quad4 Finance nem tárolja a tokent, ezért később nem tudjuk újra megmutatni. Visszavonni az AGENTS_MCP_JWT_SECRET lecserélésével lehet.",
       "regenerate": "Újabb generálása",
       "snippets": {
         "token": "Token",
@@ -2777,7 +2777,7 @@
       "optional": "nem kötelező",
       "empty": {
         "title": "Még nincs kapcsolat",
-        "subtitle": "Adj hozzá egy kapcsolatot, hogy a Securo a helyi Ollamádat, az OpenAI-t, az Anthropicot vagy bármilyen OpenAI-kompatibilis végpontot használhassa."
+        "subtitle": "Adj hozzá egy kapcsolatot, hogy a Quad4 Finance a helyi Ollamádat, az OpenAI-t, az Anthropicot vagy bármilyen OpenAI-kompatibilis végpontot használhassa."
       }
     }
   },

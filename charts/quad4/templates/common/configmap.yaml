@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "quad4.fullname" . }}-config
+  labels:
+    {{- include "quad4.labels" . | nindent 4 }}
+data:
+  FRONTEND_URL: {{ include "quad4.frontendUrl" . | quote }}
+  PLUGGY_OAUTH_REDIRECT_URI: {{ default (include "quad4.oauthRedirectUri" .) .Values.config.pluggyOauthRedirectUri | quote }}
+  ENABLE_BANKING_OAUTH_REDIRECT_URI: {{ default (include "quad4.oauthRedirectUri" .) .Values.config.enableBankingOauthRedirectUri | quote }}
+  {{- range $key, $value := .Values.config }}
+  {{- if and (ne $key "pluggyOauthRedirectUri") (ne $key "enableBankingOauthRedirectUri") }}
+  {{ $key | snakecase | upper }}: {{ tpl (print $value) $ | quote }}
+  {{- end }}
+  {{- end }}

@@ -76,7 +76,7 @@ class _FakeMCP(MCPRegistry):
         self.calls: list[tuple[str, dict]] = []
 
     def server_names(self):
-        return ["securo"]
+        return ["quad4"]
 
     async def discover(self, *, workspace_id=None, user_id, conversation_id=None, agent_id=None):
         return list(self._tools)
@@ -168,7 +168,7 @@ async def test_usage_row_recorded(session, test_user, test_agent, test_conversat
 async def test_tool_call_dispatch_and_result_persisted(session, test_user, test_agent, test_conversation, signature):
     """LLM emits a tool call; executor runs it via fake MCP and feeds the
     result back; second turn returns a plain answer."""
-    tools = [ToolHandle(server="securo", name="list_accounts", description="d", parameters={"type": "object"})]
+    tools = [ToolHandle(server="quad4", name="list_accounts", description="d", parameters={"type": "object"})]
     fake_mcp = _FakeMCP(tools=tools, canned_result={
         "ok": True, "data": {"items": [{"id": "a1", "name": "Checking"}]}, "text": "1 account",
     })
@@ -176,7 +176,7 @@ async def test_tool_call_dispatch_and_result_persisted(session, test_user, test_
     provider = _ScriptedProvider([
         # Turn 1: emit a tool call.
         [
-            ChatChunk(type="tool_call_start", tool_call_id="t1", tool_name="securo__list_accounts"),
+            ChatChunk(type="tool_call_start", tool_call_id="t1", tool_name="quad4__list_accounts"),
             ChatChunk(type="tool_call_args_delta", tool_call_id="t1", args_delta="{}"),
             ChatChunk(type="tool_call_end", tool_call_id="t1", thought_signature=signature),
             ChatChunk(type="usage", usage=Usage(input_tokens=20, output_tokens=5)),
@@ -208,7 +208,7 @@ async def test_tool_call_dispatch_and_result_persisted(session, test_user, test_
     assert types[-1] == "done"
 
     # MCP got called with the right wire name.
-    assert fake_mcp.calls == [("securo__list_accounts", {})]
+    assert fake_mcp.calls == [("quad4__list_accounts", {})]
 
     # DB state: user, assistant(turn1, with tool_calls), tool, assistant(turn2, with text).
     msgs = (await session.execute(
@@ -216,7 +216,7 @@ async def test_tool_call_dispatch_and_result_persisted(session, test_user, test_
     )).scalars().all()
     roles = [m.role for m in msgs]
     assert roles == ["user", "assistant", "tool", "assistant"]
-    assert msgs[1].tool_calls and msgs[1].tool_calls[0]["name"] == "securo__list_accounts"
+    assert msgs[1].tool_calls and msgs[1].tool_calls[0]["name"] == "quad4__list_accounts"
     assert msgs[3].content == "You have 1 account."
 
     # Two usage rows, one per provider call.
@@ -319,13 +319,13 @@ async def test_per_agent_tool_whitelist_filters_discovery(
 
     # Discover 2 tools, but only enable one.
     tools = [
-        ToolHandle(server="securo", name="list_accounts", description="", parameters={"type": "object"}),
-        ToolHandle(server="securo", name="list_categories", description="", parameters={"type": "object"}),
+        ToolHandle(server="quad4", name="list_accounts", description="", parameters={"type": "object"}),
+        ToolHandle(server="quad4", name="list_categories", description="", parameters={"type": "object"}),
     ]
     fake_mcp = _FakeMCP(tools=tools)
     await agent_service.replace_tool_enablement(
         session, test_agent.id,
-        [("securo", "list_accounts", True), ("securo", "list_categories", False)],
+        [("quad4", "list_accounts", True), ("quad4", "list_categories", False)],
     )
 
     captured_tool_names: list[str] = []
@@ -352,7 +352,7 @@ async def test_per_agent_tool_whitelist_filters_discovery(
             user_message="hi",
         )
 
-    assert captured_tool_names == ["securo__list_accounts"]
+    assert captured_tool_names == ["quad4__list_accounts"]
 
 
 async def test_tool_result_passed_to_llm_in_full(session, test_user, test_agent, test_conversation):
@@ -362,7 +362,7 @@ async def test_tool_result_passed_to_llm_in_full(session, test_user, test_agent,
     The LLM must see the full structured payload."""
     big_items = [{"id": f"id-{i}", "description": f"Transaction number {i}", "amount": i * 10} for i in range(20)]
     fake_mcp = _FakeMCP(
-        tools=[ToolHandle(server="securo", name="list_transactions", description="d", parameters={"type": "object"})],
+        tools=[ToolHandle(server="quad4", name="list_transactions", description="d", parameters={"type": "object"})],
         canned_result={
             "ok": True,
             "data": {"items": big_items, "total": 20},
@@ -381,7 +381,7 @@ async def test_tool_result_passed_to_llm_in_full(session, test_user, test_agent,
     provider = _Capture([
         # Turn 1: emit a tool call.
         [
-            ChatChunk(type="tool_call_start", tool_call_id="t1", tool_name="securo__list_transactions"),
+            ChatChunk(type="tool_call_start", tool_call_id="t1", tool_name="quad4__list_transactions"),
             ChatChunk(type="tool_call_args_delta", tool_call_id="t1", args_delta="{}"),
             ChatChunk(type="tool_call_end", tool_call_id="t1"),
             ChatChunk(type="finish", finish_reason="tool_calls"),
@@ -448,7 +448,7 @@ async def test_auto_context_primer_prepended_when_enabled(session, test_user, te
     assert len(sys_msgs) == 4, f"expected guardrail + identity + agent prompt + auto-context, got {len(sys_msgs)}"
     assert "Runtime rules" in sys_msgs[0]
     assert "propose_" in sys_msgs[0]
-    assert "Securo" in sys_msgs[1]            # identity primer mentions the product
+    assert "Quad4 Finance" in sys_msgs[1]            # identity primer mentions the product
     assert sys_msgs[2] == "You are helpful."
     assert "Context for this conversation" in sys_msgs[3]
     assert "test@example.com" in sys_msgs[3]  # uses test_user fixture's email
@@ -486,7 +486,7 @@ async def test_auto_context_primer_skipped_when_disabled(session, test_user, tes
     # Guardrail [0] + identity [1] + agent prompt [2]; no auto-context primer.
     assert len(sys_msgs) == 3
     assert "Runtime rules" in sys_msgs[0]
-    assert "Securo" in sys_msgs[1]
+    assert "Quad4 Finance" in sys_msgs[1]
     assert sys_msgs[2] == "Just the agent prompt."
 
 
@@ -520,19 +520,19 @@ async def test_runtime_guardrail_always_present_even_with_no_agent_prompt(sessio
     assert len(sys_msgs) == 2
     assert "Runtime rules" in sys_msgs[0]
     assert "propose_" in sys_msgs[0]
-    assert "Securo" in sys_msgs[1]
+    assert "Quad4 Finance" in sys_msgs[1]
 
 
 async def test_max_iterations_terminates_runaway_agent(session, test_user, test_agent, test_conversation):
     """If the LLM keeps emitting tool calls forever, executor stops at
     MAX_ITERS and emits a max_iterations error."""
-    tools = [ToolHandle(server="securo", name="loop_tool", description="", parameters={"type": "object"})]
+    tools = [ToolHandle(server="quad4", name="loop_tool", description="", parameters={"type": "object"})]
     fake_mcp = _FakeMCP(tools=tools)
 
     # Same tool-call turn repeated indefinitely.
     def _looping_turn():
         return [
-            ChatChunk(type="tool_call_start", tool_call_id=f"t{uuid.uuid4().hex[:6]}", tool_name="securo__loop_tool"),
+            ChatChunk(type="tool_call_start", tool_call_id=f"t{uuid.uuid4().hex[:6]}", tool_name="quad4__loop_tool"),
             ChatChunk(type="tool_call_args_delta", tool_call_id="t1", args_delta="{}"),
             ChatChunk(type="tool_call_end", tool_call_id="t1"),
             ChatChunk(type="finish", finish_reason="tool_calls"),
@@ -572,8 +572,8 @@ async def test_history_window_never_opens_on_an_orphaned_tool_result(
 
     await add("user", "q0")
     await add("assistant", tool_calls=[
-        {"id": "c1", "name": "securo__list_accounts", "arguments": {}},
-        {"id": "c2", "name": "securo__list_budgets", "arguments": {}},
+        {"id": "c1", "name": "quad4__list_accounts", "arguments": {}},
+        {"id": "c2", "name": "quad4__list_budgets", "arguments": {}},
     ])
     await add("tool", "{}", tool_result={"tool_call_id": "c1"})
     await add("tool", "{}", tool_result={"tool_call_id": "c2"})

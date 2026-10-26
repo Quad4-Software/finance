@@ -64,7 +64,7 @@
     "addMemberDescriptionExistingOnly": "Nodig een bestaande gebruiker uit via e-mail."
   },
   "app": {
-    "name": "Securo",
+    "name": "Quad4 Finance",
     "versionAriaLabel": "Lopende versie {{version}}",
     "versionLabel": "Versie {{version}}",
     "updateAvailable": "Update beschikbaar",
@@ -247,7 +247,7 @@
       "presetTracking": "Track payments",
       "presetDocument": "Issue documents",
       "presetTrackingHint": "Je factureert elders. Hier volg je wie je nog moet betalen en of het geld binnen is.",
-      "presetDocumentHint": "Securo schrijft de factuur die je klant ontvangt. Daarvoor is nodig wat je in rekening brengt.",
+      "presetDocumentHint": "Quad4 Finance schrijft de factuur die je klant ontvangt. Daarvoor is nodig wat je in rekening brengt.",
       "numberPrefix": "Number prefix",
       "paymentTerms": "Payment terms (days)",
       "issuerName": "Your business name",
@@ -426,7 +426,7 @@
       "notOurs": "Het document is elders uitgegeven",
       "notOursHint": "Voeg het ontvangen bestand toe, dan wordt het hier getoond zoals het binnenkwam.",
       "ourPage": "Factuur",
-      "rendered": "Gegenereerd door Securo · {{date}}",
+      "rendered": "Gegenereerd door Quad4 Finance · {{date}}",
       "kindLabel": "Documenttype",
       "fromSystem": "Van {{source}} · {{date}}",
       "fromUpload": "Geüpload · {{date}}"
@@ -790,9 +790,9 @@
     "passkeysCleanupDescription": "Lokaal aanmelden is uitgeschakeld. U kunt opgeslagen passkeys verwijderen, maar geen nieuwe toevoegen.",
     "passkeyLoadError": "Kan de passkeys niet laden",
     "passkeyUnsupported": "Deze browser ondersteunt geen passkeys.",
-    "passkeyInsecureContext": "Passkeys hebben een beveiligde verbinding nodig. Open Securo via HTTPS of op http://localhost.",
-    "passkeyIpAddress": "Passkeys werken niet op een IP-adres. Open Securo op een domeinnaam via HTTPS of op http://localhost.",
-    "passkeyDomainError": "Uw browser heeft dit domein afgewezen voor passkeys. Open Securo op het domein waarvoor het is geconfigureerd, via HTTPS.",
+    "passkeyInsecureContext": "Passkeys hebben een beveiligde verbinding nodig. Open Quad4 Finance via HTTPS of op http://localhost.",
+    "passkeyIpAddress": "Passkeys werken niet op een IP-adres. Open Quad4 Finance op een domeinnaam via HTTPS of op http://localhost.",
+    "passkeyDomainError": "Uw browser heeft dit domein afgewezen voor passkeys. Open Quad4 Finance op het domein waarvoor het is geconfigureerd, via HTTPS.",
     "passkeyDomainMismatch": "Dit adres valt buiten het passkeydomein dat op de server is geconfigureerd (WEBAUTHN_RP_ID).",
     "passkeyDuplicate": "Dit apparaat heeft al een passkey voor uw account.",
     "passkeyWaiting": "Wachten op uw apparaat...",
@@ -1287,7 +1287,7 @@
       "openBridge": "Genereer een token bij SimpleFIN Bridge",
       "tokenLabel": "Instellingstoken",
       "tokenPlaceholder": "Plak de token die u heeft ontvangen hier...",
-      "tokenHelp": "Het installatietoken is voor eenmalig gebruik. Securo claimt er een privétoegangs-URL van en slaat deze gecodeerd op.",
+      "tokenHelp": "Het installatietoken is voor eenmalig gebruik. Quad4 Finance claimt er een privétoegangs-URL van en slaat deze gecodeerd op.",
       "connect": "Verbinden",
       "connecting": "Verbinden…",
       "simplefin": {
@@ -1332,7 +1332,7 @@
     "syncAssets": "Investeringsactiva importeren",
     "syncAssetsHint": "Indien uitgeschakeld, synchroniseert deze verbinding accounts en transacties, maar laat de investeringen van de provider onaangeroerd.",
     "initialSyncSettings": "Synchronisatie-opties",
-    "initialSyncSettingsDesc": "Kies wat Securo moet importeren voordat u de connector opent.",
+    "initialSyncSettingsDesc": "Kies wat Quad4 Finance moet importeren voordat u de connector opent.",
     "continueToConnector": "Ga verder naar de connector"
   },
   "settings": {
@@ -1745,9 +1745,9 @@
     "outflowColumn": "Uitstroom kolom",
     "selectColumn": "Kolom selecteren...",
     "columnMapping": "Kolomtoewijzing",
-    "columnMappingHint": "Wijs uw CSV-kolommen toe aan Securo-velden. Laat automatische detectie ingeschakeld om de gedetecteerde kolom te behouden.",
+    "columnMappingHint": "Wijs uw CSV-kolommen toe aan Quad4 Finance-velden. Laat automatische detectie ingeschakeld om de gedetecteerde kolom te behouden.",
     "columnAutoDetect": "Automatische detectie",
-    "mappingNeeded": "We konden uw CSV-kolommen niet automatisch herkennen. Wijs ze toe aan onderstaande Securo-velden om door te gaan.",
+    "mappingNeeded": "We konden uw CSV-kolommen niet automatisch herkennen. Wijs ze toe aan onderstaande Quad4 Finance-velden om door te gaan.",
     "mapDate": "Datumkolom",
     "mapDescription": "Beschrijving kolom",
     "mapAmount": "Kolom Bedrag",
@@ -2300,11 +2300,11 @@
     "you": "uzelf",
     "memberName": "Naam",
     "memberEmail": "E-mail",
-    "memberEmailHint": "Optioneel – handig als u ze later uitnodigt als Securo-gebruiker.",
-    "linkedUser": "Gekoppelde Securo-gebruiker",
+    "memberEmailHint": "Optioneel – handig als u ze later uitnodigt als Quad4 Finance-gebruiker.",
+    "linkedUser": "Gekoppelde Quad4 Finance-gebruiker",
     "linkedUserNone": "— Niet gekoppeld (niet-gebruiker) —",
-    "linkedUserHint": "Kies een bestaande Securo-gebruiker om het lid te koppelen, of laat de link los om een niet-gebruiker toe te voegen (bijvoorbeeld iemand die nog geen account heeft).",
-    "willLinkToUser": "Zal linken naar bestaande Securo-gebruiker {{email}}",
+    "linkedUserHint": "Kies een bestaande Quad4 Finance-gebruiker om het lid te koppelen, of laat de link los om een niet-gebruiker toe te voegen (bijvoorbeeld iemand die nog geen account heeft).",
+    "willLinkToUser": "Zal linken naar bestaande Quad4 Finance-gebruiker {{email}}",
     "sharedWithYou": "Met jou gedeeld",
     "sharedRowBadge": "Gedeeld · {{group}}",
     "sharedRowBadgeAuthor": "{{author}} · {{group}}",
@@ -2387,7 +2387,7 @@
     "show": "Toon waarden"
   },
   "setup": {
-    "title": "Welkom bij Securo",
+    "title": "Welkom bij Quad4 Finance",
     "description": "Maak uw beheerdersaccount aan om aan de slag te gaan.",
     "confirmPassword": "Bevestig wachtwoord",
     "createAdmin": "Maak een beheerdersaccount aan",
@@ -2415,14 +2415,14 @@
     "passwordLabel": "Wachtwoord (optioneel)",
     "passwordPlaceholder": "Laat leeg voor een niet-versleutelde back-up",
     "passwordTooShort": "Gebruik minimaal {{min}} tekens",
-    "encryptionNote": "Het archief is gecodeerd met AES-256 en kan in elk standaard archiveringsprogramma worden geopend. Securo slaat dit wachtwoord niet op en kan het bestand zonder dit wachtwoord niet herstellen.",
+    "encryptionNote": "Het archief is gecodeerd met AES-256 en kan in elk standaard archiveringsprogramma worden geopend. Quad4 Finance slaat dit wachtwoord niet op en kan het bestand zonder dit wachtwoord niet herstellen.",
     "successEncrypted": "Gecodeerde back-up succesvol gedownload"
   },
   "update": {
     "title": "Server-update",
     "runningLabel": "rennen",
     "newVersionAvailable": "Nieuwe versie beschikbaar:",
-    "description": "Er is een nieuwe versie van Securo beschikbaar. Overweeg een update uit te voeren als u:",
+    "description": "Er is een nieuwe versie van Quad4 Finance beschikbaar. Overweeg een update uit te voeren als u:",
     "reasonFeatures": "Toegang wilt tot de nieuwste functies en verbeteringen",
     "reasonBugs": "Ondervindt problemen die mogelijk in de nieuwe versie worden opgelost",
     "releaseNotesHintBefore": "Wij raden u aan de",
@@ -2549,7 +2549,7 @@
       }
     },
     "title": "Agents",
-    "subtitle": "Bouw gespreksassistenten bovenop uw Securo-gegevens. Elke agent kan zijn eigen kennisbank, tools en provider hebben.",
+    "subtitle": "Bouw gespreksassistenten bovenop uw Quad4 Finance-gegevens. Elke agent kan zijn eigen kennisbank, tools en provider hebben.",
     "newAgent": "Nieuwe agent",
     "newConversation": "Nieuw gesprek",
     "conversationsCount": "Gesprekken",
@@ -2721,14 +2721,14 @@
     },
     "mcpExternal": {
       "title": "Externe MCP-toegang",
-      "subtitle": "Sluit een externe agent (Claude Desktop, ChatGPT, n8n, een aangepaste client) aan op de ingebouwde MCP-server van Securo. Het onderstaande token is bedoeld voor uw gebruiker en verloopt over {{days}} dagen.",
+      "subtitle": "Sluit een externe agent (Claude Desktop, ChatGPT, n8n, een aangepaste client) aan op de ingebouwde MCP-server van Quad4 Finance. Het onderstaande token is bedoeld voor uw gebruiker en verloopt over {{days}} dagen.",
       "copy": "Kopieer",
       "copied": "Gekopieerd",
       "copyFailed": "Kopiëren mislukt",
       "mint": "Token genereren",
       "minting": "Genereren…",
       "mintFailed": "Kan token niet verdienen",
-      "warning": "Kopieer nu — Securo slaat het token niet op, dus we kunnen het niet opnieuw tonen. Intrekken door AGENTS_MCP_JWT_SECRET te roteren.",
+      "warning": "Kopieer nu — Quad4 Finance slaat het token niet op, dus we kunnen het niet opnieuw tonen. Intrekken door AGENTS_MCP_JWT_SECRET te roteren.",
       "regenerate": "Genereer een andere",
       "snippets": {
         "token": "Token",
@@ -2779,7 +2779,7 @@
       "optional": "optioneel",
       "empty": {
         "title": "Nog geen verbindingen",
-        "subtitle": "Voeg een verbinding toe om Securo te richten op uw lokale Ollama, OpenAI, Anthropic of een ander OpenAI-compatibel endpoint."
+        "subtitle": "Voeg een verbinding toe om Quad4 Finance te richten op uw lokale Ollama, OpenAI, Anthropic of een ander OpenAI-compatibel endpoint."
       }
     }
   },

@@ -91,7 +91,7 @@ function openMenu(surface: string) {
 
 beforeEach(() => {
   vi.clearAllMocks()
-  localStorage.removeItem('securo.sidebar.collapsed')
+  localStorage.removeItem('quad4.sidebar.collapsed')
   state.theme = 'light'
   state.user = { ...state.user, is_2fa_enabled: true }
   state.auth.oidcConfig.mockResolvedValue({
@@ -114,7 +114,7 @@ it('collapses the desktop sidebar and persists the preference', async () => {
 
   await user.click(toggle)
 
-  expect(localStorage.getItem('securo.sidebar.collapsed')).toBe('true')
+  expect(localStorage.getItem('quad4.sidebar.collapsed')).toBe('true')
   expect(screen.getByRole('button', { name: t('nav.expandSidebar') })).toHaveAttribute('aria-expanded', 'false')
   expect(document.querySelector('aside')).toHaveAttribute('data-collapsed', 'true')
   expect(document.querySelector('main')).toHaveClass('lg:ml-16')
@@ -135,7 +135,7 @@ it('offers System after Dark in the theme button (#1203)', async () => {
 })
 
 it('restores a collapsed desktop sidebar from local storage', () => {
-  localStorage.setItem('securo.sidebar.collapsed', 'true')
+  localStorage.setItem('quad4.sidebar.collapsed', 'true')
 
   renderWithProviders(<AppLayout />)
 

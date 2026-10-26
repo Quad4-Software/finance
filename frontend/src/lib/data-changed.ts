@@ -9,7 +9,7 @@
  * (which fires in every other tab, never in the one that wrote) is what
  * `useCrossTabRefresh` listens for.
  */
-export const DATA_CHANGED_KEY = 'securo.data-changed'
+export const DATA_CHANGED_KEY = 'quad4.data-changed'
 
 let sequence = 0
 

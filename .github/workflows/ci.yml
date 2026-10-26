@@ -20,13 +20,13 @@ jobs:
       postgres:
         image: pgvector/pgvector:pg16
         env:
-          POSTGRES_USER: securo_test
-          POSTGRES_PASSWORD: securo_test
-          POSTGRES_DB: securo_test
+          POSTGRES_USER: quad4_test
+          POSTGRES_PASSWORD: quad4_test
+          POSTGRES_DB: quad4_test
         ports:
           - 5432/tcp
         options: >-
-          --health-cmd "pg_isready -h 127.0.0.1 -U securo_test -d securo_test"
+          --health-cmd "pg_isready -h 127.0.0.1 -U quad4_test -d quad4_test"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -82,7 +82,7 @@ jobs:
       - name: Run tests with coverage
         if: steps.backend-changes.outputs.run_backend != 'false'
         env:
-          POSTGRES_TEST_URL: postgresql+asyncpg://securo_test:securo_test@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/securo_test
+          POSTGRES_TEST_URL: postgresql+asyncpg://quad4_test:quad4_test@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/quad4_test
         run: |
           uv run --no-sync pytest -n auto --dist loadfile --cov=app --cov-report=xml --cov-report=term-missing --cov-fail-under=60 -ra -W error
 
@@ -101,7 +101,7 @@ jobs:
           echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
 
       - name: Update coverage badge
-        if: github.repository == 'securo-finance/securo' && github.ref == 'refs/heads/main' && steps.backend-changes.outputs.run_backend != 'false'
+        if: github.repository == 'Quad4-Software/quad4-finance' && github.ref == 'refs/heads/main' && steps.backend-changes.outputs.run_backend != 'false'
         uses: schneegans/dynamic-badges-action@v1.9.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
@@ -198,7 +198,7 @@ jobs:
 
       - name: Lint Helm Chart
         if: steps.helm-changes.outputs.run_helm != 'false'
-        run: helm lint charts/securo
+        run: helm lint charts/quad4
 
       - name: Validate Helm Chart with Kubeconform
         if: steps.helm-changes.outputs.run_helm != 'false'
@@ -206,4 +206,4 @@ jobs:
           curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar -xz
           sudo mv kubeconform /usr/local/bin/
 
-          helm template securo-test charts/securo | kubeconform -summary -strict
+          helm template quad4-test charts/quad4 | kubeconform -summary -strict

@@ -16,11 +16,11 @@ CREDENTIALS_DIRECTORY: list[Path] = [
 
 class Settings(BaseSettings):
     # App
-    app_name: str = "Securo"
+    app_name: str = "Quad4 Finance"
     debug: bool = False
 
     # Database
-    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/securo"
+    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/quad4"
 
     # Auth
     secret_key: SecretStr = SecretStr("change-me-in-production")
@@ -59,10 +59,10 @@ class Settings(BaseSettings):
     frontend_port: int = 3000
 
     # WebAuthn / passkeys
-    webauthn_rp_name: str = "Securo"
+    webauthn_rp_name: str = "Quad4 Finance"
     # Empty means the RP ID follows the domain the browser is on, which is what
     # most deployments want. Set it to pin passkeys to one domain (e.g.
-    # securo.example.com); requests from other origins are then rejected.
+    # quad4.example.com); requests from other origins are then rejected.
     webauthn_rp_id: str = ""
     # Empty means the expected origin follows the browser. Only set this when the
     # app is reached at exactly one origin and you want it enforced.
@@ -102,7 +102,7 @@ class Settings(BaseSettings):
     oidc_enabled: bool = False
     oidc_provider_name: str = "OIDC"
     oidc_discovery_url: str = (
-        ""  # e.g. https://auth.example.com/application/o/securo/.well-known/openid-configuration
+        ""  # e.g. https://auth.example.com/application/o/quad4/.well-known/openid-configuration
     )
     oidc_client_id: str = ""
     oidc_client_secret: SecretStr = SecretStr("")
@@ -113,7 +113,7 @@ class Settings(BaseSettings):
     oidc_require_verified_email: bool = True
     oidc_sync_roles: bool = False
     oidc_roles_claim: str = "groups"
-    oidc_admin_roles: str = ""  # comma-separated provider roles/groups that grant Securo admin
+    oidc_admin_roles: str = ""  # comma-separated provider roles/groups that grant Quad4 Finance admin
     oidc_workspace_role_map: str = ""  # JSON: {"provider-role": "owner|editor|viewer"}
 
     # Deploy scripts that source the .env file with a shell need values with

@@ -4,7 +4,7 @@ Closes the transfer-matching dead end from the MCP: an agent can find
 likely counterparts for a transaction, preview and link a pair, and
 preview and unlink a pair, all inside the protocol. Reads reuse the
 existing service layer directly; writes follow the propose pattern
-(preview first, apply only on the external transport), so Securo's own
+(preview first, apply only on the external transport), so Quad4 Finance's own
 runtime never writes through MCP.
 """
 

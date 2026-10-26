@@ -101,12 +101,12 @@ def _app_user_agent() -> str:
 
     Backends see the HTTP library name by default (e.g. `python-httpx/0.x`);
     a few of them ask for the real client instead. Identifying as
-    `securo/<version>` keeps the logs on their side meaningful.
+    `quad4/<version>` keeps the logs on their side meaningful.
     """
     try:
-        return f"securo/{_pkg_version('securo-backend')}"
+        return f"quad4/{_pkg_version('quad4-backend')}"
     except PackageNotFoundError:
-        return "securo"
+        return "quad4"
 
 
 _APP_USER_AGENT = _app_user_agent()

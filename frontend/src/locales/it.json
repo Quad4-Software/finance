@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "L'area di lavoro \"{{name}}\" sarà rimossa dal tuo elenco. I dati vengono conservati e un amministratore potrà ripristinarla in seguito."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Versione in esecuzione {{version}}",
     "versionLabel": "Versione {{version}}",
     "updateAvailable": "Aggiornamento disponibile",

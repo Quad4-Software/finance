@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Der Workspace \"{{name}}\" wird aus deiner Liste entfernt. Die Daten bleiben erhalten und ein Administrator kann ihn später wiederherstellen."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Läuft mit Version {{version}}",
     "versionLabel": "Version {{version}}",
     "updateAvailable": "Update verfügbar",

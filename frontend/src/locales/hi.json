@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "वर्कस्पेस \"{{name}}\" आपकी सूची से हटा दिया जाएगा। डेटा सुरक्षित रहता है और व्यवस्थापक इसे बाद में बहाल कर सकता है।"
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "वर्शन {{version}} चल रहा है",
     "versionLabel": "वर्शन {{version}}",
     "updateAvailable": "अपडेट उपलब्ध",

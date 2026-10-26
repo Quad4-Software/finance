@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Рабочее пространство «{{name}}» будет удалено из вашего списка. Данные сохраняются, администратор сможет восстановить его позже."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Запущена версия {{version}}",
     "versionLabel": "Версия {{version}}",
     "updateAvailable": "Доступно обновление",

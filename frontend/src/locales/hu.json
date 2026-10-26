@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Ez a munkaterület kikerül a listádból: „{{name}}\". Az adatok megmaradnak, és egy adminisztrátor később visszaállíthatja."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Futó verzió: {{version}}",
     "versionLabel": "Verzió: {{version}}",
     "updateAvailable": "Frissítés érhető el",

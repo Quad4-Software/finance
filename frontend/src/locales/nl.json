@@ -64,7 +64,7 @@
     "addMemberDescriptionExistingOnly": "Nodig een bestaande gebruiker uit via e-mail."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Lopende versie {{version}}",
     "versionLabel": "Versie {{version}}",
     "updateAvailable": "Update beschikbaar",

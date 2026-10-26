@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Obszar roboczy „{{name}}\" zostanie usunięty z listy. Dane zostają zachowane, a administrator może go później przywrócić."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Działa wersja {{version}}",
     "versionLabel": "Wersja {{version}}",
     "updateAvailable": "Dostępna aktualizacja",

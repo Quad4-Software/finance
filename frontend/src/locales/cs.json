@@ -64,7 +64,7 @@
     "archiveConfirmDescription": "Pracovní prostor „{{name}}\" bude odebrán z vašeho seznamu. Data zůstanou zachována a správce ho může později obnovit."
   },
   "app": {
-    "name": "Quad4 Finance",
+    "name": "Finance",
     "versionAriaLabel": "Spuštěná verze {{version}}",
     "versionLabel": "Verze {{version}}",
     "updateAvailable": "Dostupná aktualizace",

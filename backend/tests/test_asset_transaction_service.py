@@ -40,7 +40,7 @@ def _tx(kind: str, qty: str, price: str, d: date, fee: str = "0") -> AssetTransa
 
 
 def test_recompute_weighted_average_across_buys():
-    # 10 @ 100 then 5 @ 110 → avg = (1000 + 550) / 15 = 103.3333...
+    # 10 @ 100 then 5 @ 110 -> avg = (1000 + 550) / 15 = 103.3333...
     pos = _recompute([
         _tx("buy", "10", "100", date(2026, 1, 1)),
         _tx("buy", "5", "110", date(2026, 2, 1)),
@@ -76,7 +76,7 @@ def test_recompute_sell_all_flattens_position():
 
 
 def test_recompute_includes_fees_in_cost_basis():
-    # buy 10 @ 100 with 9.90 fee → cost basis 1009.90, avg 100.99
+    # buy 10 @ 100 with 9.90 fee -> cost basis 1009.90, avg 100.99
     pos = _recompute([_tx("buy", "10", "100", date(2026, 1, 1), fee="9.90")])
     assert pos["cost_basis"] == Decimal("1009.90")
     assert pos["average_price"].quantize(Decimal("0.0001")) == Decimal("100.9900")
@@ -295,7 +295,7 @@ async def test_rebuy_after_full_exit_resets_position(session, test_workspace, ma
     assert read.units == 5
     assert read.average_price is not None
     assert round(read.average_price, 2) == 40.00
-    assert read.sell_date is None  # re-entered → no longer "sold"
+    assert read.sell_date is None  # re-entered -> no longer "sold"
     # Realized gain from the earlier round-trip is retained.
     assert read.realized_gain is not None
     assert round(read.realized_gain, 2) == 100.00
@@ -344,7 +344,7 @@ async def test_buy_into_holding_separate_across_wallets(session, test_workspace,
         AssetBuyCreate(ticker="ITUB4.SA", quantity=Decimal("5"), price=Decimal("32"), date=date(2026, 2, 1), group_id=wallet.id),
         market_provider=provider,
     )
-    # Same ticker, different wallet → distinct holdings (not consolidated).
+    # Same ticker, different wallet -> distinct holdings (not consolidated).
     assert ungrouped.id != walleted.id
     rows = (
         await session.execute(
@@ -367,7 +367,7 @@ async def test_buy_into_holding_consolidates_by_ticker(session, test_workspace, 
         AssetBuyCreate(ticker="VALE3.SA", quantity=Decimal("10"), price=Decimal("70"), date=date(2026, 2, 1)),
         market_provider=provider,
     )
-    # Same logical holding — not two assets.
+    # Same logical holding -- not two assets.
     assert first.id == second.id
     assert second is not None
     assert second.units == 20

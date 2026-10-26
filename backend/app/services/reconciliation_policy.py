@@ -40,7 +40,7 @@ POLICY_VERSION = 1
 #: The withholding strategy is a `link` rather than a `suggest`, and that
 #: is the most consequential line in this file. A R$3.000 invoice paid by
 #: a Brazilian company lands as R$2.955 or R$2.860,50: withholding is
-#: 1.5–11%, not cents. Sending those to a confirmation queue would send
+#: 1.5-11%, not cents. Sending those to a confirmation queue would send
 #: *the best clients* to the queue, and the accountant interview is
 #: explicit that import-then-make-the-user-confirm is what killed
 #: adoption of the incumbent.

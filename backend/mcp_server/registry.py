@@ -1,7 +1,7 @@
 """Tool registry for the MCP server.
 
 Each tool is a Python coroutine registered via the @tool decorator. The
-registry holds (name → ToolSpec) for /mcp's `tools/list` and `tools/call`.
+registry holds (name -> ToolSpec) for /mcp's `tools/list` and `tools/call`.
 """
 from __future__ import annotations
 

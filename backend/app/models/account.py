@@ -57,7 +57,7 @@ class Account(Base):
     card_level: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     shared_balance_group: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
     # The institution this account is actually at. One connection can span
-    # several (SimpleFIN — issue #345); null falls back to the connection's
+    # several (SimpleFIN -- issue #345); null falls back to the connection's
     # own institution_name/logo_url. Eager (selectin) because serialization
     # always reads it and lazy loads raise in async sessions.
     institution_id: Mapped[Optional[uuid.UUID]] = mapped_column(

@@ -1,9 +1,9 @@
-"""Enable Banking (PSD2) provider — European banks via open banking.
+"""Enable Banking (PSD2) provider -- European banks via open banking.
 
 Auth model: RS256 JWT signed with the operator's application private key,
 `kid` header set to the application ID. No client secret, no refresh token.
 Sessions are valid for the consent window the user grants at their bank
-(typically 90–180 days); after that, re-authorization is required.
+(typically 90-180 days); after that, re-authorization is required.
 
 The flow requires the user to pick a country and bank before the
 authorization URL can be generated, so `get_oauth_url` takes
@@ -150,7 +150,7 @@ def _txn_fingerprint(account_uid: str, raw: dict) -> str:
 
     EB's `entry_reference` is unreliable across providers, so we hash the
     fields most likely to persist across re-fetches of the same booked txn.
-    Pending → booked transitions deliberately produce a different id; the
+    Pending -> booked transitions deliberately produce a different id; the
     sync layer's pending↔posted twin matcher handles that.
     """
     amount = raw.get("transaction_amount") or {}
@@ -317,15 +317,15 @@ class EnableBankingProvider(BankProvider):
                 f"Enable Banking returned {resp.status_code} for {path}"
             )
         if resp.status_code == 429:
-            # The bank (ASPSP) is throttling us — transient, not a broken
+            # The bank (ASPSP) is throttling us -- transient, not a broken
             # connection. Surface a distinct type so sync can skip-and-retry
             # instead of erroring the connection.
             raise ProviderRateLimited(
-                f"Enable Banking {method} {path} → 429: {resp.text[:200]}"
+                f"Enable Banking {method} {path} -> 429: {resp.text[:200]}"
             )
         if resp.status_code >= 400:
             raise httpx.HTTPStatusError(
-                f"Enable Banking {method} {path} → {resp.status_code}: {resp.text[:300]}",
+                f"Enable Banking {method} {path} -> {resp.status_code}: {resp.text[:300]}",
                 request=resp.request,
                 response=resp,
             )

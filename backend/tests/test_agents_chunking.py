@@ -1,8 +1,8 @@
 """Chunking helper.
 
 Tests cover:
-  - empty / whitespace input → no chunks
-  - text below target → single chunk
+  - empty / whitespace input -> no chunks
+  - text below target -> single chunk
   - paragraph-aware splits stay close to the target size
   - overlap text appears at the start of subsequent chunks
   - very long single-paragraph fallback (hard split)

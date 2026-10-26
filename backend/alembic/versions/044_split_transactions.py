@@ -2,7 +2,7 @@
 
 Adds the schema for splitting a transaction across multiple participants
 (roommates, travel groups, cost centers, projects, clients). Independent
-from the account ledger — the transaction keeps the full amount on the
+from the account ledger -- the transaction keeps the full amount on the
 owner's account; splits track the social/allocation debt separately.
 
 Tables:
@@ -18,7 +18,7 @@ Tables:
   a real transaction when cash actually moves.
 
 `groups.user_id` is the single owner today and will become workspace_id
-when multi-user workspaces land — the FK shape is identical, so the
+when multi-user workspaces land -- the FK shape is identical, so the
 migration cost is just a column rename + backfill.
 
 Revision ID: 044
@@ -133,7 +133,7 @@ def upgrade() -> None:
         # rounding residual is assigned to the last share at write time
         # so the sum is exact.
         sa.Column("share_amount", sa.Numeric(precision=15, scale=2), nullable=False),
-        # equal | exact | percent — metadata only; share_amount is the
+        # equal | exact | percent -- metadata only; share_amount is the
         # source of truth.
         sa.Column("share_type", sa.String(10), server_default="exact", nullable=False),
         # Preserved only for share_type='percent' so an edit round-trips

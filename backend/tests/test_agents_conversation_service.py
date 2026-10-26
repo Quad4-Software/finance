@@ -1,5 +1,5 @@
 """Direct unit tests for app/agents/services/conversation_service. The
-HTTP layer covers most paths in test_agents_api.py — this fills in the
+HTTP layer covers most paths in test_agents_api.py -- this fills in the
 service-only utilities (append_message ordinal generation,
 update_title_if_empty, etc.) that don't ride a route."""
 from __future__ import annotations
@@ -28,7 +28,7 @@ async def test_list_conversations_filters_by_agent_and_user(session, test_user, 
     a = await svc.create_conversation(
         session, workspace_id=test_workspace.id, user_id=test_user.id, agent_id=test_agent.id, title="A",
     )
-    # Conversation for a different agent → should be filtered out.
+    # Conversation for a different agent -> should be filtered out.
     other_agent_id = uuid.uuid4()
     from app.agents.models.agent import Agent
     other_agent = Agent(id=other_agent_id, user_id=test_user.id, name="Other")
@@ -45,7 +45,7 @@ async def test_list_conversations_filters_by_agent_and_user(session, test_user, 
     rows_all = await svc.list_conversations(session, test_workspace.id)
     assert {a.id, b.id} <= {c.id for c in rows_all}
 
-    # Foreign user → empty.
+    # Foreign user -> empty.
     foreign = uuid.uuid4()
     assert await svc.list_conversations(session, foreign) == []  # foreign workspace_id
 
@@ -100,7 +100,7 @@ async def test_update_title_if_empty_only_writes_when_blank(session, test_user, 
     conv = await svc.create_conversation(
         session, workspace_id=test_workspace.id, user_id=test_user.id, agent_id=test_agent.id,
     )
-    # First call: title is None → should fill in.
+    # First call: title is None -> should fill in.
     await svc.update_title_if_empty(session, conv.id, "Auto generated")
     refreshed = await svc.get_conversation(session, conv.id, test_workspace.id)
 
@@ -108,7 +108,7 @@ async def test_update_title_if_empty_only_writes_when_blank(session, test_user, 
     await session.refresh(refreshed)
     assert refreshed.title == "Auto generated"
 
-    # Second call: title already set → should NOT overwrite.
+    # Second call: title already set -> should NOT overwrite.
     await svc.update_title_if_empty(session, conv.id, "Different title")
     refreshed = await svc.get_conversation(session, conv.id, test_workspace.id)
 
@@ -119,7 +119,7 @@ async def test_update_title_if_empty_only_writes_when_blank(session, test_user, 
 
 @pytest.mark.asyncio
 async def test_update_title_if_empty_silent_on_missing_conv(session):
-    # No exception when the conv doesn't exist — used by streaming code.
+    # No exception when the conv doesn't exist -- used by streaming code.
     await svc.update_title_if_empty(session, uuid.uuid4(), "x")
 
 
@@ -169,7 +169,7 @@ async def test_delete_conversation_removes_row(session, test_user, test_workspac
 @pytest.mark.asyncio
 async def test_list_messages_window_keeps_newest_turns(session, test_user, test_workspace, test_agent):
     """Regression: with more messages than `limit`, the returned window must
-    end at the NEWEST message. The executor replays this window to the LLM —
+    end at the NEWEST message. The executor replays this window to the LLM --
     when the limit selected the oldest rows instead, the model never saw the
     user's latest question in long conversations and re-answered stale ones."""
     conv = await svc.create_conversation(

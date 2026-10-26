@@ -40,7 +40,7 @@ export interface DateRangePickerProps {
   /** Segment highlight state; ignored for variant 'button'. */
   active?: boolean
   /**
-   * Fired as soon as the popover starts opening — before the calendar is
+   * Fired as soon as the popover starts opening -- before the calendar is
    * shown. This is a notification only; committed values change on Apply.
    */
   onOpen?: () => void
@@ -55,16 +55,16 @@ export interface DateRangePickerProps {
   /**
    * Reject a candidate range whose end date is more than this many calendar
    * years after the start date (the 10-year anniversary, not a fixed day
-   * count — leap days inside the window would otherwise let a day-count cap
+   * count -- leap days inside the window would otherwise let a day-count cap
    * drift past the intended boundary).
    */
   maxRangeYears?: number
 }
 
 /**
- * A self-contained "from → to" date picker, mirroring the popover the
+ * A self-contained "from -> to" date picker, mirroring the popover the
  * transactions filter bar uses. Isolated so multiple pages (Reports, Assets,
- * …) can share the same interaction without duplicating state juggling.
+ * ...) can share the same interaction without duplicating state juggling.
  *
  * Deliberately independent of the transactions filter bar's rich chip UI:
  * this variant is a single trigger + popover, which is what report toolbars
@@ -105,7 +105,7 @@ export function DateRangePicker({
   }
   const normalizedDraft = normalizeDraft(draftFrom, draftTo)
 
-  // An empty draft is always valid — it's how Apply clears a saved range.
+  // An empty draft is always valid -- it's how Apply clears a saved range.
   const draftError = (() => {
     const { from: draftStart, to: draftEnd } = normalizedDraft
     if (!draftStart && !draftEnd) return null
@@ -114,7 +114,7 @@ export function DateRangePicker({
     }
     if (maxRangeYears && draftStart && draftEnd) {
       // Compare against the calendar-year anniversary of the start date,
-      // not a fixed day count — a day count would let leap days inside the
+      // not a fixed day count -- a day count would let leap days inside the
       // window push the effective cap past the intended N years.
       const maxEnd = addYears(new Date(draftStart + 'T00:00:00'), maxRangeYears)
       if (new Date(draftEnd + 'T00:00:00') > maxEnd) {
@@ -146,8 +146,8 @@ export function DateRangePicker({
     placeholder ?? t('transactions.filtersBar.pickRange')
   const triggerLabel =
     from || to ? formatDateRange(from, to, dateLocale) : emptyLabel
-  // Segment mode sits inline among short preset labels (6M, 1Y, …), so it
-  // drops the year even across a year boundary — the same compact form the
+  // Segment mode sits inline among short preset labels (6M, 1Y, ...), so it
+  // drops the year even across a year boundary -- the same compact form the
   // transactions filter bar's applied-range chip uses. The year is still
   // visible while the calendar is open, which is the only place picking it
   // actually matters.

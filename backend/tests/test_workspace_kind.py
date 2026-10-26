@@ -74,7 +74,7 @@ async def test_create_defaults_to_personal(client: AsyncClient, auth_headers, te
 
 
 # ---------------------------------------------------------------------------
-# update — kind is write-once
+# update -- kind is write-once
 # ---------------------------------------------------------------------------
 @pytest.mark.asyncio
 async def test_update_cannot_change_kind(client: AsyncClient, auth_headers, test_workspace):
@@ -90,7 +90,7 @@ async def test_update_cannot_change_kind(client: AsyncClient, auth_headers, test
     assert body["name"] == "Renamed"
     assert body["kind"] == "personal"
 
-    # Not just the response shape — the row itself is untouched.
+    # Not just the response shape -- the row itself is untouched.
     current = await client.get("/api/workspaces/current", headers=auth_headers)
     assert current.json()["kind"] == "personal"
 

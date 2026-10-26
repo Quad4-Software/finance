@@ -105,8 +105,8 @@ describe('resolveDateLocale', () => {
 describe('formatCurrency', () => {
   it('renders an em dash for a missing value rather than "0"', () => {
     // A null balance means "unknown", and showing 0 would be a lie.
-    expect(formatCurrency(null)).toBe('—')
-    expect(formatCurrency(undefined)).toBe('—')
+    expect(formatCurrency(null)).toBe('--')
+    expect(formatCurrency(undefined)).toBe('--')
   })
 
   it('formats with the separators of the given locale', () => {

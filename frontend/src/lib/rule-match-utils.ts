@@ -10,7 +10,7 @@ export function normalizeRuleMatchValue(value: string | number): string {
 }
 
 /** The text a rule is searchable by: its name, the values it matches on, and
- * the categories it assigns — so typing "uber" finds the rule whose condition
+ * the categories it assigns -- so typing "uber" finds the rule whose condition
  * value is UBER, not just one named after it. Normalized the same way as
  * {@link normalizeRuleMatchValue}, so the query can be compared against it
  * case- and accent-insensitively. */

@@ -122,7 +122,7 @@ resolve_compose_command() {
         COMPOSE_BACKEND="docker-compose-v2"
         COMPOSE_CMD=(docker-compose)
         COMPOSE_CMD_DISPLAY="docker-compose"
-        success "docker-compose v2 found — best Podman compatibility"
+        success "docker-compose v2 found -- best Podman compatibility"
       elif command -v podman-compose > /dev/null 2>&1; then
         COMPOSE_BACKEND="podman-compose"
         COMPOSE_CMD=(podman-compose)

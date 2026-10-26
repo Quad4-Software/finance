@@ -43,8 +43,8 @@ let strict: Intl.DisplayNames | null | undefined
  *
  * Uses `fallback: 'none'`, which answers `undefined` for a code the region
  * data does not know, rather than echoing the code back the way `countryName`
- * deliberately does. Needed wherever a code is *derived* rather than given —
- * a VAT number's prefix, say — so a stray pair of letters does not get
+ * deliberately does. Needed wherever a code is *derived* rather than given --
+ * a VAT number's prefix, say -- so a stray pair of letters does not get
  * dressed up as a country.
  */
 export function isKnownRegion(code: string): boolean {

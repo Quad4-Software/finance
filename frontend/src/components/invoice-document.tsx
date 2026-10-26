@@ -14,7 +14,7 @@ import type { InvoiceDocumentPayload } from '@/types'
  * instead of a bug.
  *
  * A deliberate mirror of `services/invoice_pdf.py`: same blocks, same
- * order, same labels. It recomputes nothing — every value was resolved
+ * order, same labels. It recomputes nothing -- every value was resolved
  * by the server into one structure both renderers read, so the preview
  * and the file cannot drift apart into two opinions.
  *
@@ -71,7 +71,7 @@ function Party({
       {name && (
         <div className="mt-1.5 text-[15px] font-semibold leading-snug break-words">{name}</div>
       )}
-      {/* Only when it differs — printing the same string twice reads as a bug. */}
+      {/* Only when it differs -- printing the same string twice reads as a bug. */}
       {legalName && legalName !== name && (
         <div className="text-[13px] leading-relaxed break-words" style={{ color: MUTED }}>
           {legalName}
@@ -156,7 +156,7 @@ export function InvoiceDocumentView({ document }: { document: InvoiceDocumentPay
     <div className="rounded-xl border border-border bg-muted/50 p-3 sm:p-8 overflow-x-auto">
       {/* A payable was written by the supplier, not by us. Saying so
           above the sheet keeps the page from reading as a document we
-          issued — the parties are already swapped server-side, but the
+          issued -- the parties are already swapped server-side, but the
           claim needs words, not just an order. */}
       {received && (
         <div

@@ -137,7 +137,7 @@ export default function AdminSettingsPage() {
     retry: false,
   })
 
-  // Credit card accounting mode: returns 404 when unset → defaults to "cash".
+  // Credit card accounting mode: returns 404 when unset -> defaults to "cash".
   const { data: ccModeSetting } = useQuery({
     queryKey: ['admin', 'settings', 'credit_card_accounting_mode'],
     queryFn: () => adminApi.getSetting('credit_card_accounting_mode').catch(() => null),
@@ -157,7 +157,7 @@ export default function AdminSettingsPage() {
 
   const accountingMode = (ccModeSetting?.value === 'accrual' ? 'accrual' : 'cash') as 'cash' | 'accrual'
 
-  // Provider categories: returns 404 when unset → defaults to "true" so
+  // Provider categories: returns 404 when unset -> defaults to "true" so
   // existing installs keep the historical sync behavior.
   const { data: providerCatsSetting } = useQuery({
     queryKey: ['admin', 'settings', 'use_provider_categories'],
@@ -184,7 +184,7 @@ export default function AdminSettingsPage() {
 
   const useProviderCats = providerCatsSetting?.value !== 'false'
 
-  // Number/date display format: 404 when unset → defaults to "auto" (derive
+  // Number/date display format: 404 when unset -> defaults to "auto" (derive
   // separators from each user's display currency).
   const { data: numberFormatSetting } = useQuery({
     queryKey: ['admin', 'settings', 'number_format'],
@@ -206,7 +206,7 @@ export default function AdminSettingsPage() {
     },
   })
 
-  // Date format: 404 when unset → defaults to "auto" (order follows the
+  // Date format: 404 when unset -> defaults to "auto" (order follows the
   // number format / currency).
   const { data: dateFormatSetting } = useQuery({
     queryKey: ['admin', 'settings', 'date_format'],
@@ -674,7 +674,7 @@ export default function AdminSettingsPage() {
                     <SelectContent>
                       {(supportedCurrencies ?? []).map((c) => (
                         <SelectItem key={c.code} value={c.code}>
-                          {c.flag} {c.code} — {c.name}
+                          {c.flag} {c.code} -- {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -732,7 +732,7 @@ export default function AdminSettingsPage() {
                     <p className="text-sm font-medium">{editUser.email}</p>
                     <p className="text-xs text-muted-foreground">
                       {editUser.is_superuser ? t('admin.users.admin') : t('admin.users.user')}
-                      {isSelf(editUser) && ` — ${t('admin.users.you')}`}
+                      {isSelf(editUser) && ` -- ${t('admin.users.you')}`}
                     </p>
                   </div>
                 </div>

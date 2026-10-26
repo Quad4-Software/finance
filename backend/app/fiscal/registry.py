@@ -319,7 +319,7 @@ def apply_mask(value: str, mask: str | None) -> str:
     digits = [c for c in value if c.isdigit()]
     # Only a value that fills the mask exactly is formatted. Too few digits
     # would render a half-masked document ("12.3" for "123"), and too many
-    # would silently drop the tail — both worse than showing what is
+    # would silently drop the tail -- both worse than showing what is
     # stored. Values reaching here are normalised on write, so a mismatch
     # means an unmasked kind or data from before a pack changed.
     if len(digits) != mask.count("#"):

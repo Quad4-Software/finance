@@ -249,7 +249,7 @@ export function TransactionsFilterBar({
     }
     if (filterMinAmount && filterMaxAmount) {
       if (filterMinAmount === filterMaxAmount) return `= ${fmt(filterMinAmount)}`
-      return `${fmt(filterMinAmount)} — ${fmt(filterMaxAmount)}`
+      return `${fmt(filterMinAmount)} -- ${fmt(filterMaxAmount)}`
     }
     if (filterMinAmount) return `≥ ${fmt(filterMinAmount)}`
     return `≤ ${fmt(filterMaxAmount)}`
@@ -359,7 +359,7 @@ export function TransactionsFilterBar({
       >
         {/* Top row: search input + controls */}
         <div className="flex items-center gap-1.5 px-2 py-1.5">
-        {/* Search input — splits committed `#tag` tokens into inline chips,
+        {/* Search input -- splits committed `#tag` tokens into inline chips,
             keeping free text as plain typing. Comma or space commits a token. */}
         <SearchWithTagChips
           inputRef={searchRef}
@@ -766,7 +766,7 @@ export function TransactionsFilterBar({
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
 
-                {/* Status submenu (single — posted vs pending) */}
+                {/* Status submenu (single -- posted vs pending) */}
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="gap-2 text-[13px]">
                     <ListChecks size={14} className="text-muted-foreground" />
@@ -893,7 +893,7 @@ export function TransactionsFilterBar({
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
 
-                {/* Amount range submenu — exact match by setting min=max */}
+                {/* Amount range submenu -- exact match by setting min=max */}
                 <DropdownMenuSub
                   open={amountSubOpen}
                   onOpenChange={handleAmountSubOpenChange}
@@ -1114,7 +1114,7 @@ export function TransactionsFilterBar({
       </div>
 
       </PopoverAnchor>
-        {/* Custom range popover — anchored to the filter bar above */}
+        {/* Custom range popover -- anchored to the filter bar above */}
         <PopoverContent
           align="end"
           sideOffset={8}
@@ -1259,7 +1259,7 @@ function SearchWithTagChips({
   onSubmit?: (value: string) => void
 }) {
   // Split into leading `#tag` chips (terminated by whitespace) + free text.
-  // We only treat a `#tag` as a chip when it has a trailing whitespace —
+  // We only treat a `#tag` as a chip when it has a trailing whitespace --
   // otherwise the user is still typing it.
   const [chips, freeText] = (() => {
     const parts: string[] = []

@@ -1,5 +1,5 @@
 /**
- * Global slide-over chat — available from every page (⌘J / Ctrl+J).
+ * Global slide-over chat -- available from every page (⌘J / Ctrl+J).
  *
  * Header surfaces:
  *   - Agent selector (all non-archived agents; default agent pre-selected)
@@ -9,7 +9,7 @@
  *
  * Conversation persistence: the active conversationId is kept in
  * localStorage keyed by agent. Re-opening the panel resumes the same
- * thread instead of starting fresh — the explicit "+" button is the
+ * thread instead of starting fresh -- the explicit "+" button is the
  * only way to start a new one.
  *
  * Page context: each send forwards a `page_context` snapshot built
@@ -92,7 +92,7 @@ export function GlobalChatPanel({ open, onOpenChange }: Props) {
     staleTime: 1000 * 60,
   })
 
-  // Resolve which agent is active. Order: persisted choice → default →
+  // Resolve which agent is active. Order: persisted choice -> default ->
   // first in the list. The picked id always points at an agent that
   // still exists; falls back gracefully when the persisted one was
   // archived/deleted.
@@ -138,7 +138,7 @@ export function GlobalChatPanel({ open, onOpenChange }: Props) {
   }
 
   // When the panel opens, default the inner view to chat (history view
-  // is opt-in). Conversation itself is NOT reset — the user explicitly
+  // is opt-in). Conversation itself is NOT reset -- the user explicitly
   // clicks + to start a new one.
   const [panelSource, setPanelSource] = useState<{ open: typeof open } | null>(null)
   if (!panelSource || panelSource.open !== open) {
@@ -194,7 +194,7 @@ export function GlobalChatPanel({ open, onOpenChange }: Props) {
                   </span>
                 </>
               ) : agentsList && agentsList.length > 1 ? (
-                // Styled Radix Select — matches the rest of the app and
+                // Styled Radix Select -- matches the rest of the app and
                 // gets a proper popover with active-state styling. The
                 // trigger sheds borders to fit the slim header bar.
                 <Select value={activeAgent?.id ?? ''} onValueChange={selectAgent}>
@@ -276,7 +276,7 @@ export function GlobalChatPanel({ open, onOpenChange }: Props) {
                   </Button>
                 </>
               )}
-              {/* Settings — jumps to /agents (the management page).
+              {/* Settings -- jumps to /agents (the management page).
                   Closing the panel after navigation so the user lands
                   on a clean view of the agents config. */}
               <Button
@@ -302,7 +302,7 @@ export function GlobalChatPanel({ open, onOpenChange }: Props) {
             {loadingAgents && (
               <div className="flex-1 flex items-center justify-center text-muted-foreground gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">{t('common.loading', 'Loading…')}</span>
+                <span className="text-sm">{t('common.loading', 'Loading...')}</span>
               </div>
             )}
             {!loadingAgents && agentsList && agentsList.length === 0 && (
@@ -322,7 +322,7 @@ export function GlobalChatPanel({ open, onOpenChange }: Props) {
               <ChatPanel
                 // Key on agent only. Including conversationId here would
                 // remount the panel mid-stream when the SSE assigns a
-                // brand-new conversation an id (null → real), wiping the
+                // brand-new conversation an id (null -> real), wiping the
                 // streaming state and hiding the loading bubble for the
                 // first message of a fresh chat.
                 key={activeAgent.id}
@@ -369,7 +369,7 @@ function ConversationsList({ agentId, activeConversationId, onPick }: ConvListPr
     return (
       <div className="flex-1 flex items-center justify-center text-muted-foreground gap-2">
         <Loader2 className="h-4 w-4 animate-spin" />
-        <span className="text-sm">{t('common.loading', 'Loading…')}</span>
+        <span className="text-sm">{t('common.loading', 'Loading...')}</span>
       </div>
     )
   }

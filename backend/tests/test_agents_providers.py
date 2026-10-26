@@ -44,7 +44,7 @@ def test_registry_unknown_raises():
 
 def test_registry_build_openai_compat_requires_base_url():
     # build_provider strips falsy base_url so the constructor's required
-    # kwarg is missing → TypeError. If supplied as empty string directly,
+    # kwarg is missing -> TypeError. If supplied as empty string directly,
     # the constructor raises ValueError. Either is acceptable as a refusal.
     with pytest.raises((ValueError, TypeError)):
         build_provider("openai_compatible", base_url="")
@@ -149,7 +149,7 @@ async def test_openai_parser_handles_index_keyed_tool_call_chunks():
     """Regression: OpenAI streams tool calls with `id` and `name` only in
     the FIRST chunk for an `index`; subsequent chunks have just args.
     Earlier code keyed by id (falling back to `_idx_N` when missing),
-    creating phantom entries with empty names — dispatch then failed with
+    creating phantom entries with empty names -- dispatch then failed with
     `unknown tool: `."""
     from unittest.mock import patch
     from app.agents.providers.base import ChatMessage

@@ -7,7 +7,7 @@ import type { Invoice, InvoiceCustomFieldDef, InvoiceState, InvoiceTemplate } fr
  * particular, none of it recomputes `state`: the server derives it from
  * allocations and the due date, and a second implementation on this side
  * is exactly how the two would come to disagree. What lives here is
- * presentation — how a state looks, what may be done to it, and what the
+ * presentation -- how a state looks, what may be done to it, and what the
  * document says its own labels are.
  */
 
@@ -25,7 +25,7 @@ export const STATE_TONE: Record<InvoiceState, string> = {
 
 /** The states that represent money still expected. Used for the "open"
  *  filter and for anything that counts receivables. `uncollectible` is
- *  deliberately absent — it is a decision to stop expecting. */
+ *  deliberately absent -- it is a decision to stop expecting. */
 export const OUTSTANDING_STATES: InvoiceState[] = ['open', 'partial', 'overdue']
 
 export function isOutstanding(invoice: Invoice): boolean {
@@ -33,7 +33,7 @@ export function isOutstanding(invoice: Invoice): boolean {
 }
 
 /** Which actions the UI should offer. Mirrors the server's rules so the
- *  user is never shown a button that will come back 400 — the server
+ *  user is never shown a button that will come back 400 -- the server
  *  still enforces every one of these, this only avoids the dead end. */
 export function availableActions(invoice: Invoice): {
   canEdit: boolean
@@ -67,7 +67,7 @@ export function availableActions(invoice: Invoice): {
  *  the sequence. Drafts have no number at all, and saying so beats
  *  printing a placeholder that looks like one.
  *
- *  The snapshot is authoritative whenever it exists — including when it
+ *  The snapshot is authoritative whenever it exists -- including when it
  *  recorded *no* prefix, which is a real answer and not a missing one.
  *  An invoice issued as "2" must keep reading as "2" after someone sets
  *  a prefix, or the app renames a document the client already has.
@@ -75,7 +75,7 @@ export function availableActions(invoice: Invoice): {
  *
  *  None of that applies to a document we did not write. An import arrives
  *  already named, and that name is reproduced verbatim from
- *  `external_number` — ours would rename a supplier's reference. */
+ *  `external_number` -- ours would rename a supplier's reference. */
 export function displayNumber(invoice: Invoice, prefix?: string | null): string | null {
   if (invoice.origin === 'imported') return invoice.external_number || null
   if (invoice.number == null) return null
@@ -138,7 +138,7 @@ export const MANUAL_METHOD = 'manual'
  * How to describe the origin of an allocation.
  *
  * `method` is either `manual` or the **id of the matching strategy** that
- * produced the link — ids that come from the reconciliation policy, a
+ * produced the link -- ids that come from the reconciliation policy, a
  * document that will eventually be user-editable. So this deliberately
  * does not switch on a closed list: it separates "a person did this" from
  * "a rule did this", and hands the id back so the caller can show *which*
@@ -157,7 +157,7 @@ export function allocationOrigin(method: string): {
 
 
 /** A file size as a person reads it. Bytes below a kilobyte, then whole
- *  kilobytes, then one decimal of a megabyte — the precision stops where
+ *  kilobytes, then one decimal of a megabyte -- the precision stops where
  *  it stops being information. */
 export function formatFileSize(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes < 0) return '0 B'
@@ -199,7 +199,7 @@ export const ISSUED_BY_US = 'issued'
 /** Where a filed document came from, as a person reads it.
  *
  *  A source id is a machine name (`gateway`, `nfe`, `email`), so it is
- *  shown as it is rather than translated — renaming somebody's system in
+ *  shown as it is rather than translated -- renaming somebody's system in
  *  our own words helps nobody trying to work out which integration
  *  delivered which file. Two sources are our word rather than theirs: a
  *  file with no source was uploaded here by hand, and one stamped

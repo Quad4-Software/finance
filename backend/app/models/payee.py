@@ -37,7 +37,7 @@ class Payee(Base):
     # counterparty from a bank descriptor, and "UBER *TRIP" does not say
     # whether it is an individual or a company. Guessing would stamp an
     # inference as a fact, and the answer only matters once a document is
-    # attached — at which point the document itself settles it, a CNPJ
+    # attached -- at which point the document itself settles it, a CNPJ
     # meaning company and a CPF meaning person.
     #
     # What this deliberately is *not* is a role. There is no `merchant`
@@ -49,8 +49,8 @@ class Payee(Base):
     # provenance is only knowable at the moment of insert, so a payee
     # created before this column existed can never be classified.
     #
-    # It exists because sync creates payees in bulk — hundreds of card
-    # descriptors — and anything that offers the user a list of
+    # It exists because sync creates payees in bulk -- hundreds of card
+    # descriptors -- and anything that offers the user a list of
     # counterparties to bill needs to tell those apart from the handful
     # somebody typed in on purpose.
     source: Mapped[str] = mapped_column(String(20), default="manual", nullable=False)

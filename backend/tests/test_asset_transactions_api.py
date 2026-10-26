@@ -203,7 +203,7 @@ async def test_oversell_rejected_via_api(client: AsyncClient, auth_headers: dict
     )
     assert r.status_code == 422
     assert "only" in r.json()["detail"].lower()
-    # Rejected sell left no trace — still just the one buy.
+    # Rejected sell left no trace -- still just the one buy.
     r2 = await client.get(f"/api/assets/{market_asset_api.id}/transactions", headers=auth_headers)
     assert len(r2.json()) == 1
 

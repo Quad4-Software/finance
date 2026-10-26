@@ -6,7 +6,7 @@ in the UI, which calls the existing Quad4 Finance write endpoint to do the real
 change. Keeps MCP safe and gives the user a chance to review.
 
 When called via an *external* token (Claude Desktop, n8n, custom clients
-— `ctx.external` is true), there is no Apply button to render. In that
+-- `ctx.external` is true), there is no Apply button to render. In that
 case the tools accept an extra `apply: true` flag: first call returns
 the preview as usual; a follow-up call with `apply=true` performs the
 write directly. Internal callers never set `apply`, so behavior is
@@ -60,17 +60,17 @@ from mcp_server.tools._helpers import (
 # Repeated in EVERY propose_* tool description. The LLM reads these when
 # deciding when to use a tool AND when describing the result to the user.
 # The strong "REQUIRES USER CONFIRMATION" framing prevents the model from
-# saying "Pronto! Criei…" / "Done! I added…" — the action is NOT executed
+# saying "Pronto! Criei..." / "Done! I added..." -- the action is NOT executed
 # by the tool call; it only takes effect when the user clicks Apply (or
 # the caller re-invokes with apply=true on the external transport).
 _PROPOSAL_PREFACE = (
-    "[PROPOSAL — PREVIEW ONLY, NOT EXECUTED. The user MUST confirm before "
+    "[PROPOSAL -- PREVIEW ONLY, NOT EXECUTED. The user MUST confirm before "
     "the change happens. In Quad4 Finance's UI an Apply button + diff card render "
-    "automatically — do not duplicate the details in your reply. When you "
+    "automatically -- do not duplicate the details in your reply. When you "
     "are running through an external MCP client (no Apply button in chat), "
     "pass apply=true on a follow-up call AFTER the user explicitly "
     "confirms in the conversation. Never set apply=true on the first call. "
-    "Describe results as 'I prepared a proposal…' / 'Here's a preview…' — "
+    "Describe results as 'I prepared a proposal...' / 'Here's a preview...' -- "
     "NEVER as 'I created' / 'Done' / 'Ready' unless the response includes "
     "applied=true.] "
 )
@@ -258,7 +258,7 @@ async def propose_create_category(
         "proposal plus any existing budget for the same category/month. "
         "STRICT: if the user mentions a category that does NOT match an "
         "existing one (call list_categories first to verify), do not "
-        "silently substitute a different category — instead, ask the user "
+        "silently substitute a different category -- instead, ask the user "
         "to confirm an alternative or call propose_create_category first "
         "to add the missing one."
     ),
@@ -340,7 +340,7 @@ async def propose_create_budget(
         "leaves currency to the account's default when not provided.\n\n"
         "Group splits: pass `group_id` + `splits` to attach a Splitwise-"
         "style breakdown. `splits.share_type='equal'` divides the amount "
-        "evenly across the listed `member_ids` — perfect for 'crie no "
+        "evenly across the listed `member_ids` -- perfect for 'crie no "
         "grupo dos Amigos e divida igualmente'. Use `'exact'` with a "
         "`share_amount` per member, or `'percent'` with `share_pct` per "
         "member, for custom shares. All members must belong to the same "
@@ -353,7 +353,7 @@ async def propose_create_budget(
             "amount": {
                 "type": "number",
                 "exclusiveMinimum": 0,
-                "description": "Absolute value, always positive — direction comes from `type`",
+                "description": "Absolute value, always positive -- direction comes from `type`",
             },
             "type": {
                 "type": "string",
@@ -452,7 +452,7 @@ async def propose_create_transaction(
         if not (group_id and splits):
             return {"error": "group_id and splits must be provided together"}
         gid = parse_uuid(group_id)
-        # Group ownership stays user-scoped (Splitwise authorship check) —
+        # Group ownership stays user-scoped (Splitwise authorship check) --
         # the user_id column on `groups` represents the owner, not a
         # tenant filter.
         group = (

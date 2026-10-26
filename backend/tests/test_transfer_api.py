@@ -365,7 +365,7 @@ async def test_delete_cascades_to_paired_transaction(
     debit_id = data["debit"]["id"]
     credit_id = data["credit"]["id"]
 
-    # Delete debit — should cascade to credit
+    # Delete debit -- should cascade to credit
     del_response = await client.delete(
         f"/api/transactions/{debit_id}", headers=auth_headers
     )
@@ -600,7 +600,7 @@ async def test_link_existing_transactions_as_transfer(
 async def test_link_transfer_permissive_with_amount_mismatch(
     client: AsyncClient, auth_headers, test_account: Account, second_account: Account
 ):
-    """Linking should succeed even if amounts differ — user is asserting intent."""
+    """Linking should succeed even if amounts differ -- user is asserting intent."""
     debit = await _create_manual_tx(
         client, auth_headers, test_account.id, type="debit", amount=100.00, description="Sent with fee"
     )

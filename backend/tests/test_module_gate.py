@@ -1,6 +1,6 @@
 """The module gate: does this workspace have this module at all?
 
-Separate from `require_write`, and deliberately so — they answer
+Separate from `require_write`, and deliberately so -- they answer
 different questions and both have to pass. This file pins the gate's
 own behaviour, including the choice of 404 over 403.
 """
@@ -52,7 +52,7 @@ class TestAssertEnabled:
 
     def test_an_unknown_kind_falls_back_to_the_catalog(self):
         """A workspace stored before a kind was retired still has to
-        render something sane — and must not gain a business module."""
+        render something sane -- and must not gain a business module."""
         _assert_enabled(context("legacy_kind"), ModuleId.TRANSACTIONS)
         with pytest.raises(HTTPException):
             _assert_enabled(context("legacy_kind"), ModuleId.INVOICES)

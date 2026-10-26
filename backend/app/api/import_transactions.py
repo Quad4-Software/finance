@@ -155,7 +155,7 @@ async def import_transactions(
     session: AsyncSession = Depends(get_async_session),
 ):
     # Verify the target account lives in this workspace BEFORE doing any
-    # writes — otherwise a hand-rolled request could import into an
+    # writes -- otherwise a hand-rolled request could import into an
     # account owned by another tenant.
     account = await account_service.get_account(session, data.account_id, ctx.workspace.id)
     if not account:

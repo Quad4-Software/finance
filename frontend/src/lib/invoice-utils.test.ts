@@ -90,7 +90,7 @@ describe('isOutstanding', () => {
     }
   })
 
-  it('excludes uncollectible — a decision to stop expecting', () => {
+  it('excludes uncollectible -- a decision to stop expecting', () => {
     expect(isOutstanding(makeInvoice({ state: 'uncollectible' }))).toBe(false)
   })
 
@@ -102,7 +102,7 @@ describe('isOutstanding', () => {
 })
 
 describe('availableActions', () => {
-  it('lets a draft be edited, deleted and issued — and nothing else', () => {
+  it('lets a draft be edited, deleted and issued -- and nothing else', () => {
     const actions = availableActions(makeInvoice({ status: 'draft', state: 'draft', number: null }))
     expect(actions).toEqual({
       canEdit: true, canDelete: true, canIssue: true,
@@ -113,7 +113,7 @@ describe('availableActions', () => {
   it('freezes an issued invoice: no edit, no delete', () => {
     const actions = availableActions(makeInvoice())
     expect(actions.canEdit).toBe(false)
-    // An issued invoice is never deleted — void keeps the paper trail.
+    // An issued invoice is never deleted -- void keeps the paper trail.
     expect(actions.canDelete).toBe(false)
     expect(actions.canVoid).toBe(true)
     expect(actions.canWriteOff).toBe(true)

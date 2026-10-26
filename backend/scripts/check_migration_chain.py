@@ -4,7 +4,7 @@
 Two long-lived branches that each add a migration pick the same next number
 without noticing: both say `revision = "074"`, both chain off `"073"`. Each
 branch is fine on its own, and each one's CI is green, so the collision only
-shows up once they are both on main — where `alembic upgrade head` refuses to
+shows up once they are both on main -- where `alembic upgrade head` refuses to
 run at all:
 
     UserWarning: Revision 074 is present more than once

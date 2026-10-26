@@ -64,7 +64,7 @@ ACCOUNT_TEMPLATES = [
     {"name": "Euro Visa", "type": "credit_card", "currency": "EUR", "balance": Decimal("0.00"), "credit_limit": Decimal("8000.00")},
 ]
 
-# (name, color, icon)  — first 22 are debit, last 8 are credit
+# (name, color, icon)  -- first 22 are debit, last 8 are credit
 CATEGORY_TEMPLATES = [
     ("Groceries", "#22c55e", "shopping-cart"),
     ("Rent", "#ef4444", "home"),
@@ -206,11 +206,11 @@ async def seed(
                 print(f"User {email} already has data and --no-reset is set. Nothing to do.")
                 return
         elif user and reset:
-            print(f"Wiping existing data for {email} …")
+            print(f"Wiping existing data for {email} ...")
             await _wipe_user_data(session, user.id)
 
         if not user:
-            print(f"Creating user {email} …")
+            print(f"Creating user {email} ...")
             user_db = SQLAlchemyUserDatabase(session, User)
             manager = UserManager(user_db)
             try:
@@ -232,7 +232,7 @@ async def seed(
         wid = workspace.id
 
         # ── 2. Accounts ──────────────────────────────────────────────────────
-        print("Creating accounts …")
+        print("Creating accounts ...")
         accounts: list[Account] = []
         for tmpl in ACCOUNT_TEMPLATES[:n_accounts]:
             acc = Account(
@@ -250,7 +250,7 @@ async def seed(
         print(f"  {len(accounts)} accounts")
 
         # ── 3. Categories ────────────────────────────────────────────────────
-        print("Creating categories …")
+        print("Creating categories ...")
         categories: list[Category] = []
         for name, color, icon in CATEGORY_TEMPLATES[:n_categories]:
             cat = Category(user_id=uid, workspace_id=wid, name=name, color=color, icon=icon)
@@ -263,7 +263,7 @@ async def seed(
 
         # ── 4. FX Rates ──────────────────────────────────────────────────────
         n_days = max(1, (today - start_date).days)
-        print(f"Seeding FX rates for {n_days} days ({start_date} → {today}) …")
+        print(f"Seeding FX rates for {n_days} days ({start_date} -> {today}) ...")
         all_dates = _make_date_range(n_days)
 
         # rates are USD-quoted: how many of quote_currency per 1 USD
@@ -296,7 +296,7 @@ async def seed(
 
         # ── 5. Transactions ──────────────────────────────────────────────────
         n_tx = max(1, int(100_000 * scale))
-        print(f"Inserting {n_tx:,} transactions …")
+        print(f"Inserting {n_tx:,} transactions ...")
         tx_rows = []
 
         for _ in range(n_tx):
@@ -336,7 +336,7 @@ async def seed(
         print(f"  {n_tx:,} transactions done        ")
 
         # ── 6. Asset Groups (wallets) ────────────────────────────────────────
-        print("Creating asset groups (wallets) …")
+        print("Creating asset groups (wallets) ...")
         asset_groups: dict[str, AssetGroup] = {}
         for i, gtmpl in enumerate(ASSET_GROUP_TEMPLATES):
             grp = AssetGroup(
@@ -354,7 +354,7 @@ async def seed(
         print(f"  {len(asset_groups)} asset groups")
 
         # ── 7. Assets + AssetValues ──────────────────────────────────────────
-        print(f"Creating {len(ASSET_TEMPLATES[:n_assets])} assets with {n_days + 1} daily values each …")
+        print(f"Creating {len(ASSET_TEMPLATES[:n_assets])} assets with {n_days + 1} daily values each ...")
         asset_days = _make_date_range(n_days)
 
         for tmpl in ASSET_TEMPLATES[:n_assets]:
@@ -402,7 +402,7 @@ async def seed(
 
         # ── 8. Recurring transactions ────────────────────────────────────────
         n_rec = max(1, int(20 * scale))
-        print(f"Creating {n_rec} recurring transactions …")
+        print(f"Creating {n_rec} recurring transactions ...")
         for i, desc in enumerate(RECURRING_DESCRIPTIONS[:n_rec]):
             acc = accounts[i % len(accounts)]
             cat = debit_cats[i % len(debit_cats)]

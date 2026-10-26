@@ -95,7 +95,7 @@ async def historical_fx_rates(session: AsyncSession, clean_db) -> list[FxRate]:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 1. FX RATE SERVICE — UNIT TESTS
+# 1. FX RATE SERVICE -- UNIT TESTS
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -129,7 +129,7 @@ class TestGetRate:
         from app.services.fx_rate_service import get_rate
 
         rate = await get_rate(session, "BRL", "USD")
-        # BRL→USD: usd_to_target(USD)=1 / usd_to_source(BRL)=5 = 0.2
+        # BRL->USD: usd_to_target(USD)=1 / usd_to_source(BRL)=5 = 0.2
         expected = Decimal("1") / Decimal("5.0000000000")
         assert rate == expected
 
@@ -138,7 +138,7 @@ class TestGetRate:
         from app.services.fx_rate_service import get_rate
 
         rate = await get_rate(session, "EUR", "BRL")
-        # EUR→BRL: usd_to_BRL / usd_to_EUR = 5.0 / 0.92
+        # EUR->BRL: usd_to_BRL / usd_to_EUR = 5.0 / 0.92
         expected = Decimal("5.0000000000") / Decimal("0.9200000000")
         assert rate == expected
 
@@ -147,7 +147,7 @@ class TestGetRate:
         from app.services.fx_rate_service import get_rate
 
         rate = await get_rate(session, "GBP", "EUR")
-        # GBP→EUR: usd_to_EUR / usd_to_GBP = 0.92 / 0.79
+        # GBP->EUR: usd_to_EUR / usd_to_GBP = 0.92 / 0.79
         expected = Decimal("0.9200000000") / Decimal("0.7900000000")
         assert rate == expected
 
@@ -264,7 +264,7 @@ class TestConvert:
         from app.services.fx_rate_service import convert
 
         converted, rate = await convert(session, Decimal("100.00"), "EUR", "BRL")
-        # 100 * (5.0 / 0.92) = 543.478...  → rounded to 543.48
+        # 100 * (5.0 / 0.92) = 543.478...  -> rounded to 543.48
         assert converted == Decimal("543.48")
 
     @pytest.mark.asyncio
@@ -280,7 +280,7 @@ class TestConvert:
             session, Decimal("0.002240"), "USD", "EUR", decimals=6
         )
         assert rate == Decimal("0.9200000000")
-        # 0.00224 * 0.92 = 0.0020608  → 0.002061 at price precision
+        # 0.00224 * 0.92 = 0.0020608  -> 0.002061 at price precision
         assert converted == Decimal("0.002061")
 
 
@@ -291,7 +291,7 @@ class TestStampPrimaryAmount:
     async def test_stamps_transaction_same_currency(
         self, session: AsyncSession, test_user: User, test_account: Account
     ):
-        """Transaction in BRL (user primary=BRL) → amount_primary = amount."""
+        """Transaction in BRL (user primary=BRL) -> amount_primary = amount."""
         from app.services.fx_rate_service import stamp_primary_amount
 
         txn = Transaction(
@@ -315,7 +315,7 @@ class TestStampPrimaryAmount:
     async def test_stamps_transaction_different_currency(
         self, session: AsyncSession, test_user: User, test_account: Account, fx_rates
     ):
-        """Transaction in USD (user primary=BRL) → converts using FX rate."""
+        """Transaction in USD (user primary=BRL) -> converts using FX rate."""
         from app.services.fx_rate_service import stamp_primary_amount
 
         txn = Transaction(
@@ -339,7 +339,7 @@ class TestStampPrimaryAmount:
     async def test_no_rate_leaves_null_not_fake_1to1(
         self, session: AsyncSession, test_user: User, test_account: Account
     ):
-        """Cross-currency tx with no rate available → amount_primary/fx stay NULL (issue #353)."""
+        """Cross-currency tx with no rate available -> amount_primary/fx stay NULL (issue #353)."""
         from app.services.fx_rate_service import stamp_primary_amount
 
         txn = Transaction(
@@ -356,7 +356,7 @@ class TestStampPrimaryAmount:
         await session.flush()
 
         await stamp_primary_amount(session, test_user.id, txn, allow_fetch=False)
-        # No fake 1:1 persisted — honestly NULL so it can self-heal later.
+        # No fake 1:1 persisted -- honestly NULL so it can self-heal later.
         assert txn.amount_primary is None
         assert txn.fx_rate_used is None
 
@@ -383,7 +383,7 @@ class TestStampPrimaryAmount:
         session.add(txn)
         await session.flush()
 
-        # fx_rates fixture has USD→BRL = 5.0; heal without hitting the provider.
+        # fx_rates fixture has USD->BRL = 5.0; heal without hitting the provider.
         await stamp_primary_amount(session, test_user.id, txn, allow_fetch=False)
         assert txn.amount_primary == Decimal("500.00")  # 100 * 5.0
         assert txn.fx_rate_used == Decimal("5.0000000000")
@@ -416,7 +416,7 @@ class TestStampPrimaryAmount:
 
     @pytest.mark.asyncio
     async def test_stamps_with_no_user_returns_early(self, session: AsyncSession):
-        """Non-existent user → does nothing."""
+        """Non-existent user -> does nothing."""
         from app.services.fx_rate_service import stamp_primary_amount
 
         class FakeObj:
@@ -545,7 +545,7 @@ class TestTransactionFxIntegration:
         )
         assert response.status_code == 201
         data = response.json()
-        # USD→BRL at rate 5.0 → 20 * 5 = 100
+        # USD->BRL at rate 5.0 -> 20 * 5 = 100
         assert data["amount_primary"] == 100.00
         assert data["fx_rate_used"] is not None
 
@@ -612,7 +612,7 @@ class TestDashboardMultiCurrency:
 
         assert data["primary_currency"] == "BRL"
         assert "total_balance_primary" in data
-        # Single BRL account → primary equals the BRL total
+        # Single BRL account -> primary equals the BRL total
         assert data["total_balance_primary"] == pytest.approx(1500.00, abs=1.0)
 
 
@@ -691,7 +691,7 @@ class TestOpenExchangeRatesProvider:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 6. SYNC RATES (mocked provider — pg_insert incompatible with SQLite)
+# 6. SYNC RATES (mocked provider -- pg_insert incompatible with SQLite)
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -792,7 +792,7 @@ class TestStampEdgeCases:
     async def test_null_amount_returns_early(
         self, session: AsyncSession, test_user: User
     ):
-        """Object with None amount → does nothing."""
+        """Object with None amount -> does nothing."""
         from app.services.fx_rate_service import stamp_primary_amount
 
         class FakeObj:
@@ -842,11 +842,11 @@ class TestStampEdgeCases:
             amount_primary = None
             fx_rate_used = None
             date = date.today()
-            # No 'currency' attribute → defaults to settings.default_currency (USD)
+            # No 'currency' attribute -> defaults to settings.default_currency (USD)
 
         obj = FakeObj()
         await stamp_primary_amount(session, test_user.id, obj, allow_fetch=False)
-        # USD→BRL at 5.0
+        # USD->BRL at 5.0
         assert obj.amount_primary == Decimal("500.00")
         assert obj.fx_rate_used == Decimal("5.0000000000")
 
@@ -907,7 +907,7 @@ class TestTransactionUpdateRestamp:
         txn_id = resp.json()["id"]
         original_rate = resp.json()["fx_rate_used"]
 
-        # Update only category — should not re-stamp
+        # Update only category -- should not re-stamp
         resp2 = await client.patch(
             f"/api/transactions/{txn_id}",
             headers=auth_headers,
@@ -937,9 +937,9 @@ class TestTransactionUpdateRestamp:
             },
         )
         txn_id = resp.json()["id"]
-        assert resp.json()["amount_primary"] == 100.0  # BRL→BRL = 1:1
+        assert resp.json()["amount_primary"] == 100.0  # BRL->BRL = 1:1
 
-        # Change currency to USD — should re-stamp with USD→BRL rate
+        # Change currency to USD -- should re-stamp with USD->BRL rate
         resp2 = await client.patch(
             f"/api/transactions/{txn_id}",
             headers=auth_headers,
@@ -951,7 +951,7 @@ class TestTransactionUpdateRestamp:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 9. REPORT SERVICE — NET WORTH WITH MULTI-CURRENCY
+# 9. REPORT SERVICE -- NET WORTH WITH MULTI-CURRENCY
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -1045,7 +1045,7 @@ class TestRecurringTransactionStamping:
         rec = await create_recurring_transaction(session, test_workspace.id, test_user.id, data)
 
         assert rec.amount_primary is not None
-        # USD→BRL: 10 * 5.0 = 50
+        # USD->BRL: 10 * 5.0 = 50
         assert rec.amount_primary == Decimal("50.00")
         assert rec.fx_rate_used == Decimal("5.0000000000")
 
@@ -1057,7 +1057,7 @@ class TestRecurringTransactionStamping:
         test_workspace,
         test_account: Account,
     ):
-        """Recurring in BRL (user primary=BRL) → rate = 1."""
+        """Recurring in BRL (user primary=BRL) -> rate = 1."""
         from app.schemas.recurring_transaction import RecurringTransactionCreate
         from app.services.recurring_transaction_service import create_recurring_transaction
 
@@ -1222,21 +1222,21 @@ class TestBackfillTask:
 
         primary = test_user.primary_currency  # BRL
 
-        # (a) cross-currency row wrongly stamped 1:1 → should be selected
+        # (a) cross-currency row wrongly stamped 1:1 -> should be selected
         fallback = Transaction(
             user_id=test_user.id, account_id=test_account.id,
             description="USD fallback", amount=Decimal("100.00"), currency="USD",
             date=date.today(), type="debit", source="manual",
             amount_primary=Decimal("100.00"), fx_rate_used=Decimal("1"),
         )
-        # (b) never-stamped cross-currency row → should be selected
+        # (b) never-stamped cross-currency row -> should be selected
         null_row = Transaction(
             user_id=test_user.id, account_id=test_account.id,
             description="EUR null", amount=Decimal("10.00"), currency="EUR",
             date=date.today(), type="debit", source="manual",
             amount_primary=None, fx_rate_used=None,
         )
-        # (c) genuine same-currency 1:1 row → must NOT be selected/healed
+        # (c) genuine same-currency 1:1 row -> must NOT be selected/healed
         same_ccy = Transaction(
             user_id=test_user.id, account_id=test_account.id,
             description="BRL 1:1", amount=Decimal("50.00"), currency="BRL",
@@ -1270,14 +1270,14 @@ class TestBackfillTask:
         test_account: Account,
     ):
         """Re-stamping must NEVER downgrade an existing 1:1 row to NULL when no real
-        rate is available — that would push a visible transaction into limbo
+        rate is available -- that would push a visible transaction into limbo
         (issue #353). stamp_primary_amount only upgrades; otherwise it leaves the
         row exactly as-is (this is what makes the periodic healer safe)."""
         from decimal import Decimal as D
 
         from app.services.fx_rate_service import stamp_primary_amount
 
-        # USD row stamped 1:1 (legacy fallback). No fx_rates fixture → no rate.
+        # USD row stamped 1:1 (legacy fallback). No fx_rates fixture -> no rate.
         tx = Transaction(
             user_id=test_user.id, account_id=test_account.id,
             description="USD legacy 1:1", amount=D("100.00"), currency="USD",
@@ -1287,7 +1287,7 @@ class TestBackfillTask:
         session.add(tx)
         await session.flush()
 
-        # Re-stamp with no rate available — must leave the row untouched.
+        # Re-stamp with no rate available -- must leave the row untouched.
         await stamp_primary_amount(session, test_user.id, tx, allow_fetch=False)
 
         # Still visible with its previous value, not NULL.
@@ -1571,7 +1571,7 @@ class TestManualFxOverride:
         )
         txn_id = resp.json()["id"]
 
-        # Update amount without FX override → should auto re-stamp
+        # Update amount without FX override -> should auto re-stamp
         resp2 = await client.patch(
             f"/api/transactions/{txn_id}",
             headers=auth_headers,
@@ -1594,7 +1594,7 @@ class TestFxFallbackFlag:
         test_user: User,
         session: AsyncSession,
     ):
-        """Cross-currency transaction with no FX rates → left NULL, fx_fallback=True (issue #353)."""
+        """Cross-currency transaction with no FX rates -> left NULL, fx_fallback=True (issue #353)."""
         usd_account = await _make_account(session, test_user, currency="USD")
 
         resp = await client.post(
@@ -1611,7 +1611,7 @@ class TestFxFallbackFlag:
         )
         assert resp.status_code == 201
         data = resp.json()
-        # No FX rate available → we honestly leave it unconverted (NULL) rather
+        # No FX rate available -> we honestly leave it unconverted (NULL) rather
         # than persisting a fake 1:1 conversion that would never self-heal.
         assert data["amount_primary"] is None
         assert data["fx_rate_used"] is None
@@ -1626,7 +1626,7 @@ class TestFxFallbackFlag:
         session: AsyncSession,
         fx_rates,
     ):
-        """Cross-currency transaction with valid FX rates → fx_fallback=False."""
+        """Cross-currency transaction with valid FX rates -> fx_fallback=False."""
         usd_account = await _make_account(session, test_user, currency="USD")
 
         resp = await client.post(
@@ -1654,7 +1654,7 @@ class TestFxFallbackFlag:
         test_user: User,
         session: AsyncSession,
     ):
-        """Same-currency transaction → fx_fallback=False (not applicable)."""
+        """Same-currency transaction -> fx_fallback=False (not applicable)."""
         brl_account = await _make_account(
             session, test_user, currency="BRL", name="BRL Account",
         )
@@ -1686,7 +1686,7 @@ class TestFxFallbackFlag:
         """GET /api/transactions tags fx_fallback on listed items."""
         usd_account = await _make_account(session, test_user, currency="USD")
 
-        # Create a cross-currency transaction with no rates → left unconverted
+        # Create a cross-currency transaction with no rates -> left unconverted
         resp = await client.post(
             "/api/transactions",
             headers=auth_headers,

@@ -6,7 +6,7 @@
 # and `uv sync --all-extras` builds a dev venv from it directly.
 #
 # Run this after any change to [project.dependencies] or the dev extra in
-# pyproject.toml and commit the updated uv.lock — CI fails if it drifts.
+# pyproject.toml and commit the updated uv.lock -- CI fails if it drifts.
 # Extra arguments are passed through, e.g.:  ./scripts/lock.sh --upgrade
 #
 # The uv version is pinned so resolution is reproducible; Renovate bumps it.

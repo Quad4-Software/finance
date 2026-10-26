@@ -30,7 +30,7 @@ interface ImportHistoryProps {
  *
  * Deleting an entry is the undo: the server takes the rows back out, and for
  * orders it also recomputes the affected positions. The two entities share
- * this table but not its columns — an order import has no account and no
+ * this table but not its columns -- an order import has no account and no
  * credit/debit totals, so those columns only appear for statements.
  */
 export function ImportHistory({ entity }: ImportHistoryProps) {
@@ -102,15 +102,15 @@ export function ImportHistory({ entity }: ImportHistoryProps) {
                     {new Date(log.created_at).toLocaleString(dateLocale, { dateStyle: 'short', timeStyle: 'short' })}
                   </td>
                   <td className="max-w-[120px] truncate px-3 py-3 font-mono text-xs text-foreground sm:max-w-none sm:px-4">
-                    {log.filename || '—'}
+                    {log.filename || '--'}
                   </td>
                   <td className="hidden px-4 py-3 lg:table-cell">
                     <span className="rounded bg-muted px-2 py-0.5 font-mono text-xs uppercase text-muted-foreground">
-                      {log.format || '—'}
+                      {log.format || '--'}
                     </span>
                   </td>
                   {isStatement && (
-                    <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{log.account_name || '—'}</td>
+                    <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{log.account_name || '--'}</td>
                   )}
                   <td className="px-3 py-3 text-right text-foreground sm:px-4">{log.transaction_count}</td>
                   {isStatement && (
@@ -149,7 +149,7 @@ export function ImportHistory({ entity }: ImportHistoryProps) {
             <DialogDescription>
               {t(isStatement ? 'import.undoDescription' : 'import.undoOrdersDescription', {
                 count: deleteTarget?.transaction_count,
-                filename: deleteTarget?.filename || '—',
+                filename: deleteTarget?.filename || '--',
               })}
             </DialogDescription>
           </DialogHeader>

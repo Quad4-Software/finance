@@ -62,7 +62,7 @@ Add credentials for a supported provider to `.env`, then restart with `docker co
 
 See [automatic bank synchronization](docs/automatic-bank-sync.md) to configure the minimum polling interval (including PSD2 four-access-per-day limits).
 
-### Enable Banking — European banks (PSD2)
+### Enable Banking -- European banks (PSD2)
 
 Sign up at [enablebanking.com](https://enablebanking.com), create a Production application, and download its PEM private key. Save the PEM to `./secrets/` (gitignored), then add:
 
@@ -72,20 +72,20 @@ ENABLE_BANKING_PRIVATE_KEY_FILE=/app/secrets/your-key.pem
 ENABLE_BANKING_OAUTH_REDIRECT_URI=https://your-host/oauth/callback
 ```
 
-The redirect URI must match exactly one of the Allowed Redirect URLs in your EB application. Production EB requires HTTPS — for local development, expose your frontend via a tunnel (ngrok, cloudflared) or use the EB sandbox.
+The redirect URI must match exactly one of the Allowed Redirect URLs in your EB application. Production EB requires HTTPS -- for local development, expose your frontend via a tunnel (ngrok, cloudflared) or use the EB sandbox.
 
-> **Free tier — restricted mode.** Enable Banking's free plan requires you to pre-link the accounts you want to import inside the EB portal *before* connecting from Quad4 Finance. If you skip that step, the connection returns no accounts and Quad4 Finance will surface a banner with a link to the portal.
+> **Free tier -- restricted mode.** Enable Banking's free plan requires you to pre-link the accounts you want to import inside the EB portal *before* connecting from Quad4 Finance. If you skip that step, the connection returns no accounts and Quad4 Finance will surface a banner with a link to the portal.
 
-### SimpleFIN — US and international banks
+### SimpleFIN -- US and international banks
 
-[SimpleFIN](https://www.simplefin.org/) is a read-only open protocol. No API key needed — each connection brings its own credentials via a single-use Setup Token from the [SimpleFIN Bridge](https://bridge.simplefin.org/). Just enable the feature:
+[SimpleFIN](https://www.simplefin.org/) is a read-only open protocol. No API key needed -- each connection brings its own credentials via a single-use Setup Token from the [SimpleFIN Bridge](https://bridge.simplefin.org/). Just enable the feature:
 
 ```
 SIMPLEFIN_ENABLED=true
 SIMPLEFIN_API_URL=https://beta-bridge.simplefin.org   # sandbox; use bridge.simplefin.org for real banks
 ```
 
-Then in Quad4 Finance: **Accounts → Connect Bank → SimpleFIN**, and paste the token. The [developer page](https://beta-bridge.simplefin.org/info/developers) gives out free demo tokens if you want to try it without a real bank.
+Then in Quad4 Finance: **Accounts -> Connect Bank -> SimpleFIN**, and paste the token. The [developer page](https://beta-bridge.simplefin.org/info/developers) gives out free demo tokens if you want to try it without a real bank.
 
 ## OIDC Login (Optional)
 
@@ -189,11 +189,11 @@ Rates are fetched on-demand when foreign-currency transactions are created. With
 
 ## Timezone
 
-Balances, budgets, due dates and recurring transactions turn over at midnight in the application timezone. Set it once in Admin Settings → Date and time; a workspace that keeps its books somewhere else can pick its own timezone in Workspace settings. Without a saved value the application follows `TZ` from the environment, then the host timezone, then UTC.
+Balances, budgets, due dates and recurring transactions turn over at midnight in the application timezone. Set it once in Admin Settings -> Date and time; a workspace that keeps its books somewhere else can pick its own timezone in Workspace settings. Without a saved value the application follows `TZ` from the environment, then the host timezone, then UTC.
 
 ## AI Agents (Optional)
 
-Self-hosted AI assistants over your Quad4 Finance data — multi-provider (OpenAI, Anthropic, Ollama, OpenAI-compatible), tool-use via MCP, per-agent RAG knowledge base, ⌘J global chat panel.
+Self-hosted AI assistants over your Quad4 Finance data -- multi-provider (OpenAI, Anthropic, Ollama, OpenAI-compatible), tool-use via MCP, per-agent RAG knowledge base, ⌘J global chat panel.
 
 Add to `.env`:
 
@@ -202,7 +202,7 @@ AGENTS_ENABLED=true
 COMPOSE_PROFILES=agents
 ```
 
-Then `docker compose -f docker-compose.prod.yml up -d`. Settings → AI Agents to add a provider connection. Off by default; zero cost when off.
+Then `docker compose -f docker-compose.prod.yml up -d`. Settings -> AI Agents to add a provider connection. Off by default; zero cost when off.
 
 ### Without Docker
 
@@ -235,7 +235,7 @@ Without that server the agents still chat, but they have no tools and cannot rea
 ```bash
 # Run backend tests (from backend/, needs Python 3.11+; same as CI)
 cd backend
-pip install -e ".[dev]"   # first time only — installs pytest and dev deps
+pip install -e ".[dev]"   # first time only -- installs pytest and dev deps
 pytest
 
 # Rebuild after dependency changes
@@ -248,4 +248,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-This project is licensed under the [GNU Affero General Public License v3.0](LICENSE), inherited from upstream [Securo](https://github.com/securo-finance/securo). Any modifications — including when used as a network service — must also be released under the AGPL-3.0.
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE), inherited from upstream [Securo](https://github.com/securo-finance/securo). Any modifications -- including when used as a network service -- must also be released under the AGPL-3.0.

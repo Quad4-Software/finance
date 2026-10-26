@@ -116,7 +116,7 @@ export function PayeeDetailDialog({
                   <p className="text-sm font-medium">
                     {summaryData.last_transaction_date
                       ? new Date(summaryData.last_transaction_date + 'T00:00:00').toLocaleDateString(dateLocale)
-                      : '—'}
+                      : '--'}
                   </p>
                 </div>
               </div>

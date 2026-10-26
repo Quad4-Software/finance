@@ -112,7 +112,7 @@ async def update_agent(
         return None
     payload = data.model_dump(exclude_unset=True)
     # If turning this agent into the default, clear the flag on every
-    # other agent in the same workspace first — the partial unique
+    # other agent in the same workspace first -- the partial unique
     # index would otherwise reject the commit.
     if payload.get("is_default") is True:
         await session.execute(
@@ -192,7 +192,7 @@ async def set_tool_enabled(
 
 async def allowed_tool_pairs(session: AsyncSession, agent_id: uuid.UUID) -> Optional[set[tuple[str, str]]]:
     """Returns the set of (server, tool_name) pairs the agent is permitted
-    to call. Returns None when no rows exist — interpreted as 'allow all'
+    to call. Returns None when no rows exist -- interpreted as 'allow all'
     so first-run agents work without setup."""
     rows = await list_tools(session, agent_id)
     if not rows:

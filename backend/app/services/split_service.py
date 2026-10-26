@@ -33,7 +33,7 @@ def _materialize(
 ) -> list[tuple[uuid.UUID, Decimal, Optional[Decimal]]]:
     """Resolve splits into [(member_id, share_amount, share_pct?)] tuples.
 
-    `total` is treated as a positive value — the sign of a transaction
+    `total` is treated as a positive value -- the sign of a transaction
     (debit/credit) is independent of how it's distributed.
     """
     total = _quantize(Decimal(str(total)).copy_abs())
@@ -127,7 +127,7 @@ async def replace_splits(
     if payload is None:
         return
 
-    # Always start by clearing existing splits — replace semantics keep
+    # Always start by clearing existing splits -- replace semantics keep
     # the create/update paths trivially consistent.
     await session.execute(
         delete(TransactionSplit).where(TransactionSplit.transaction_id == transaction.id)

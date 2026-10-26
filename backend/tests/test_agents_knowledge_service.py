@@ -23,7 +23,7 @@ def _storage_in_tmpdir(monkeypatch):
     tmp = tempfile.mkdtemp(prefix="kb-test-")
     from app.agents.config import get_agent_settings
 
-    # Settings is @lru_cache'd — monkeypatch the attribute on the
+    # Settings is @lru_cache'd -- monkeypatch the attribute on the
     # cached instance.
     s = get_agent_settings()
     monkeypatch.setattr(s, "knowledge_storage_path", tmp)
@@ -109,10 +109,10 @@ async def test_get_doc_scopes_by_user(session, test_agent, test_user):
         session, agent_id=test_agent.id, user_id=test_user.id,
         filename="x.txt", mime="text/plain", payload=b"x",
     )
-    # Wrong user → None.
+    # Wrong user -> None.
     other = uuid.uuid4()
     assert await knowledge_service.get_doc(session, doc.id, other) is None
-    # Right user → returns the row.
+    # Right user -> returns the row.
     found = await knowledge_service.get_doc(session, doc.id, test_user.id)
     assert found is not None
     assert found.id == doc.id
@@ -179,14 +179,14 @@ async def test_mark_status_ready_clears_prior_error(session, test_agent, test_us
         session, agent_id=test_agent.id, user_id=test_user.id,
         filename="s.txt", mime="text/plain", payload=b"x",
     )
-    # Initial failure → error message stored.
+    # Initial failure -> error message stored.
     await knowledge_service.mark_status(session, doc.id, status="failed", error="embed failed: 500")
     refreshed = await knowledge_service.get_doc(session, doc.id, test_user.id)
 
     assert refreshed is not None
     assert refreshed.status == "failed"
     assert "embed failed" in (refreshed.error or "")
-    # Subsequent success → status flips AND prior error cleared.
+    # Subsequent success -> status flips AND prior error cleared.
     await knowledge_service.mark_status(session, doc.id, status="ready", chunk_count=4)
     refreshed = await knowledge_service.get_doc(session, doc.id, test_user.id)
 
@@ -213,7 +213,7 @@ async def test_mark_status_failed_preserves_prior_status_metadata(session, test_
 
 @pytest.mark.asyncio
 async def test_mark_status_unknown_doc_is_silent_noop(session):
-    # No exception even when the doc doesn't exist — used by the
+    # No exception even when the doc doesn't exist -- used by the
     # Celery task to avoid crashing on a missing row.
     await knowledge_service.mark_status(session, uuid.uuid4(), status="failed", error="x")
 

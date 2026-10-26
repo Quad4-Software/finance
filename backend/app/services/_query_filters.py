@@ -75,7 +75,7 @@ def reporting_date_col(accounting_mode: str):
     aggregations (dashboard, reports, budgets).
 
     Honors the manual credit-card cycle override (`effective_bill_date`)
-    FIRST — regardless of accounting mode — because that's the whole point
+    FIRST -- regardless of accounting mode -- because that's the whole point
     of the override: the user hand-corrected which invoice a purchase
     belongs to (issue #92). When there's no override, fall back to
     `effective_date` in accrual mode or the raw purchase `date` in cash
@@ -104,7 +104,7 @@ def is_not_ignored():
     belongs in the ledger the user is reading.
 
     Matches what the UI badges as ignored, which is the transaction flag or
-    its category's — see `TransactionRead.reflect_ignored_category`. A list
+    its category's -- see `TransactionRead.reflect_ignored_category`. A list
     that hid one but not the other would leave visibly-ignored rows behind
     and look broken.
     """
@@ -148,7 +148,7 @@ def counts_as_pnl():
         omitted from income and expense calculations),
       - transactions in categories flagged `is_ignored=True` (user-marked as not to be reported).
 
-    Does NOT exclude `source='opening_balance'` — callers that already
+    Does NOT exclude `source='opening_balance'` -- callers that already
     filter those keep doing so; this helper only handles the transfer-like
     exclusion family so both rules stay visible at each call site.
     """
@@ -159,7 +159,7 @@ def counts_as_pnl():
         # Settlement *debits* are repayments of debts that were already
         # booked as an expense via the share. Counting them would
         # double-count. Settlement *credits*, however, represent the
-        # receiver actually getting the cash back — they offset the
+        # receiver actually getting the cash back -- they offset the
         # over-recorded expense from when the receiver paid the full
         # parent transaction. So we keep credits, drop debits.
         ~and_(Transaction.source == "settlement", Transaction.type == "debit"),
@@ -212,7 +212,7 @@ def counts_on_bill(net_payments: bool = False):
         category, and letting it through here would net it against new
         debt instead of being a repayment of it.
 
-    Neither reading is exactly right — there's no field today that tells
+    Neither reading is exactly right -- there's no field today that tells
     a genuine merchant refund apart from an unpaired bill payment once
     both land as a credit in a transfer-like category, so this is a
     judgment call, not a derived fact. Dropping transfer-tagged credits
@@ -290,7 +290,7 @@ async def owner_split_offset_pnl(
     primary_currency: Optional[str] = None,
     workspace_id: Optional[uuid.UUID] = None,
 ) -> tuple[float, float]:
-    """Return (income_offset, expense_offset) — the totals to *subtract*
+    """Return (income_offset, expense_offset) -- the totals to *subtract*
     from the owner's full-amount aggregations so only their own share
     remains. We sum every split share that belongs to a non-owner
     member; subtracting that from the parent's full amount leaves the
@@ -385,7 +385,7 @@ async def owner_split_offset_by_category(
     primary_currency: Optional[str] = None,
     workspace_id: Optional[uuid.UUID] = None,
 ) -> dict:
-    """Per-category, sum of non-owner shares on owner-side debit splits —
+    """Per-category, sum of non-owner shares on owner-side debit splits --
     subtract from full owner debits to get the owner's category share."""
     from app.models.group import Group, GroupMember
     from app.models.transaction_split import TransactionSplit
@@ -461,7 +461,7 @@ async def viewer_shared_pnl(
     viewer doesn't own but participates in via a group split.
 
     Concert tickets paid by a friend show up as the viewer's share in
-    their own spending picture — without inflating account balances.
+    their own spending picture -- without inflating account balances.
 
     When `primary_currency` is given, mixed-currency shares are
     converted to that currency via the FX service. Otherwise, sums

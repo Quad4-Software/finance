@@ -1,4 +1,4 @@
-"""MCP tool wrappers — call them directly with seeded data and a fake
+"""MCP tool wrappers -- call them directly with seeded data and a fake
 CallContext (skipping HTTP/JWT, which is covered by test_agents_jwt.py).
 
 Tools that depend on services Quad4 Finance already tests heavily (reports,
@@ -25,7 +25,7 @@ async def ctx(test_user) -> CallContext:
 # --- Registry shape --------------------------------------------------------
 
 def test_registry_contains_v1_tools():
-    """We promised these in the design — keep the contract."""
+    """We promised these in the design -- keep the contract."""
     expected = {
         "list_transactions",
         "list_accounts",
@@ -116,7 +116,7 @@ async def test_list_transactions_default_sort_is_purchase_date_desc(
     'what's my last transaction?' returns the most recent one.
     Previously we sorted by COALESCE(effective_bill_date, date), which
     floats credit-card transactions whose bill is due in the future to
-    the top — pushing the actual latest transaction down."""
+    the top -- pushing the actual latest transaction down."""
     handler = REGISTRY["list_transactions"].handler
     result = await handler(session=session, ctx=ctx, limit=5)
     items = result["items"]
@@ -130,8 +130,8 @@ async def test_list_transactions_default_sort_is_purchase_date_desc(
 async def test_list_transactions_exposes_extra_fields(
     session: AsyncSession, ctx: CallContext, test_transactions, test_account, test_categories
 ):
-    """Make sure the LLM gets enough context per row — names, not just
-    ids — so it can answer "from which account?" without a second call."""
+    """Make sure the LLM gets enough context per row -- names, not just
+    ids -- so it can answer "from which account?" without a second call."""
     handler = REGISTRY["list_transactions"].handler
     result = await handler(session=session, ctx=ctx, limit=5)
     sample = result["items"][0]
@@ -167,7 +167,7 @@ async def test_list_transactions_currency_filter_matches_native(
 async def test_list_transactions_currency_filter_returns_zero_for_unused(
     session: AsyncSession, ctx: CallContext, test_transactions
 ):
-    """Regression for the 'do I have any EUR transactions?' bug — the
+    """Regression for the 'do I have any EUR transactions?' bug -- the
     answer should be a clean 0, not a 0 from text-searching 'EUR' in
     descriptions."""
     handler = REGISTRY["list_transactions"].handler
@@ -246,7 +246,7 @@ async def test_aggregate_payee_filter(
     a single tool call instead of the agent's old 4-call dance."""
     handler = REGISTRY["aggregate"].handler
     r = await handler(session=session, ctx=ctx, payee_id=str(uuid.uuid4()))
-    # Filtering by a non-existent payee returns no buckets — but the call
+    # Filtering by a non-existent payee returns no buckets -- but the call
     # should still succeed (no error key).
     assert "error" not in r
     assert r["items"] == []
@@ -265,7 +265,7 @@ async def test_aggregate_currency_filter(
 async def test_list_transactions_account_types_filter(
     session: AsyncSession, ctx: CallContext, test_transactions, test_account
 ):
-    """fixture's test_account is 'checking' — filtering on 'credit_card' returns nothing."""
+    """fixture's test_account is 'checking' -- filtering on 'credit_card' returns nothing."""
     handler = REGISTRY["list_transactions"].handler
     cc = await handler(session=session, ctx=ctx, account_types=["credit_card"])
     assert cc["total"] == 0
@@ -335,7 +335,7 @@ async def test_get_dashboard_snapshot(session: AsyncSession, ctx: CallContext, t
     handler = REGISTRY["get_dashboard_snapshot"].handler
     result = await handler(session=session, ctx=ctx)
     assert isinstance(result, dict)
-    # Snapshot is a Pydantic model dumped to dict — at minimum should be non-empty.
+    # Snapshot is a Pydantic model dumped to dict -- at minimum should be non-empty.
     assert result
 
 
@@ -404,7 +404,7 @@ async def test_propose_create_category_detects_collision(
     session: AsyncSession, ctx: CallContext, test_categories
 ):
     handler = REGISTRY["propose_create_category"].handler
-    # Use the same name as an existing category — should flag collision.
+    # Use the same name as an existing category -- should flag collision.
     result = await handler(session=session, ctx=ctx, name=test_categories[0].name)
     assert result["kind"] == "create_category"
     assert result["name_collision"] is not None
@@ -541,7 +541,7 @@ async def test_propose_update_recurring_no_changes(
 async def test_propose_update_recurring_amount_change(
     session: AsyncSession, ctx: CallContext, test_user
 ):
-    """'Update my salary to R$8,000' — change amount only, current values
+    """'Update my salary to R$8,000' -- change amount only, current values
     are echoed back so the user sees the diff."""
     from app.models.recurring_transaction import RecurringTransaction
     from decimal import Decimal
@@ -765,7 +765,7 @@ async def test_propose_create_category_external_apply_blocks_collision(
     session: AsyncSession, test_user, test_categories
 ):
     """When the name collides with an existing category, apply must NOT
-    create a duplicate — the preview already flagged it."""
+    create a duplicate -- the preview already flagged it."""
     from sqlalchemy import select, func
     from app.models.category import Category
 

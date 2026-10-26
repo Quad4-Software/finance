@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.agents.models.usage import LlmUsage
 
 
-# Rough per-1M-token USD pricing for cost estimates. Inaccurate by design —
+# Rough per-1M-token USD pricing for cost estimates. Inaccurate by design --
 # prices change weekly and this is just a budget ballpark for the user. Out
 # of date entries default to 0 (logged for tokens but no cost shown).
 _PRICING_PER_M = {

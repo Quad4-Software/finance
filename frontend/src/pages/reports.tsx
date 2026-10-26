@@ -238,7 +238,7 @@ export default function ReportsPage() {
   })
   const [rangeKey, setRangeKey] = useState(initialRange.rangeKey)
   const [interval, setInterval] = useState(initialRange.interval)
-  // Custom range endpoints (YYYY-MM-DD) — populated when the user opens the
+  // Custom range endpoints (YYYY-MM-DD) -- populated when the user opens the
   // Custom preset and confirms a date range. Preserved across tab switches
   // that still support custom ranges so the picker doesn't forget its
   // selection while the user compares views.
@@ -264,7 +264,7 @@ export default function ReportsPage() {
   const acctIds = activeAccountIds ?? undefined
   const walletIds = activeWalletIds ?? undefined
   // Wallet-only collection (active, zero accounts): the account-based reports
-  // (income/expenses, cash flow) have no data — only net worth (which includes
+  // (income/expenses, cash flow) have no data -- only net worth (which includes
   // the wallets' assets) is meaningful.
   const noAccounts = activeAccountIds !== null && activeAccountIds.length === 0
 
@@ -536,7 +536,7 @@ export default function ReportsPage() {
       : key === 'projectedExpenses' ? 'expenses'
         : key
 
-  // Inner ring — summary view (high-level breakdown), filtered by toggle state for net_worth
+  // Inner ring -- summary view (high-level breakdown), filtered by toggle state for net_worth
   const innerDonutData = (() => {
     const excludedKeys = new Set(['netIncome', 'startingBalance', 'endingBalance'])
     return compositionBreakdownData
@@ -550,7 +550,7 @@ export default function ReportsPage() {
 
   const activeComposition = snapshotTrendPoint?.composition ?? composition
 
-  // Build a stable key → color map from the full composition range (never the
+  // Build a stable key -> color map from the full composition range (never the
   // snapshot), sorted the same way compositionDetail sorts, so colors don't
   // shift when switching between dates.
   const netWorthColorMap = (() => {
@@ -572,7 +572,7 @@ export default function ReportsPage() {
     return map
   })()
 
-  // Full detail — every holding in the active group(s), largest first, labelled
+  // Full detail -- every holding in the active group(s), largest first, labelled
   // and coloured. The donut draws only the top slice of this; the legend popover
   // lists all of it. Net worth items get a distinct palette (the long tail falls
   // back to the neutral colour); income/expense items keep the user's category colour.
@@ -589,7 +589,7 @@ export default function ReportsPage() {
     const itemLabel = (c: { label: string; key: string; group: string }) => {
       if (c.key === 'uncategorized') {
         // Uncategorized income and uncategorized expenses are distinct buckets
-        // that share a label — qualify them by group so they don't look duplicated.
+        // that share a label -- qualify them by group so they don't look duplicated.
         const g = c.group === 'income' ? t('reports.income')
           : c.group === 'expenses' ? t('reports.expenses')
           : null
@@ -619,7 +619,7 @@ export default function ReportsPage() {
       }))
   })()
 
-  // Outer ring — items above 3 % of total get their own slice; everything else
+  // Outer ring -- items above 3 % of total get their own slice; everything else
   // per group folds into one "Other <Group>" slice. Outer arcs are anchored to
   // inner ring values so per-item rounding never misaligns the two rings.
   const outerDonutData = (() => {
@@ -1314,7 +1314,7 @@ export default function ReportsPage() {
 
       {/* Breakdown: Donut + Grouped Bar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
-        {/* Composition widget — summary ring + ranked, labelled detail bars */}
+        {/* Composition widget -- summary ring + ranked, labelled detail bars */}
         <div className={`rounded-xl border shadow-sm transition-colors ${selectedDate ? 'bg-primary/5 border-primary/50' : 'bg-card border-border'}`}>
           <div className="px-5 pt-4 pb-2 flex flex-col gap-2 min-[635px]:flex-row min-[635px]:items-start min-[635px]:justify-between lg:flex-col lg:items-start xl:flex-row xl:items-start xl:justify-between">
             <div className="flex flex-col">
@@ -1409,7 +1409,7 @@ export default function ReportsPage() {
                                 const v = (entry.value as number) ?? 0
                                 const pct = donutTotal > 0 ? ((v / donutTotal) * 100).toFixed(1) : '0'
                                 const rawName = (entry.name as string) ?? ''
-                                const displayName = rawName.length > 50 ? rawName.slice(0, 47) + '…' : rawName
+                                const displayName = rawName.length > 50 ? rawName.slice(0, 47) + '...' : rawName
                                 const children = (entry.payload as { children?: { name: string; value: number; color: string }[] }).children
                                 return (
                                   <div style={{ ...tooltipStyle, padding: '8px 12px', zIndex: 10, maxWidth: 256 }}>
@@ -1426,7 +1426,7 @@ export default function ReportsPage() {
                                               <div className="flex items-center gap-1.5 min-w-0">
                                                 <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: child.color }} />
                                                 <span className="text-xs text-muted-foreground truncate">
-                                                  {child.name.length > 25 ? child.name.slice(0, 22) + '…' : child.name}
+                                                  {child.name.length > 25 ? child.name.slice(0, 22) + '...' : child.name}
                                                 </span>
                                               </div>
                                               <span className="text-xs text-muted-foreground shrink-0">
@@ -1477,7 +1477,7 @@ export default function ReportsPage() {
                             <div key={`${i}-${d.name}`} className="flex items-center gap-1.5">
                               <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
                               <span className="text-[11px] text-muted-foreground whitespace-nowrap">
-                                {d.name.length > 30 ? d.name.slice(0, 27) + '…' : d.name}
+                                {d.name.length > 30 ? d.name.slice(0, 27) + '...' : d.name}
                               </span>
                             </div>
                           ))}
@@ -1491,7 +1491,7 @@ export default function ReportsPage() {
                                 <div key={`${i}-${d.name}`} className="flex items-center gap-1.5">
                                   <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
                                   <span className="text-[11px] text-muted-foreground whitespace-nowrap">
-                                    {d.name.length > 30 ? d.name.slice(0, 27) + '…' : d.name}
+                                    {d.name.length > 30 ? d.name.slice(0, 27) + '...' : d.name}
                                   </span>
                                 </div>
                               ))}
@@ -1516,7 +1516,7 @@ export default function ReportsPage() {
                                           <div key={`${i}-${d.name}`} className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
                                             <span className="text-[11px] text-muted-foreground flex-1 truncate">
-                                              {d.name.length > 25 ? d.name.slice(0, 22) + '…' : d.name}
+                                              {d.name.length > 25 ? d.name.slice(0, 22) + '...' : d.name}
                                             </span>
                                             <span className="text-xs text-muted-foreground shrink-0">
                                               {privacyMode ? MASK : `${formatCurrency(d.value, userCurrency, locale)} (${pct}%)`}

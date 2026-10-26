@@ -25,7 +25,7 @@ def _storage_in_tmpdir(monkeypatch):
 
 @pytest.fixture(autouse=True)
 def _stub_celery_dispatch():
-    """Knowledge upload does send_task → we don't want it to actually
+    """Knowledge upload does send_task -> we don't want it to actually
     enqueue anything during tests. Returning a sentinel keeps the upload
     happy."""
     with patch("app.worker.celery_app.send_task", return_value=None) as m:

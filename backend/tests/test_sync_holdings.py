@@ -1,7 +1,7 @@
 """Cover the Asset lifecycle through `_sync_holdings`.
 
 The sync contract is a bit subtle: provider data drives creation *and*
-closure of Assets, but user-set fields are load-bearing — manual sell_date
+closure of Assets, but user-set fields are load-bearing -- manual sell_date
 is never overwritten, while provider closures reopen if the holding returns
 ACTIVE; group_id is rewritten only between wallets the
 sync itself owns (per-account re-attribution, issue #345); a wallet the
@@ -40,7 +40,7 @@ from app.services.connection_service import _sync_holdings
 
 
 # ---------------------------------------------------------------------------
-# Mock provider — deterministic replacement for a real provider in tests.
+# Mock provider -- deterministic replacement for a real provider in tests.
 # ---------------------------------------------------------------------------
 
 
@@ -164,7 +164,7 @@ async def _values_for(session: AsyncSession, asset_id) -> list[AssetValue]:
 async def test_new_active_holding_creates_asset_wallet_and_today_value(
     session: AsyncSession, test_user: User, mock_connection: BankConnection
 ):
-    """Happy path: one fresh ACTIVE holding → Asset + wallet + today's value."""
+    """Happy path: one fresh ACTIVE holding -> Asset + wallet + today's value."""
     today = date.today()
     _MockProvider._holdings = [
         _holding(current_value=Decimal("1234.56"), purchase_date=today - timedelta(days=10)),
@@ -201,7 +201,7 @@ async def test_new_withdrawn_holding_is_skipped_entirely(
     session: AsyncSession, test_user: User, mock_connection: BankConnection
 ):
     """A holding that's already TOTAL_WITHDRAWAL on first sight should not
-    create a zero-balance Asset — there's no meaningful history to show."""
+    create a zero-balance Asset -- there's no meaningful history to show."""
     _MockProvider._holdings = [
         _holding(external_id="dead-1", current_value=Decimal("0"), is_withdrawn=True),
     ]
@@ -442,7 +442,7 @@ async def test_active_holding_preserves_sell_date_edited_after_provider_withdraw
 async def test_same_day_resync_updates_asset_value_in_place(
     session: AsyncSession, test_user: User, mock_connection: BankConnection
 ):
-    """Running sync twice in one day must not duplicate the day's AssetValue —
+    """Running sync twice in one day must not duplicate the day's AssetValue --
     the second pass updates the amount in the existing row."""
     _MockProvider._holdings = [_holding(external_id="h-1", current_value=Decimal("100"))]
 
@@ -470,7 +470,7 @@ async def test_sparse_fields_are_preserved_on_later_sync(
 ):
     """Providers return purchase_price/purchase_date/units on some syncs and
     null on others. Earlier non-null values must not be clobbered by later
-    nulls — otherwise the user loses provenance data permanently."""
+    nulls -- otherwise the user loses provenance data permanently."""
     _MockProvider._holdings = [
         _holding(
             external_id="h-1",
@@ -511,7 +511,7 @@ async def test_sparse_fields_are_preserved_on_later_sync(
 async def test_historical_seed_is_idempotent(
     session: AsyncSession, test_user: User, mock_connection: BankConnection
 ):
-    """Historical seed at purchase_date should be inserted exactly once —
+    """Historical seed at purchase_date should be inserted exactly once --
     running sync 3× still leaves a single row at that date."""
     purchase = date.today() - timedelta(days=60)
     _MockProvider._holdings = [
@@ -587,7 +587,7 @@ async def test_disappeared_holding_gets_archived(
 ):
     """If a previously-synced holding is no longer in the provider response
     at all (e.g. broker removed it), archive the Asset so it stops cluttering
-    the UI — but don't delete it, history matters."""
+    the UI -- but don't delete it, history matters."""
     _MockProvider._holdings = [
         _holding(external_id="h-1", current_value=Decimal("500")),
         _holding(external_id="h-2", current_value=Decimal("200")),
@@ -728,7 +728,7 @@ async def test_provider_error_is_swallowed_without_side_effects(
     session: AsyncSession, test_user: User, mock_connection: BankConnection
 ):
     """/investments errors must not crash the account/transaction sync that
-    just succeeded — silent failure here is intentional."""
+    just succeeded -- silent failure here is intentional."""
     _MockProvider._raise = RuntimeError("provider 500")
 
     assert mock_connection.credentials is not None

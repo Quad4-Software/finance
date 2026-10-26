@@ -145,7 +145,7 @@ export interface BankConnection {
   last_sync_at: string | null
   created_at: string
   // Institutions this link spans (issue #345). Empty for one-institution
-  // providers — institution_name covers those.
+  // providers -- institution_name covers those.
   institutions: ConnectionInstitution[]
 }
 
@@ -249,7 +249,7 @@ export interface AccountSummary {
 }
 
 /** Set when this transaction settles an invoice. Absent in workspaces
- *  without the invoicing module — the query behind it does not run there. */
+ *  without the invoicing module -- the query behind it does not run there. */
 export interface TransactionInvoiceLink {
   invoice_id: string
   number: number | null
@@ -268,7 +268,7 @@ export interface DescriptionSuggestion {
 }
 
 export interface Transaction {
-  /** Every invoice this transaction settles — a payout net of fees
+  /** Every invoice this transaction settles -- a payout net of fees
    *  settles several. Absent in a workspace without the module. */
   invoice_links?: TransactionInvoiceLink[] | null
   id: string
@@ -316,7 +316,7 @@ export interface Transaction {
   splits: TransactionSplit[]
   // Shared-transaction view fields. Set per-request when the viewer
   // is a linked split member but not the owner. Render `viewer_share`
-  // as the amount and treat the row as read-only — editing belongs
+  // as the amount and treat the row as read-only -- editing belongs
   // to the parent's owner.
   is_shared?: boolean
   viewer_share?: number | null
@@ -413,7 +413,7 @@ export interface Group {
   color: string
   is_archived: boolean
   // Derived server-side per request. False = the current user is a
-  // linked member, not the owner — UI should hide edit affordances.
+  // linked member, not the owner -- UI should hide edit affordances.
   is_owner: boolean
   notes: string | null
   created_at: string
@@ -470,7 +470,7 @@ export interface Payee {
   id: string
   user_id: string
   name: string
-  /** Legal nature, or null when unknown — the normal state for a row sync created. */
+  /** Legal nature, or null when unknown -- the normal state for a row sync created. */
   type: 'person' | 'company' | null
   /** Where the row came from. Server-set at creation and never editable. */
   source: 'manual' | 'sync' | 'import'
@@ -512,7 +512,7 @@ export interface RuleCondition {
 
 /** A nested group of conditions joined by its own operator.
  *
- * Groups let a rule mix AND and OR — `type is debit AND (contains UBER OR
+ * Groups let a rule mix AND and OR -- `type is debit AND (contains UBER OR
  * contains 99POP)`. They hold leaf conditions only, capping rule depth at the
  * two levels the engine evaluates and the editor exposes.
  */
@@ -565,7 +565,7 @@ export interface RuleImportResponse {
 
 /** One matched transaction in a rule preview, with the category the draft rule
  * would leave it in. `will_change` is false when the rule matches but changes
- * nothing — usually a transaction that already has a category the draft keeps. */
+ * nothing -- usually a transaction that already has a category the draft keeps. */
 export interface RulePreviewItem {
   id: string
   date: string
@@ -583,7 +583,7 @@ export interface RulePreviewItem {
 export interface RulePreviewResponse {
   matched: number
   will_change: number
-  /** False when the draft's flags mean saving it changes nothing right now —
+  /** False when the draft's flags mean saving it changes nothing right now --
    * an inactive rule, or one not being applied to existing transactions. */
   will_apply: boolean
   /** One window of the matches, newest first: `offset` through
@@ -1014,13 +1014,13 @@ export interface PaginatedResponse<T> {
 }
 
 // Income / expense / net totals for all transactions matching the active
-// filters (issue #185) — accompanies the paginated /transactions response.
+// filters (issue #185) -- accompanies the paginated /transactions response.
 export interface TransactionsSummary {
   income: number
   expense: number
   net: number
   // Absolute total of everything excluded from income/expense for the same
-  // rows — transfers, treat_as_transfer categories and ignored items (#242).
+  // rows -- transfers, treat_as_transfer categories and ignored items (#242).
   excluded: number
   currency: string
 }
@@ -1104,7 +1104,7 @@ export interface ReportResponse {
 // workspace: the module resolver leaves `invoices` out of a personal
 // workspace's `enabled_modules`, so nothing below is ever fetched there.
 
-/** A decision a human took. Never PATCHed directly — each one has its own
+/** A decision a human took. Never PATCHed directly -- each one has its own
  *  endpoint, because a status that changed always has a reason. */
 export type InvoiceStatus = 'draft' | 'open' | 'void' | 'uncollectible'
 
@@ -1144,7 +1144,7 @@ export interface InvoiceLine {
 export interface InvoiceLineInput {
   description: string
   quantity: string
-  /** What the quantity counts — hours, words, pieces. Free text, because
+  /** What the quantity counts -- hours, words, pieces. Free text, because
    *  a list here would be a guess about somebody else's trade. */
   unit?: string | null
   unit_price: string
@@ -1258,14 +1258,14 @@ export interface InvoiceAllocation {
   } | null
 }
 
-/** What a filed document proves. Roles, not file types — a nota fiscal,
+/** What a filed document proves. Roles, not file types -- a nota fiscal,
  *  a facture and a Rechnung are all `fiscal`, and each locale names it. */
 export type InvoiceAttachmentKind = 'bill' | 'fiscal' | 'receipt' | 'contract' | 'other'
 
 export interface InvoiceAttachment {
   id: string
   invoice_id: string
-  /** The system that produced or delivered the file — a payment
+  /** The system that produced or delivered the file -- a payment
    *  provider, a fiscal-document integration, a mailbox. Null when a
    *  person uploaded it here. */
   source: string | null
@@ -1301,7 +1301,7 @@ export interface Invoice {
   state: InvoiceState
   issue_date: string
   due_date: string
-  /** The accrual date — competência / fait générateur / Leistungsdatum.
+  /** The accrual date -- competência / fait générateur / Leistungsdatum.
    *  Defaults to `issue_date` and diverges when work was delivered in a
    *  different period from the one it was billed in. */
   competence_date: string | null
@@ -1497,7 +1497,7 @@ export interface InvoiceSettings {
 
 /** The invoice resolved into a document: what the PDF prints and what the
  *  preview shows, from one definition on the server. Nothing here is
- *  recomputed on this side — a second implementation is how the two
+ *  recomputed on this side -- a second implementation is how the two
  *  would come to disagree. */
 export interface InvoiceDocumentParty {
   name: string | null
@@ -1545,12 +1545,12 @@ export interface InvoiceDocumentPayload {
   /** On a payable the parties are already swapped server-side; this is
    *  carried so the page can say "received" instead of "issued". */
   direction: InvoiceDirection
-  /** False when the invoice is only tracking money — the common case
+  /** False when the invoice is only tracking money -- the common case
    *  where the fiscal document was issued somewhere else entirely. */
   has_line_items: boolean
   /** Set when a real document was filed under this invoice. When it is,
    *  that file is the document and the page below is only a summary of
-   *  it — nothing here needs redrawing. */
+   *  it -- nothing here needs redrawing. */
   source_file: { id: string; filename: string; content_type: string } | null
   /** The dates the money is expected on, when more than one. */
   installments: { label: string | null; due_date: string; amount: string }[]

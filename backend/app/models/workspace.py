@@ -44,7 +44,7 @@ class Workspace(Base):
     name: Mapped[str] = mapped_column(String(100))
     kind: Mapped[str] = mapped_column(String(30), default="personal", server_default="personal")
     # The human who originally created the workspace. Distinct from
-    # `owner` role membership — ownership can transfer via the members
+    # `owner` role membership -- ownership can transfer via the members
     # table, but this field records the creator for audit.
     created_by_user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True

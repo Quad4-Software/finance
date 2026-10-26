@@ -26,7 +26,7 @@ describe('taxIdCountry', () => {
     expect(taxIdCountry('uy_rut', '211003420011', JURISDICTIONS)).toBe('UY')
   })
 
-  it('reads a VAT id’s country out of the number itself', () => {
+  it('reads a VAT id\'s country out of the number itself', () => {
     // The case that motivated this: one kind, nineteen countries, so the
     // label cannot say whose it is but the value can.
     expect(taxIdCountry('vat', 'NL802225395B01', JURISDICTIONS)).toBe('NL')

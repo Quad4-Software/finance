@@ -110,7 +110,7 @@ async def _make_goal(session, user_id, workspace_id, **kwargs):
 
 
 # ---------------------------------------------------------------------------
-# Pure helpers — _compute_percentage
+# Pure helpers -- _compute_percentage
 # ---------------------------------------------------------------------------
 
 
@@ -131,7 +131,7 @@ def test_compute_percentage_negative_target():
 
 
 # ---------------------------------------------------------------------------
-# Pure helpers — _compute_monthly_contribution
+# Pure helpers -- _compute_monthly_contribution
 # ---------------------------------------------------------------------------
 
 
@@ -164,7 +164,7 @@ def test_monthly_contribution_months_clamped_to_one():
 
 
 # ---------------------------------------------------------------------------
-# Pure helpers — _compute_on_track
+# Pure helpers -- _compute_on_track
 # ---------------------------------------------------------------------------
 
 
@@ -240,7 +240,7 @@ def test_on_track_created_at_none_uses_today():
 
 
 # ---------------------------------------------------------------------------
-# _resolve_current_amount — manual fallback
+# _resolve_current_amount -- manual fallback
 # ---------------------------------------------------------------------------
 
 
@@ -255,7 +255,7 @@ async def test_resolve_manual(session: AsyncSession, test_user, test_workspace):
 
 
 # ---------------------------------------------------------------------------
-# _resolve_current_amount — account tracking
+# _resolve_current_amount -- account tracking
 # ---------------------------------------------------------------------------
 
 
@@ -336,7 +336,7 @@ async def test_resolve_account_no_account_id_fallback(session, test_user, test_w
 
 
 # ---------------------------------------------------------------------------
-# _resolve_current_amount — asset tracking
+# _resolve_current_amount -- asset tracking
 # ---------------------------------------------------------------------------
 
 
@@ -443,7 +443,7 @@ async def test_resolve_asset_group_missing_fallback(session, test_user, test_wor
 
 
 # ---------------------------------------------------------------------------
-# _resolve_current_amount — net_worth
+# _resolve_current_amount -- net_worth
 # ---------------------------------------------------------------------------
 
 
@@ -519,7 +519,7 @@ async def test_resolve_net_worth_cross_currency(session, test_user, test_workspa
 
 
 # ---------------------------------------------------------------------------
-# _enrich_goal — names + primary-currency conversion
+# _enrich_goal -- names + primary-currency conversion
 # ---------------------------------------------------------------------------
 
 

@@ -19,7 +19,7 @@ export function shiftMonth(yearMonth: string, delta: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
-/** Last day-of-month number for a `"YYYY-MM"` month (28–31, leap-year aware). */
+/** Last day-of-month number for a `"YYYY-MM"` month (28-31, leap-year aware). */
 export function monthLastDay(yearMonth: string): number {
   const [y, m] = yearMonth.split('-').map(Number)
   return new Date(y, m, 0).getDate()

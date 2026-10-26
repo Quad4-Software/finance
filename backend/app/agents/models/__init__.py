@@ -6,7 +6,7 @@ from app.agents.models.usage import LlmUsage
 
 # Re-run the autostamp installer now that Agent + Conversation are loaded so
 # their inserts inherit workspace_id like the core financial models. Safe to
-# call multiple times — the listener registration is idempotent.
+# call multiple times -- the listener registration is idempotent.
 from app.core.workspace_autostamp import install_workspace_autostamp  # noqa: E402
 
 install_workspace_autostamp()

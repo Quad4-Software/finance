@@ -111,7 +111,7 @@ async def update_recurring_transaction(
         if required in update_data and update_data[required] is None:
             raise ValueError(f"{required} is required")
 
-    # A recurring transaction must always have an account — reject an explicit
+    # A recurring transaction must always have an account -- reject an explicit
     # null, and verify ownership of any new account_id.
     if "account_id" in update_data:
         new_account_id = update_data["account_id"]
@@ -341,7 +341,7 @@ async def generate_pending(
     for recurring in recurring_list:
         # Legacy rows may exist with a null account_id from before account_id
         # was required. Skip them rather than crashing on Transaction's NOT NULL
-        # constraint — the user should edit the recurring to fix it.
+        # constraint -- the user should edit the recurring to fix it.
         if recurring.account_id is None:
             continue
         cutoff = up_to or cutoffs.get(recurring.workspace_id) or app_today()

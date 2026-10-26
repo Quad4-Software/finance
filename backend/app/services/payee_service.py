@@ -95,7 +95,7 @@ async def get_or_create_payee(
 
     `source` is stamped only on rows this call creates. An existing payee is
     returned untouched, so a counterparty somebody entered by hand keeps
-    saying so even after sync sees the same name — the same protection that
+    saying so even after sync sees the same name -- the same protection that
     already keeps sync from overwriting manual edits.
 
     Defaults to `sync` because that is what this function is for: the bulk
@@ -302,7 +302,7 @@ async def delete_payee(session: AsyncSession, payee_id: uuid.UUID, workspace_id:
     # Invoices hold this payee under a RESTRICT foreign key, deliberately:
     # deleting a client must never silently delete the record of money
     # they owed. Refuse in words rather than letting the constraint
-    # surface as a 500, and point at the way out — merging keeps the
+    # surface as a 500, and point at the way out -- merging keeps the
     # history, which is what someone deleting a duplicate actually wants.
     invoiced = await _invoice_count(session, [payee_id])
     if invoiced:

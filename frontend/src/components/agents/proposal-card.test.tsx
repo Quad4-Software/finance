@@ -67,7 +67,7 @@ describe('ProposalCard transfer kinds', () => {
     )
 
     expect(screen.getByText('Link as transfer')).toBeInTheDocument()
-    const summary = screen.getByText(/Checking .*→ Savings/)
+    const summary = screen.getByText(/Checking .*-> Savings/)
     // Leg dates go through the shared date formatter in the viewer's date
     // locale, not as the raw ISO string from the tool payload.
     expect(summary.textContent).toContain('(01 Oct 2026)')

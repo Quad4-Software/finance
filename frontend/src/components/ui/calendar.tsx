@@ -61,7 +61,7 @@ function Calendar({
       ? format(viewMonth, 'LLLL yyyy', { locale })
       : view === 'months'
         ? format(viewMonth, 'yyyy', { locale })
-        : `${yearPageStart} – ${yearPageStart + YEAR_PAGE_SIZE - 1}`
+        : `${yearPageStart} - ${yearPageStart + YEAR_PAGE_SIZE - 1}`
 
   const onHeaderClick = () => {
     if (view === 'days') setView('months')

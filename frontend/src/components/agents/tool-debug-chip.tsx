@@ -12,7 +12,7 @@ interface Props {
 
 /**
  * Expandable tool-call inspector. Compact by default (status, name, brief
- * summary). Clicking reveals the raw JSON arguments and result — same
+ * summary). Clicking reveals the raw JSON arguments and result -- same
  * "show your work" affordance anything-llm uses for agent skills.
  */
 export function ToolDebugChip({ name, args, result, pending, defaultOpen = false }: Props) {
@@ -44,7 +44,7 @@ export function ToolDebugChip({ name, args, result, pending, defaultOpen = false
         <Wrench className="h-3 w-3 text-muted-foreground shrink-0" />
         <span className="font-mono truncate">{name}</span>
         {summary && (
-          <span className="text-muted-foreground truncate flex-1 min-w-0">— {summary}</span>
+          <span className="text-muted-foreground truncate flex-1 min-w-0">-- {summary}</span>
         )}
         {open ? (
           <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/70 shrink-0" />

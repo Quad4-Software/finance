@@ -161,7 +161,7 @@ async def test_ollama_chat_stream_yields_text_and_finish():
             "done": True, "done_reason": "stop",
             "prompt_eval_count": 7, "eval_count": 4,
         }),
-        "",  # blank line — should be skipped
+        "",  # blank line -- should be skipped
     ]))
 
     provider = OllamaProvider(base_url="http://ollama:11434")
@@ -275,8 +275,8 @@ async def test_anthropic_chat_stream_parses_text_block_sequence():
         f"data: {json.dumps({'type': 'content_block_delta', 'index': 0, 'delta': {'type': 'text_delta', 'text': '!'}})}",
         f"data: {json.dumps({'type': 'content_block_stop', 'index': 0})}",
         f"data: {json.dumps({'type': 'message_delta', 'delta': {'stop_reason': 'end_turn'}, 'usage': {'output_tokens': 2}})}",
-        "",  # blank — skipped
-        "non-sse line — should be ignored",  # not 'data:' prefixed
+        "",  # blank -- skipped
+        "non-sse line -- should be ignored",  # not 'data:' prefixed
     ]
     _FakeAsyncClient.queue_stream.append(_FakeStreamResponse(status_code=200, lines=sse))
 
@@ -293,7 +293,7 @@ async def test_anthropic_chat_stream_parses_text_block_sequence():
 
 @pytest.mark.asyncio
 async def test_anthropic_chat_stream_parses_tool_use_block():
-    # Build SSE lines via explicit json.dumps payloads — avoids backslash
+    # Build SSE lines via explicit json.dumps payloads -- avoids backslash
     # escapes inside f-strings, which Python 3.11 doesn't allow.
     events = [
         {"type": "content_block_start", "index": 0,
@@ -353,7 +353,7 @@ async def test_anthropic_payload_omits_temperature():
     assert "temperature" not in payload
 
 
-# --------------------------------------------------------------------- Anthropic: HTTP errors → typed exceptions
+# --------------------------------------------------------------------- Anthropic: HTTP errors -> typed exceptions
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("status,exc_type", [

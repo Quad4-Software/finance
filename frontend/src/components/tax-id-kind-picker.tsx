@@ -160,7 +160,7 @@ export function TaxIdKindPicker({
         >
           {/* Searches document names and country names alike: `keywords`
               carries the country so "Itália" matches Partita IVA. */}
-          <CommandInput placeholder={t('payees.searchTaxIdKind', 'Search document or country…')} />
+          <CommandInput placeholder={t('payees.searchTaxIdKind', 'Search document or country...')} />
           <CommandList className="max-h-[280px]">
             <CommandEmpty>{t('common.noResults', 'No results')}</CommandEmpty>
             {groups.map((jurisdiction) => (

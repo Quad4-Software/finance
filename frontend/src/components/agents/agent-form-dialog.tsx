@@ -38,7 +38,7 @@ export function AgentFormDialog({ open, onOpenChange, agent, preset }: Props) {
   const [systemPrompt, setSystemPrompt] = useState('')
   // Empty string = nothing picked yet. Required to submit; we no
   // longer support an "instance default" sentinel because there is no
-  // such thing — a connection is what tells the agent how to reach an
+  // such thing -- a connection is what tells the agent how to reach an
   // LLM.
   const [connectionId, setConnectionId] = useState<string>('')
   const [model, setModel] = useState('')
@@ -120,7 +120,7 @@ export function AgentFormDialog({ open, onOpenChange, agent, preset }: Props) {
       return
     }
     if (!connectionId) {
-      toast.error(t('agents.form.connectionRequired', 'Pick a connection — agents need one to talk to an LLM.'))
+      toast.error(t('agents.form.connectionRequired', 'Pick a connection -- agents need one to talk to an LLM.'))
       return
     }
     saveMut.mutate({
@@ -174,7 +174,7 @@ export function AgentFormDialog({ open, onOpenChange, agent, preset }: Props) {
             />
           </div>
           {noConnections ? (
-            // No connections at all → block the create flow with a
+            // No connections at all -> block the create flow with a
             // useful CTA. Otherwise the user fills out the form and
             // gets a confusing error when they hit "create".
             <div className="rounded-md border border-dashed p-4 flex items-start gap-3">
@@ -186,7 +186,7 @@ export function AgentFormDialog({ open, onOpenChange, agent, preset }: Props) {
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {t(
                     'agents.form.needConnectionHint',
-                    'An agent needs a connection (OpenAI, Anthropic, Ollama, …) to talk to a model. Set one up, then come back here.',
+                    'An agent needs a connection (OpenAI, Anthropic, Ollama, ...) to talk to a model. Set one up, then come back here.',
                   )}
                 </p>
                 <Link
@@ -270,7 +270,7 @@ export function AgentFormDialog({ open, onOpenChange, agent, preset }: Props) {
               <p className="text-xs text-muted-foreground mt-0.5">
                 {t(
                   'agents.form.isDefaultHint',
-                  'Used by the global slide-over chat (⌘J). Only one agent can be the default — turning this on clears it on others.',
+                  'Used by the global slide-over chat (⌘J). Only one agent can be the default -- turning this on clears it on others.',
                 )}
               </p>
             </div>

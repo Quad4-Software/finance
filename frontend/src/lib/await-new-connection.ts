@@ -3,7 +3,7 @@ import { connections } from '@/lib/api'
 import type { BankConnection } from '@/types'
 
 // A gateway or proxy gave up on the request (no response at all, or a
-// 502/503/504) — the backend may still be working on it and finish.
+// 502/503/504) -- the backend may still be working on it and finish.
 export function isGatewayTimeout(err: unknown): boolean {
   if (!axios.isAxiosError(err)) return false
   if (!err.response) return true

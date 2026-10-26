@@ -2592,8 +2592,8 @@ async def test_phantom_cleanup_counts_a_returned_pending_id_with_import_pending_
 async def test_sync_connection_tolerates_duplicate_transaction_rows(
     session: AsyncSession, test_user, test_workspace
 ):
-    """A pre-existing (account_id, external_id) duplicate — the state an earlier
-    concurrent-sync race leaves behind — must not abort the sync. Regression for
+    """A pre-existing (account_id, external_id) duplicate -- the state an earlier
+    concurrent-sync race leaves behind -- must not abort the sync. Regression for
     the MultipleResultsFound crash at the transaction dedup lookup.
     """
     conn = await _make_connection(session, test_user.id, "Dup Bank")
@@ -2843,7 +2843,7 @@ async def test_sync_rule_category_wins_over_provider_category(
 ):
     """A rule matching the description is more specific than the provider's
     generic category, so it should categorize the transaction instead of the
-    provider guess — not merely fill in what the provider left blank."""
+    provider guess -- not merely fill in what the provider left blank."""
     conn = await _make_connection(session, test_user.id, "Rule Precedence Bank")
     await _make_category(session, test_user.id, "Alimentação")
     consorcio_category = await _make_category(session, test_user.id, "Patrimônio / Consórcios")
@@ -4063,7 +4063,7 @@ async def test_sync_connection_does_not_revive_ignored_transaction(
 ):
     """Issue #200: a transaction the user flagged is_ignored=True must not be
     mutated by a subsequent sync, even when the provider returns the same external_id
-    with different fields (e.g. pending → posted)."""
+    with different fields (e.g. pending -> posted)."""
     from app.models.account import Account
 
     conn = await _make_connection(session, test_user.id, "Ignore Bank")
@@ -4329,7 +4329,7 @@ async def test_sync_connection_preserves_display_name(
     account.display_name = "Meu Apelido"
     await session.commit()
 
-    # Resync — provider now returns a different name
+    # Resync -- provider now returns a different name
     mock_provider.get_accounts = AsyncMock(
         return_value=[
             AccountData(
@@ -4469,7 +4469,7 @@ def _cc_provider_mock(
 
 
 def _patch_sync_helpers():
-    """Common context managers for sync tests — silences out-of-scope helpers."""
+    """Common context managers for sync tests -- silences out-of-scope helpers."""
     return (
         patch("app.services.connection_service.detect_transfer_pairs", new_callable=AsyncMock),
         patch("app.services.connection_service.stamp_primary_amount", new_callable=AsyncMock),
@@ -4580,7 +4580,7 @@ async def test_sync_falls_back_to_cycle_math_when_bill_missing(
     test_workspace,
 ):
     """A tx with bill_external_id that isn't in the bills feed (older bill,
-    bills 4xx, etc.) leaves bill_id null and uses local cycle math —
+    bills 4xx, etc.) leaves bill_id null and uses local cycle math --
     nothing about the legacy path may regress."""
     conn = await _make_connection(session, test_user.id, "Cycle Bank")
 
@@ -4622,7 +4622,7 @@ async def test_sync_falls_back_to_cycle_math_when_bill_missing(
         await session.execute(select(Transaction).where(Transaction.external_id == "tx-orphan"))
     ).scalar_one()
     assert tx_row.bill_id is None
-    # close=20 (>tx_date=5) → cycle ends 2026-04-20, due=28 → effective=2026-04-28
+    # close=20 (>tx_date=5) -> cycle ends 2026-04-20, due=28 -> effective=2026-04-28
     assert tx_row.effective_date == date(2026, 4, 28)
 
 
@@ -4673,7 +4673,7 @@ async def test_sync_skips_get_bills_for_non_credit_card_account(
     test_user,
     test_workspace,
 ):
-    """Checking accounts must not hit /bills — saves an HTTP roundtrip and
+    """Checking accounts must not hit /bills -- saves an HTTP roundtrip and
     avoids 4xx noise on providers that scope bills to credit accounts."""
     conn = await _make_connection(session, test_user.id, "Checking Bank")
     mock_provider = AsyncMock()
@@ -4726,7 +4726,7 @@ async def test_sync_backfills_bill_link_on_existing_transaction(
         bill_external_id="bill-future-1",
     )
 
-    # First sync — no bills returned yet (simulates pre-feature state)
+    # First sync -- no bills returned yet (simulates pre-feature state)
     mock_provider = _cc_provider_mock(bills=[], transactions=[txn_v0])
 
     p1, p2, p3 = _patch_sync_helpers()
@@ -4745,7 +4745,7 @@ async def test_sync_backfills_bill_link_on_existing_transaction(
     ).scalar_one()
     assert pre.bill_id is None  # not linked yet
 
-    # Second sync — same tx, but now /bills returns a matching bill
+    # Second sync -- same tx, but now /bills returns a matching bill
     bill = BillData(
         external_id="bill-future-1",
         due_date=date(2026, 5, 10),
@@ -4786,7 +4786,7 @@ async def test_sync_relinks_transaction_when_bank_moves_it_to_another_bill(
     test_workspace,
 ):
     """If the bank later re-buckets a tx (chargeback, billing dispute), the
-    next sync must update bill_id and effective_date — same row, new link."""
+    next sync must update bill_id and effective_date -- same row, new link."""
     from app.models.credit_card_bill import CreditCardBill
 
     conn = await _make_connection(session, test_user.id, "Relink Bank")
@@ -4935,7 +4935,7 @@ async def test_sync_dates_charges_at_cycle_close_when_close_day_known(
     test_workspace,
 ):
     """Synthetic finance charges should be dated at the cycle close (the
-    bank's snapshot moment) rather than the bill's due date — otherwise
+    bank's snapshot moment) rather than the bill's due date -- otherwise
     they'd appear chronologically AFTER the user's payment in the tx list,
     which doesn't match real bank semantics. effective_date stays at
     due_date for accrual aggregation."""
@@ -4985,7 +4985,7 @@ async def test_sync_dates_charges_at_cycle_close_when_close_day_known(
             )
         )
     ).scalar_one()
-    # Close = the most recent close_day on or before due — same month here.
+    # Close = the most recent close_day on or before due -- same month here.
     assert tx.date == date(2026, 2, 12)
     # Accrual bucketing still anchors on bill.due_date.
     assert tx.effective_date == date(2026, 2, 18)
@@ -5131,7 +5131,7 @@ async def test_sync_removes_orphaned_finance_charges_on_resync(
     ):
         await sync_connection(session, conn.id, test_workspace.id, test_user.id)
 
-    # Second sync — the LATE_PAYMENT_FEE charge is gone (bank reversed it)
+    # Second sync -- the LATE_PAYMENT_FEE charge is gone (bank reversed it)
     bill_v2 = BillData(
         external_id="bill-orph",
         due_date=date(2026, 4, 15),
@@ -5178,7 +5178,7 @@ async def test_sync_does_not_overwrite_manual_effective_bill_date(
     test_workspace,
 ):
     """When the user has manually set effective_bill_date on a tx, the next
-    sync must NOT relink bill_id or recompute effective_date — the user is
+    sync must NOT relink bill_id or recompute effective_date -- the user is
     explicitly overriding the auto bucketing (issue #92, LucasFidelis idea)."""
     from datetime import date as _date_
 
@@ -5220,7 +5220,7 @@ async def test_sync_does_not_overwrite_manual_effective_bill_date(
     tx_row.effective_date = _date_(2026, 5, 5)
     await session.commit()
 
-    # Re-sync — provider still says bill A. Override must be preserved.
+    # Re-sync -- provider still says bill A. Override must be preserved.
     with (
         patch("app.services.connection_service.get_provider", return_value=mock_provider),
         p1,
@@ -5309,8 +5309,8 @@ async def test_sync_dedupes_pending_posted_twin_in_same_fetch(
     test_user,
     test_workspace,
 ):
-    """A provider emits the same operation twice in a single fetch — once
-    pending (the scheduled row) and once posted (the executed row) — under
+    """A provider emits the same operation twice in a single fetch -- once
+    pending (the scheduled row) and once posted (the executed row) -- under
     two different external_ids. Only the posted row must land."""
     conn = await _make_connection(session, test_user.id, "Twin Bank")
     mock_provider = AsyncMock()
@@ -5380,7 +5380,7 @@ async def test_sync_dedupes_pending_posted_twin_with_identical_descriptions(
     test_user,
     test_workspace,
 ):
-    """Same case as above but the descriptions are byte-identical — the
+    """Same case as above but the descriptions are byte-identical -- the
     status differential alone is enough to collapse them."""
     conn = await _make_connection(session, test_user.id, "Identical Desc Bank")
     mock_provider = AsyncMock()
@@ -5449,8 +5449,8 @@ async def test_sync_keeps_unrelated_pending_and_posted_with_different_descriptio
     test_user,
     test_workspace,
 ):
-    """Two unrelated transactions that happen to share a date and amount —
-    one pending, one posted, completely different merchants — must NOT be
+    """Two unrelated transactions that happen to share a date and amount --
+    one pending, one posted, completely different merchants -- must NOT be
     collapsed. The description-similarity guard protects against this
     false positive."""
     conn = await _make_connection(session, test_user.id, "Unrelated Bank")
@@ -5521,7 +5521,7 @@ async def test_sync_upgrades_pending_to_posted_when_twin_arrives(
 ):
     """When the pending row was synced first and the posted twin arrives on
     the next sync with a different external_id, the existing row must be
-    upgraded in place — not duplicated."""
+    upgraded in place -- not duplicated."""
     conn = await _make_connection(session, test_user.id, "Twin Upgrade Bank")
     mock_provider = AsyncMock()
     mock_provider.refresh_credentials = AsyncMock(return_value={"token": "t"})
@@ -5706,7 +5706,7 @@ async def test_sync_dedupes_advanced_installment_when_pending_lands_first(
 ):
     """Same as the previous test but the pending next-bill row arrives
     before the posted current-bill row in the fetch list. Order must not
-    matter — posted still wins."""
+    matter -- posted still wins."""
     conn = await _make_connection(session, test_user.id, "Inst Order Bank")
 
     bill_current = BillData(
@@ -5789,7 +5789,7 @@ async def test_sync_keeps_genuine_same_day_repeats(
     test_workspace,
 ):
     """Two genuine same-day same-amount transactions with byte-identical
-    descriptions and identical statuses must NOT be collapsed — those are
+    descriptions and identical statuses must NOT be collapsed -- those are
     real repeats (e.g. two identical fares charged on the same day), not
     provider-side duplicates. Guards against false positives in the new
     dedup."""
@@ -5939,7 +5939,7 @@ async def test_sync_normalizes_simplefin_card_balance_to_positive_for_debt(
         await sync_connection(session, conn.id, test_workspace.id, test_user.id)
 
     await session.refresh(account)
-    # Incoming -650 (raw SimpleFIN) → stored +650 (positive-for-debt). The user
+    # Incoming -650 (raw SimpleFIN) -> stored +650 (positive-for-debt). The user
     # override (type=credit_card) is preserved.
     assert account.type == "credit_card"
     assert account.balance == Decimal("650.00")
@@ -5952,7 +5952,7 @@ async def test_sync_leaves_simplefin_checking_balance_unchanged(
     test_workspace,
 ):
     """A SimpleFIN non-card account (no override) keeps the provider's balance
-    verbatim — the normalization only applies to credit_card."""
+    verbatim -- the normalization only applies to credit_card."""
     from app.models.account import Account
 
     conn = await _make_simplefin_connection(session, test_user.id, "SF Checking")
@@ -5998,7 +5998,7 @@ async def test_sync_leaves_simplefin_checking_balance_unchanged(
 
 
 # ---------------------------------------------------------------------------
-# _sync_holdings — per-account wallets (issue #345)
+# _sync_holdings -- per-account wallets (issue #345)
 # ---------------------------------------------------------------------------
 
 
@@ -6010,7 +6010,7 @@ async def test_sync_holdings_splits_wallets_per_account(
 ):
     """Holdings split into one wallet per owning account, backed by the
     account's institution. The legacy connection-keyed wallet is ADOPTED by
-    the first account — re-keyed, its untouched auto-name refreshed — so an
+    the first account -- re-keyed, its untouched auto-name refreshed -- so an
     existing user's wallet row survives the upgrade; a wallet the user made
     themselves is never touched."""
     from app.models.asset_group import AssetGroup
@@ -6044,7 +6044,7 @@ async def test_sync_holdings_splits_wallets_per_account(
         connection_id=conn.id,
         external_id=conn.external_id,
     )
-    # A wallet the user made themselves — sync must never touch it.
+    # A wallet the user made themselves -- sync must never touch it.
     custom = AssetGroup(
         user_id=test_user.id,
         workspace_id=test_workspace.id,
@@ -6130,7 +6130,7 @@ async def test_sync_holdings_splits_wallets_per_account(
 
 
 # ---------------------------------------------------------------------------
-# sync_connection — institution wiring (issue #345)
+# sync_connection -- institution wiring (issue #345)
 # ---------------------------------------------------------------------------
 
 
@@ -6173,7 +6173,7 @@ async def test_sync_wires_account_institutions_and_reaps_orphans(
     conn = await _make_connection(session, test_user.id, "Sync Bank")
     conn_id = conn.id
 
-    # Pre-existing account with no institution yet — must get backfilled.
+    # Pre-existing account with no institution yet -- must get backfilled.
     account = Account(
         id=uuid.uuid4(),
         user_id=test_user.id,
@@ -6189,7 +6189,7 @@ async def test_sync_wires_account_institutions_and_reaps_orphans(
     account_id = account.id
     # An abandoned identity-drift row: no account or wallet points at it.
     stray = Institution(connection_id=conn_id, name="Old Name Bank")
-    # A row only a wallet references — the reap must never touch it.
+    # A row only a wallet references -- the reap must never touch it.
     kept = Institution(connection_id=conn_id, name="Departed Brokerage")
     session.add_all([stray, kept])
     await session.flush()
@@ -6297,8 +6297,8 @@ async def test_sync_holdings_readopts_orphaned_wallet_after_reconnect(
 ):
     """Disconnect leaves the legacy wallet with connection_id NULL (SET NULL)
     and reconnects can mint a NEW connection external_id. The lone stale
-    plain-keyed wallet is adopted anyway — customization kept, assets in
-    place — instead of being emptied and deleted (review round 4 on #654)."""
+    plain-keyed wallet is adopted anyway -- customization kept, assets in
+    place -- instead of being emptied and deleted (review round 4 on #654)."""
     from app.models.asset_group import AssetGroup
     from app.services.connection_service import _sync_holdings
 
@@ -6381,7 +6381,7 @@ async def test_sync_holdings_keeps_emptied_wallet_a_goal_tracks(
     test_workspace,
 ):
     """Deleting an emptied sync-owned wallet would SET NULL a goal's target
-    and CASCADE away collection membership — so referenced wallets survive
+    and CASCADE away collection membership -- so referenced wallets survive
     (self-review on #654)."""
     from app.models.asset_group import AssetGroup
     from app.models.goal import Goal
@@ -6404,7 +6404,7 @@ async def test_sync_holdings_keeps_emptied_wallet_a_goal_tracks(
     )
     # Keyed like a per-account wallet of a since-removed account, so the
     # legacy-adoption path (which only considers plain-keyed wallets) doesn't
-    # claim it — this test exercises the goal guard on the emptied-wallet
+    # claim it -- this test exercises the goal guard on the emptied-wallet
     # delete, not adoption.
     legacy = AssetGroup(
         user_id=test_user.id,
@@ -6469,8 +6469,8 @@ async def test_sync_holdings_adoption_preserves_wallet_customization(
     test_user,
     test_workspace,
 ):
-    """The maintainer's repro on #654: an existing user's wallet — renamed,
-    custom icon/color/position — must survive the first per-account sync as
+    """The maintainer's repro on #654: an existing user's wallet -- renamed,
+    custom icon/color/position -- must survive the first per-account sync as
     the same row with all customization intact, not come back as a default
     wallet. A custom name is never overwritten by adoption."""
     from app.models.asset_group import AssetGroup
@@ -6624,7 +6624,7 @@ async def test_sync_holdings_mixed_hints_stay_stable_across_syncs(
             account_external_id="acc-1",
             account_name="IRA",
         ),
-        # Spec-nonconforming account without an id → no account hint.
+        # Spec-nonconforming account without an id -> no account hint.
         HoldingData(
             external_id="h-2",
             name="Mystery Fund",
@@ -6651,7 +6651,7 @@ async def test_sync_holdings_mixed_hints_stay_stable_across_syncs(
     )
     by_key = {w.external_id: w for w in wallets}
     # Steady state: the adopted per-account wallet plus one connection-default
-    # wallet for the unattributed holding — no churn, no duplicates.
+    # wallet for the unattributed holding -- no churn, no duplicates.
     assert len(wallets) == 2
     assert set(by_key) == {f"{conn.external_id}::acc-1", conn.external_id}
     assert by_key[f"{conn.external_id}::acc-1"].id == legacy_id  # adopted once
@@ -6664,7 +6664,7 @@ async def test_sync_holdings_adoption_refreshes_suffixed_auto_names(
     test_workspace,
 ):
     """A wallet auto-named "Mixed Bank 2" by _unique_default_name is still an
-    untouched auto-name — adoption refreshes it to the account's name, and
+    untouched auto-name -- adoption refreshes it to the account's name, and
     the refresh itself dedupes against existing wallet names
     (review round 4 on #654)."""
     from app.models.asset_group import AssetGroup
@@ -6695,7 +6695,7 @@ async def test_sync_holdings_adoption_refreshes_suffixed_auto_names(
         connection_id=conn_id,
         external_id=conn.external_id,
     )
-    # A manual wallet already using the account's name — the refresh must
+    # A manual wallet already using the account's name -- the refresh must
     # dedupe, not duplicate.
     session.add_all(
         [
@@ -6739,7 +6739,7 @@ async def test_sync_holdings_unattributed_first_keeps_default_wallet_key(
 ):
     """When the unattributed holding claims the connection-default wallet
     first, a later per-account bucket must not adopt (and re-key) that
-    just-claimed wallet — provider-controlled payload order must not cause
+    just-claimed wallet -- provider-controlled payload order must not cause
     churn (review round 5 on #654)."""
     from app.models.asset_group import AssetGroup
     from app.services.connection_service import _sync_holdings
@@ -6908,7 +6908,7 @@ async def test_sync_holdings_adopts_own_stale_wallet_over_foreign_orphan(
     test_workspace,
 ):
     """A reconnect-in-place leaves the bank's wallet linked to the connection
-    but on a stale key. It is adopted even when an unrelated orphan coexists —
+    but on a stale key. It is adopted even when an unrelated orphan coexists --
     the old ambiguity rule would have minted a wallet and reaped the
     customized one (review round 5 on #654)."""
     from app.models.asset_group import AssetGroup
@@ -6998,7 +6998,7 @@ async def test_sync_holdings_prefers_exact_key_match_over_stale_candidate(
     test_workspace,
 ):
     """With the current-keyed legacy wallet AND a stale-keyed wallet both on
-    the connection, the exact match wins — without the preference, two
+    the connection, the exact match wins -- without the preference, two
     same-connection candidates would read as ambiguous and mint
     (review round 5 on #654)."""
     from app.models.asset_group import AssetGroup
@@ -7039,7 +7039,7 @@ async def test_sync_holdings_prefers_exact_key_match_over_stale_candidate(
     session.add_all([legacy, stale])
     await session.flush()
     legacy_id, stale_id = legacy.id, stale.id
-    # An asset outside this payload keeps the stale wallet from the reap —
+    # An asset outside this payload keeps the stale wallet from the reap --
     # the point here is which candidate adoption picks, not the reap.
     session.add(
         Asset(
@@ -7156,7 +7156,7 @@ async def test_sync_holdings_adoption_keeps_name_matching_account(
     test_workspace,
 ):
     """When the account is named after the institution, the refreshed
-    auto-name equals the wallet's current one — it must not count itself as
+    auto-name equals the wallet's current one -- it must not count itself as
     taken and become "Vanguard 2" (review round 5 on #654)."""
     from app.models.asset_group import AssetGroup
     from app.services.connection_service import _sync_holdings
@@ -7293,7 +7293,7 @@ async def test_sync_holdings_readopts_split_wallet_after_reconnect(
 ):
     """The keys this PR itself writes must survive a delete/re-add cycle: an
     orphaned per-account wallet on an old connection prefix is matched by its
-    "::{account}" suffix and re-keyed in place — not excluded, re-minted, and
+    "::{account}" suffix and re-keyed in place -- not excluded, re-minted, and
     reaped (review round 6 on #654)."""
     from app.models.asset_group import AssetGroup
     from app.services.connection_service import _sync_holdings
@@ -7549,7 +7549,7 @@ async def test_sync_holdings_new_account_first_keeps_default_wallet(
     test_workspace,
 ):
     """Once per-account wallets exist, the plain-keyed wallet is the live
-    connection-default — a new account's bucket running first must mint its
+    connection-default -- a new account's bucket running first must mint its
     own wallet, not adopt and re-key the default (review round 6 on #654)."""
     from app.models.asset_group import AssetGroup
     from app.services.connection_service import _sync_holdings
@@ -7877,7 +7877,7 @@ async def test_ensure_group_recovers_when_losing_the_mint_race(
             return None
 
     async def racing_execute(stmt, *args, **kwargs):
-        # The first lookup misses — the winner's row lands "between" the
+        # The first lookup misses -- the winner's row lands "between" the
         # select and the flush, as a concurrent sync's commit would.
         if not state["missed"]:
             state["missed"] = True
@@ -7951,7 +7951,7 @@ async def test_sync_holdings_survives_losing_the_adoption_rekey_race(
     session.add_all([twin, stale])
     await session.flush()
     twin_id, stale_id = twin.id, stale.id
-    # An asset outside the payload keeps the loser's wallet from the reap —
+    # An asset outside the payload keeps the loser's wallet from the reap --
     # the point here is the contained IntegrityError, not the reap.
     session.add(
         Asset(
@@ -8018,7 +8018,7 @@ async def test_sync_holdings_keyless_bucket_adopts_default_after_rotation(
     test_workspace,
 ):
     """After a reconnect rotates the connection key, the keyless bucket must
-    still adopt the customized stale default wallet — pinned against
+    still adopt the customized stale default wallet -- pinned against
     recomputing the split snapshot per bucket, which would see the split
     wallet re-keyed earlier in the same run and mint instead
     (review round 7 on #654)."""
@@ -8079,7 +8079,7 @@ async def test_sync_holdings_keyless_bucket_adopts_default_after_rotation(
     mock_provider = AsyncMock()
     mock_provider.get_holdings.return_value = [
         # The keyed bucket runs first and re-keys the split wallet under
-        # the new prefix — the pre-run snapshot must not see that.
+        # the new prefix -- the pre-run snapshot must not see that.
         HoldingData(
             external_id="h-1",
             name="Apple",
@@ -8118,7 +8118,7 @@ async def test_sync_holdings_new_account_after_rotation_mints_its_own_wallet(
     test_workspace,
 ):
     """A genuinely new account appearing in the first post-rotation sync
-    must mint — old-prefix split wallets prove the legacy era is over, so
+    must mint -- old-prefix split wallets prove the legacy era is over, so
     the stale default belongs to the keyless bucket, not the new account
     (review round 7 on #654)."""
     from app.models.asset_group import AssetGroup
@@ -8224,7 +8224,7 @@ async def test_sync_holdings_two_stale_generations_mean_minting(
     test_workspace,
 ):
     """Two stale per-account wallets for the same account (two rotations)
-    are ambiguous — mint rather than guess; neither is re-keyed
+    are ambiguous -- mint rather than guess; neither is re-keyed
     (review round 7 on #654)."""
     from app.models.asset_group import AssetGroup
     from app.services.connection_service import _sync_holdings
@@ -8314,7 +8314,7 @@ async def test_sync_holdings_separator_in_account_id_cannot_steal_sibling_wallet
     test_workspace,
 ):
     """An account id ending in another account's id (ids may contain "::")
-    must not suffix-match the sibling's live wallet — live-prefix wallets
+    must not suffix-match the sibling's live wallet -- live-prefix wallets
     are never candidates, and a stale key must parse as exactly one
     "{prefix}::{key}" (review round 7 on #654)."""
     from app.models.asset_group import AssetGroup
@@ -8367,7 +8367,7 @@ async def test_sync_holdings_separator_in_account_id_cannot_steal_sibling_wallet
     mock_provider = AsyncMock()
     mock_provider.get_holdings.return_value = [
         # The new account whose id is the "::"-tail of its sibling's runs
-        # first — the hostile ordering.
+        # first -- the hostile ordering.
         HoldingData(
             external_id="h-solo",
             name="Solo Fund",
@@ -8410,7 +8410,7 @@ async def test_ensure_group_relocates_wallet_when_connection_moves_workspaces(
     test_workspace,
 ):
     """The wallet key is unique per (user, source) across workspaces, so a
-    key match from another workspace means the bank moved — the wallet
+    key match from another workspace means the bank moved -- the wallet
     follows its connection instead of feeding data into a workspace the
     connection doesn't live in (review round 7 on #654)."""
     from app.models.asset_group import AssetGroup

@@ -3,7 +3,7 @@ conversation when the agent has `auto_context=True`.
 
 Goals:
   - Tiny budget: ~300 tokens. Cheap on every turn.
-  - Stable orientation, not authoritative data — the LLM should still
+  - Stable orientation, not authoritative data -- the LLM should still
     use tools for precise queries (balances, transactions, etc.).
   - Locale-aware: respects the user's primary currency and language.
 """
@@ -91,14 +91,14 @@ async def build_context_primer(
                 piece += f", {balance_str}"
             piece += ")"
             if account_id:
-                piece += f" — id: {account_id}"
+                piece += f" -- id: {account_id}"
             lines.append(piece)
         lines.append("")
 
     lines.append(
         "Use the available tools (list_transactions, get_dashboard_snapshot, "
         "aggregate, etc.) for precise current data. The summary above is "
-        "orientation only — never quote balances from this primer; query the "
+        "orientation only -- never quote balances from this primer; query the "
         "tools instead."
     )
     lines.append("")
@@ -106,13 +106,13 @@ async def build_context_primer(
     lines.append(
         "- `propose_*` tools NEVER execute the action; they return a preview "
         "that renders as a card with an Apply button. After calling one, say "
-        "'I prepared a proposal — review and click Apply to confirm', NOT "
+        "'I prepared a proposal -- review and click Apply to confirm', NOT "
         "'I created' or 'Done'."
     )
     lines.append(
         "- When the user names an entity (category, account, payee) you "
         "haven't seen, list it first. Do NOT silently substitute a "
-        "different one — ask the user to pick from the existing list, or "
+        "different one -- ask the user to pick from the existing list, or "
         "use `propose_create_category` to add the missing one."
     )
     return "\n".join(lines).strip()

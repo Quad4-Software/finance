@@ -1,4 +1,4 @@
-"""require account — create Carteira default accounts and make account_id NOT NULL
+"""require account -- create Carteira default accounts and make account_id NOT NULL
 
 Revision ID: 013
 Revises: 012

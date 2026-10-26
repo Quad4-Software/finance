@@ -8,7 +8,7 @@ branches, and the net-worth credit-card / asset composition branches.
 ``to_char`` (and ``extract`` for weekly). Tests run on SQLite, so we register
 a ``to_char`` user-defined function on the shared test engine for the
 daily / monthly / yearly intervals (weekly relies on ``extract('isoyear')``
-which SQLite cannot compile and is therefore not exercised here — its label
+which SQLite cannot compile and is therefore not exercised here -- its label
 helper is covered by the existing pure-function tests).
 """
 import uuid
@@ -173,7 +173,7 @@ async def test_to_char_udf_registered(session: AsyncSession):
 
 
 # ---------------------------------------------------------------------------
-# get_income_expenses_report — the big uncovered function (328-865)
+# get_income_expenses_report -- the big uncovered function (328-865)
 # ---------------------------------------------------------------------------
 
 
@@ -230,7 +230,7 @@ async def test_income_expenses_basic_structure(session, test_user, test_workspac
 
 
 async def test_income_expenses_empty_data(session, test_user, test_workspace):
-    """No transactions → zeroed summary, empty composition / category trend."""
+    """No transactions -> zeroed summary, empty composition / category trend."""
     report = await get_income_expenses_report(
         session, test_workspace.id, test_user.id, months=2, interval="monthly"
     )
@@ -344,7 +344,7 @@ async def test_income_expenses_pending_is_projected_not_actual(
 
 
 async def test_income_expenses_many_categories_triggers_other_bucket(session, test_user, test_workspace):
-    """More than CATEGORY_TREND_TOP_N expense categories → an 'Other' bucket."""
+    """More than CATEGORY_TREND_TOP_N expense categories -> an 'Other' bucket."""
     acct = await _make_account(session, test_user.id, "IE Many")
     today = date.today()
     # 14 distinct expense categories (> top-N of 11)
@@ -377,14 +377,14 @@ async def test_income_expenses_change_percent_computed(session, test_user, test_
     report = await get_income_expenses_report(
         session, test_workspace.id, test_user.id, months=4, interval="monthly"
     )
-    # change_percent may be None only if the first trend net is 0 — assert the
+    # change_percent may be None only if the first trend net is 0 -- assert the
     # field is the right type either way and totals are correct.
     bd = {b.key: b.value for b in report.summary.breakdowns}
     assert bd["income"] == pytest.approx(4000.0)
 
 
 # ---------------------------------------------------------------------------
-# get_net_worth_report — credit-card composition + asset-value branches
+# get_net_worth_report -- credit-card composition + asset-value branches
 # ---------------------------------------------------------------------------
 
 
@@ -459,7 +459,7 @@ async def test_net_worth_at_credit_card_branch(session, test_user, test_workspac
 
 
 # ---------------------------------------------------------------------------
-# get_cash_flow_report — non-daily interval aggregation (1261-1294)
+# get_cash_flow_report -- non-daily interval aggregation (1261-1294)
 # ---------------------------------------------------------------------------
 
 
@@ -501,7 +501,7 @@ async def test_cash_flow_weekly_interval_aggregation(session, test_user, test_wo
 
 
 # ---------------------------------------------------------------------------
-# get_cash_flow_report — baseline projection branch (_get_baseline_projection)
+# get_cash_flow_report -- baseline projection branch (_get_baseline_projection)
 # ---------------------------------------------------------------------------
 
 
@@ -526,7 +526,7 @@ async def test_cash_flow_baseline_mode_projects_from_history(session, test_user,
 
 
 async def test_baseline_projection_no_history_returns_empty(session, test_user, test_workspace):
-    """No qualifying transactions → empty projection, zero lookback days."""
+    """No qualifying transactions -> empty projection, zero lookback days."""
     async def _to_primary(amount, ccy):
         return float(amount)
 
@@ -564,7 +564,7 @@ async def test_baseline_projection_with_history(session, test_user, test_workspa
 
 
 # ---------------------------------------------------------------------------
-# get_cash_flow_report — accrual mode (pending CC purchases branch 1122-1152)
+# get_cash_flow_report -- accrual mode (pending CC purchases branch 1122-1152)
 # ---------------------------------------------------------------------------
 
 
@@ -756,7 +756,7 @@ async def test_cash_flow_foreign_currency_conversion_path(session, test_user, te
     today = date.today()
     await _add_txn(session, test_user.id, acct.id, 1000, "credit", today,
                    source="opening_balance", currency="USD")
-    # Past actual flow in USD → hits _to_primary with a non-BRL currency
+    # Past actual flow in USD -> hits _to_primary with a non-BRL currency
     await _add_txn(session, test_user.id, acct.id, 200, "debit",
                    today - timedelta(days=5), currency="USD")
 

@@ -5,7 +5,7 @@ v0.13.0 stored the Pluggy connector ``imageUrl`` verbatim, which for the demo
 logo fix only backfills connections whose ``logo_url`` is NULL, so these rows
 keep showing the placeholder. Null them out here so the next sync re-resolves
 the real bank logo (via the COMPE-code fallback). Only the placeholder rows
-are touched — real logos, Enable Banking and SimpleFIN entries are untouched.
+are touched -- real logos, Enable Banking and SimpleFIN entries are untouched.
 
 Revision ID: 058
 Revises: 057

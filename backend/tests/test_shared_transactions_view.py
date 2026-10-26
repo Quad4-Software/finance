@@ -154,7 +154,7 @@ async def test_owner_does_not_see_shared_duplicate(client, auth_headers, test_us
     assert dinner_rows[0]["is_shared"] is False
     # viewer_share is also populated for the owner (= their own split
     # share), so the UI can render "your share" alongside the full
-    # parent amount. is_shared stays False — no duplicate row.
+    # parent amount. is_shared stays False -- no duplicate row.
     assert float(dinner_rows[0]["viewer_share"]) == 30.0
 
 
@@ -184,7 +184,7 @@ async def test_owner_viewer_share_null_when_owner_not_in_splits(
             "type": "debit",
             "currency": "USD",
             # Owner pays but only the friend is in the split (owner is
-            # covering the friend's whole share — common gift / loan case).
+            # covering the friend's whole share -- common gift / loan case).
             "splits": {
                 "share_type": "equal",
                 "splits": [{"group_member_id": friend["id"]}],
@@ -215,7 +215,7 @@ async def test_settlement_with_account_id_creates_settlement_source_tx(
         client, auth_headers, friend_email
     )
 
-    # Owner pays $100, splits equally — friend ends up owing $50.
+    # Owner pays $100, splits equally -- friend ends up owing $50.
     await client.post(
         "/api/transactions",
         headers=auth_headers,
@@ -237,7 +237,7 @@ async def test_settlement_with_account_id_creates_settlement_source_tx(
     )
 
     # Friend creates their own account and settles their $50 debt with
-    # the optional account_id flow → backend creates a debit tx in
+    # the optional account_id flow -> backend creates a debit tx in
     # their account, tagged source='settlement'.
     friend_account = await _create_account(client, friend_headers, name="Friend's wallet")
     settle_resp = await client.post(
@@ -258,7 +258,7 @@ async def test_settlement_with_account_id_creates_settlement_source_tx(
 
     # Friend's transaction list now has TWO rows: the shared $50
     # share (Show) and the settlement debit ($50). Total spending
-    # reports must NOT count both — settlement.source filters it out.
+    # reports must NOT count both -- settlement.source filters it out.
     list_resp = await client.get("/api/transactions", headers=friend_headers)
     rows = list_resp.json()["items"]
     settlement_rows = [r for r in rows if r["id"] == settlement["transaction_id"]]

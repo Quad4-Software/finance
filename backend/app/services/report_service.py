@@ -401,7 +401,7 @@ async def get_net_worth_report(
     )
     # The first trend point's *actual* cutoff (`points[0]`, before its `.date`
     # was overwritten with a formatted label) equals `start` for every
-    # interval except monthly, which snaps to month-end. Only reuse it then —
+    # interval except monthly, which snaps to month-end. Only reuse it then --
     # an approximate match would silently swap in the wrong day's snapshot.
     if trend and points[0] == start:
         baseline = trend[0]
@@ -543,7 +543,7 @@ async def get_income_expenses_report(
         expenses = abs(float(row[2] or 0))
         data_map[row[0]] = (income, expenses)
 
-    # Subtract non-owner shares of the user's own splits per period — the
+    # Subtract non-owner shares of the user's own splits per period -- the
     # user shouldn't be charged for the parts they're owed back.
     from sqlalchemy import or_ as _or_, and_ as _and_
     from app.models.group import Group as _Group_, GroupMember as _GroupMember_
@@ -611,14 +611,14 @@ async def get_income_expenses_report(
             max(0.0, existing_expenses - sub_exp),
         )
 
-    # Layer in the viewer's share from group splits — concert tickets
+    # Layer in the viewer's share from group splits -- concert tickets
     # paid by a friend show up as the viewer's expense in their P/L
     # picture, just like in /transactions and the dashboard. Group by
     # currency so we can FX-convert each bucket to primary correctly.
     from app.models.group import GroupMember
     from app.models.transaction_split import TransactionSplit
 
-    # Exclude is_self memberships — the owner's own self-member must
+    # Exclude is_self memberships -- the owner's own self-member must
     # not surface their in-Pessoal transactions in Trabalho's report.
     viewer_member_ids = select(GroupMember.id).where(
         GroupMember.linked_user_id == user_id,
@@ -884,7 +884,7 @@ async def get_income_expenses_report(
             "value": amount,
         }
 
-    # Subtract non-owner shares of own splits from composition (debit only —
+    # Subtract non-owner shares of own splits from composition (debit only --
     # owner_split_offset_by_category is debit-only). Keeps the report's
     # composition consistent with summary totals under share-only model.
     full_range_offset = {} if filtered else await owner_split_offset_by_category(
@@ -904,7 +904,7 @@ async def get_income_expenses_report(
     # Investment-style outflows: transactions in `treat_as_transfer` categories
     # are excluded from P&L by counts_as_user_pnl (an investment application's
     # counterpart is an Asset/Holding, not spending). But for the cashflow Sankey
-    # we surface them as their own "investments" group — money set aside, distinct
+    # we surface them as their own "investments" group -- money set aside, distinct
     # from spending and from leftover surplus (mirrors how Sure shows an
     # "Investment Contributions" node). Paired account transfers stay excluded via
     # the transfer_pair_id filter, so only one-sided movements (contributions)
@@ -990,7 +990,7 @@ async def get_income_expenses_report(
             cat_trend_map[map_key]["periods"].get(period_label, 0.0) + amount
         )
 
-    # Subtract non-owner shares of own splits per (period, category) — keeps
+    # Subtract non-owner shares of own splits per (period, category) -- keeps
     # the per-category trend consistent with the share-only summary.
     cat_offset_result = await session.execute(
         select(
@@ -1271,10 +1271,10 @@ async def _get_baseline_projection(
     ``_BASELINE_MAX_LOOKBACK_MONTHS`` (12) but shrunk to the user's earliest
     qualifying transaction date when they have less history. This means a
     user with 4 months of activity gets a 4-month average; a user with
-    3 years gets a 12-month average. More history → more stable estimate;
-    less history → still works, just noisier.
+    3 years gets a 12-month average. More history -> more stable estimate;
+    less history -> still works, just noisier.
 
-    Symmetric for income and expense — fixes the "no recurring salary set
+    Symmetric for income and expense -- fixes the "no recurring salary set
     up, chart looks catastrophic" case as well as the "no recurring expenses
     set up, chart looks rosy" case.
 
@@ -1380,7 +1380,7 @@ async def get_cash_flow_report(
     booked transactions so the user has a visible "this is real" anchor next
     to the forecast. Forward window walks from today to ``today + months``
     applying either deterministic recurring projections (default) or a
-    historical-mean baseline (when ``baseline=True``) — see
+    historical-mean baseline (when ``baseline=True``) -- see
     ``_get_baseline_projection`` for the latter.
 
     Respects the global ``credit_card_accounting_mode`` setting:

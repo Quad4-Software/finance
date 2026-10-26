@@ -3,7 +3,7 @@
 The API tests cover the journeys. These cover the arithmetic and the
 boundaries: which state wins when a decision and a fact disagree, where
 one aging bucket ends and the next begins, and whether the N:N
-allocation table really is N:N — the claim the whole schema rests on.
+allocation table really is N:N -- the claim the whole schema rests on.
 """
 import uuid
 from datetime import date, datetime, timedelta, timezone
@@ -57,7 +57,7 @@ def allocation(amount: str) -> InvoiceAllocation:
 
 
 # ---------------------------------------------------------------------------
-# derive_state — the rule the whole design rests on
+# derive_state -- the rule the whole design rests on
 # ---------------------------------------------------------------------------
 class TestDeriveState:
     def test_stored_decisions_pass_straight_through(self):
@@ -102,7 +102,7 @@ class TestDeriveState:
         assert svc.derive_state(invoice, TODAY) == "paid"
 
     def test_overdue_wins_over_partial(self):
-        """A part-paid invoice past its date reads as late, not as partial —
+        """A part-paid invoice past its date reads as late, not as partial --
         the thing the user needs to act on is the lateness."""
         invoice = build_invoice(
             due_date=TODAY - timedelta(days=1), allocations=[allocation("500.00")]
@@ -275,7 +275,7 @@ class TestAllocationTable:
         self, session: AsyncSession, workspace, test_user, credit
     ):
         """One payment closing one invoice must not require typing the
-        number twice — and a larger inflow must not over-apply."""
+        number twice -- and a larger inflow must not over-apply."""
         invoice = await create(session, workspace, test_user, total=Decimal("500.00"))
         await svc.allocate(session, invoice, credit.id)  # credit carries 2000
         await session.commit()
@@ -302,7 +302,7 @@ class TestNumbering:
         """A voided invoice keeps its number and the next one moves on.
 
         Reusing it would put two different documents under one
-        identifier — forbidden where numbering is regulated, and
+        identifier -- forbidden where numbering is regulated, and
         confusing everywhere else.
         """
         first = await create(session, workspace, test_user)
@@ -440,8 +440,8 @@ class TestCompetenceDate:
 class TestAllocationProvenance:
     """`method` records who or what decided, and it is not an enum.
 
-    The ids come from the reconciliation policy — a document the user will
-    eventually edit — so closing this set would mean a migration every time
+    The ids come from the reconciliation policy -- a document the user will
+    eventually edit -- so closing this set would mean a migration every time
     somebody adds a strategy.
     """
 

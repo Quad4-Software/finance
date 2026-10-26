@@ -2,8 +2,8 @@
 
 Implements lightweight case-insensitive ILIKE matching across transactions,
 accounts, payees, categories, goals and assets. Designed to power the
-command palette (Cmd/Ctrl+K) on the frontend. Kept intentionally simple —
-no full-text indexes required — but fast enough for tens of thousands of
+command palette (Cmd/Ctrl+K) on the frontend. Kept intentionally simple --
+no full-text indexes required -- but fast enough for tens of thousands of
 rows thanks to per-entity LIMITs and trigger-word scoping.
 """
 
@@ -84,7 +84,7 @@ async def search_all(
 
     Transaction search additionally pulls in cross-workspace rows the
     caller participates in via group splits (the Splitwise projection
-    — "concert" finds the parent that someone else paid for but is on
+    -- "concert" finds the parent that someone else paid for but is on
     the caller's settlement ledger).
     """
     term = (query or "").strip()

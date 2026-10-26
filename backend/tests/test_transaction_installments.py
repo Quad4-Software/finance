@@ -79,7 +79,7 @@ def _transaction(account: Account, **overrides) -> Transaction:
 
 
 # ---------------------------------------------------------------------------
-# create_installment_series — helper behavior
+# create_installment_series -- helper behavior
 # ---------------------------------------------------------------------------
 
 
@@ -129,7 +129,7 @@ async def test_create_installment_series_monthly_defaults(
 async def test_create_installment_series_repeats_amount_for_every_parcel(
     session: AsyncSession, test_user, test_workspace, installment_account
 ):
-    # "Repeat as installments": no total is split — every parcel stores the
+    # "Repeat as installments": no total is split -- every parcel stores the
     # base amount as-is, even for a large count where rounding a split total
     # could otherwise produce a negative or zero last parcel.
     created = await create_installment_series(
@@ -405,7 +405,7 @@ async def test_create_single_installment_persists_fingerprint(
 
 
 # ---------------------------------------------------------------------------
-# update_transaction — installment scope
+# update_transaction -- installment scope
 # ---------------------------------------------------------------------------
 
 
@@ -711,7 +711,7 @@ async def test_update_installment_scope_uses_series_id_for_same_account_and_date
 
 
 # ---------------------------------------------------------------------------
-# delete_transaction — installment scope
+# delete_transaction -- installment scope
 # ---------------------------------------------------------------------------
 
 

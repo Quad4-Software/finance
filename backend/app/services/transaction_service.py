@@ -76,9 +76,9 @@ async def _ensure_payee_in_workspace(
 def _apply_fx_override(transaction, amount, amount_primary=None, fx_rate_used=None):
     """Apply manual FX override values to a transaction.
 
-    - Both provided → use as-is
-    - Only amount_primary → derive rate = amount_primary / amount
-    - Only fx_rate_used → derive amount_primary = amount * fx_rate_used
+    - Both provided -> use as-is
+    - Only amount_primary -> derive rate = amount_primary / amount
+    - Only fx_rate_used -> derive amount_primary = amount * fx_rate_used
     """
     from decimal import Decimal, ROUND_HALF_UP
 
@@ -140,7 +140,7 @@ async def get_transactions(
     """List transactions for a workspace.
 
     `workspace_id` scopes the tenant (which transactions are visible). `user_id`
-    is the *viewer* — used for Splitwise projection (linked-member visibility,
+    is the *viewer* -- used for Splitwise projection (linked-member visibility,
     is-shared tagging) which is identity-based, not tenancy-based.
 
     `include_running_balance` fills `running_balance` (and, for an account in a
@@ -151,7 +151,7 @@ async def get_transactions(
     # In "accrual" mode, bucket/order by effective_date so list filters
     # line up with the cash-flow view used by the dashboard and reports.
     # When the user has set a manual cycle override (effective_bill_date)
-    # we honor it FIRST regardless of accounting mode — that's the whole
+    # we honor it FIRST regardless of accounting mode -- that's the whole
     # point of the override (issue #92, LucasFidelis suggestion). Shared
     # with the dashboard/report/budget aggregations so a transaction lands
     # in the same month everywhere (issue #232).
@@ -172,7 +172,7 @@ async def get_transactions(
 
     # CC bill-view date column: when the caller asks "what's in this bill?"
     # (bill_id passed, or in-progress cycle via unbilled_only), the answer
-    # is bank-truth — the charges that fell in the cycle by purchase date —
+    # is bank-truth -- the charges that fell in the cycle by purchase date --
     # independent of the user's cash/accrual reporting preference. Without
     # this carve-out, accrual mode would hide a 4/30 charge whose
     # effective_date points at the next bill's due date because the cycle
@@ -219,13 +219,13 @@ async def get_transactions(
         # alongside their own expenses; account-balance integrity is
         # preserved because the parent tx's account still belongs to the
         # original owner. The shared-id subquery EXCLUDES rows already
-        # in this workspace — otherwise self-membership in an
+        # in this workspace -- otherwise self-membership in an
         # in-workspace group double-surfaces the owner's own
         # transactions when they switch to another workspace.
         from app.models.group import GroupMember
         from app.models.transaction_split import TransactionSplit
 
-        # Exclude is_self memberships — those represent the viewer's
+        # Exclude is_self memberships -- those represent the viewer's
         # OWN self-member in groups they created, not invitations from
         # someone else's workspace. Without this exclusion, the owner's
         # own transactions get double-projected when they switch into
@@ -291,7 +291,7 @@ async def get_transactions(
     if status:
         base_query = base_query.where(Transaction.status == status)
     if currency:
-        # Native-currency filter — match the column verbatim. Lets agents
+        # Native-currency filter -- match the column verbatim. Lets agents
         # answer "do I have any EUR transactions?" without text-searching
         # the description column.
         base_query = base_query.where(Transaction.currency == currency.upper())
@@ -309,7 +309,7 @@ async def get_transactions(
     # Bill-driven filter: when the caller passes bill_id, include
     #   (a) txs linked to this bill via the provider's bill id mapping (handles
     #       charges the bank rolled into a bill whose nominal range doesn't
-    #       contain them — e.g. a 30/03 charge in the May statement), AND
+    #       contain them -- e.g. a 30/03 charge in the May statement), AND
     #   (b) txs with NO bill_id (manual / OFX / CSV / recurring fills) whose
     #       bucketing date falls in the cycle window. Without (b) we'd drop
     #       user-added entries that exist precisely to compensate for txs
@@ -318,7 +318,7 @@ async def get_transactions(
     # Without bill_id (cycle-math cycles or non-CC), apply the date window
     # straight to all txs.
     if bill_id is not None:
-        from app.models.credit_card_bill import CreditCardBill  # local — avoid cycle
+        from app.models.credit_card_bill import CreditCardBill  # local -- avoid cycle
         bill_predicates = [Transaction.bill_id == bill_id]
         if from_date or to_date:
             from sqlalchemy import and_ as _and, not_ as _not
@@ -332,7 +332,7 @@ async def get_transactions(
             unlinked_clauses = [
                 Transaction.bill_id.is_(None),
                 # Sync-pending txs without a billId are normally deferred
-                # (provider hasn't classified them) — but if our cycle-math
+                # (provider hasn't classified them) -- but if our cycle-math
                 # `apply_effective_date` already pre-classified them to THIS
                 # bill's due_date, trust it and include them. That's the
                 # in-progress case: pending charges the user can already see
@@ -366,7 +366,7 @@ async def get_transactions(
         # Cycle-math fallback (no bill_id was passed). The opt-in
         # `unbilled_only` flag is for callers that need the in-progress
         # cycle on a CC account whose date window may overlap a closed
-        # bill's range — they ask us to exclude already-billed txs so the
+        # bill's range -- they ask us to exclude already-billed txs so the
         # in-progress bar / list doesn't double-count them. The global
         # /transactions list and other generic callers leave it False.
         if unbilled_only:
@@ -374,7 +374,7 @@ async def get_transactions(
         # Forward-pointing override catch (issue #162): a manual override
         # pointing past this cycle's right edge (e.g., user wants the tx
         # on a future bill that doesn't exist yet) won't fit any closed
-        # bill window either — past bills are by definition behind us.
+        # bill window either -- past bills are by definition behind us.
         # Honor the user's explicit intent by including those orphans in
         # the in-progress cycle so the tx stays visible until a real bill
         # eventually anchors it. Limited to `unbilled_only` so the global
@@ -463,7 +463,7 @@ async def get_transactions(
         )
     if tags:
         # Exact tag match using portable ILIKE patterns so `#test` never
-        # matches `#test2`. Multiple tags are OR-combined (union) — a row
+        # matches `#test2`. Multiple tags are OR-combined (union) -- a row
         # matches if it carries ANY of the requested tags. The four boundary
         # variants cover position at start / middle / end / standalone
         # (issue #88).
@@ -483,10 +483,10 @@ async def get_transactions(
     total = await session.scalar(count_query)
 
     # Filtered summary (issue #185): income / expense / net across ALL
-    # rows matching the active filters — not just the current page — so
+    # rows matching the active filters -- not just the current page -- so
     # the UI can show an accurate total even when results span pages.
     # Cross-currency rows are normalized to their primary-currency amount
-    # when stamped (coalesce → native amount as fallback for unstamped
+    # when stamped (coalesce -> native amount as fallback for unstamped
     # rows). Computed before pagination so it covers the whole result set.
     summary: Optional[dict] = None
     if include_summary:
@@ -514,7 +514,7 @@ async def get_transactions(
                 expense = Decimal(str(row_total or 0))
 
         # Excluded: the absolute total of everything filtered out of P/L for
-        # the same rows — the complement of `counts_as_pnl()`. Surfaces
+        # the same rows -- the complement of `counts_as_pnl()`. Surfaces
         # transfer-like movement (e.g. how much was moved/invested) without
         # distorting income/expense/net.
         excl_subq = base_query.where(not_(pnl_filter)).subquery()
@@ -595,7 +595,7 @@ async def get_transactions(
             tx.payee_name = tx.payee_entity.name if tx.payee_entity else None
         # Tag shared rows with the viewer's share + the source group.
         # Owned rows stay as-is. We pre-compute the viewer's linked
-        # member ids → group ids once, then look up each transaction's
+        # member ids -> group ids once, then look up each transaction's
         # split that targets one of those member ids.
         # Run for both default and group-scoped queries: when filtering
         # by `group_id`, a linked member sees the owner's transactions
@@ -686,7 +686,7 @@ async def _tag_shared_view(
     )
     member_to_group = {row.id: row.group_id for row in member_rows}
 
-    # Map every split-member that appears in this batch → group, so we
+    # Map every split-member that appears in this batch -> group, so we
     # can also tag owner-side transactions with their group. (The
     # viewer-linked map above only covers the viewer's own member ids.)
     all_split_member_ids: set[uuid.UUID] = set()
@@ -712,7 +712,7 @@ async def _tag_shared_view(
 
     # Per-group lookups: the `is_self` member represents the parent
     # owner / payer. We need this for ALL groups touching this batch,
-    # not just the viewer-linked ones — owners need their own
+    # not just the viewer-linked ones -- owners need their own
     # self-member id to compute their share. Cached once per call.
     all_group_ids = set(member_to_group.values()) | set(split_member_to_group.values())
     self_member_rows = await session.execute(
@@ -729,7 +729,7 @@ async def _tag_shared_view(
 
     for tx in transactions:
         if tx.user_id == user_id:
-            # Owner of the parent — not "shared" but still tag the
+            # Owner of the parent -- not "shared" but still tag the
             # group_id so the UI can show a group badge for owners.
             # Also populate viewer_share with the owner's *own* split
             # share when they participate (is_self member appears in the
@@ -774,7 +774,7 @@ async def _tag_shared_view(
             tx.viewer_share = match.share_amount
             tx.group_id = member_to_group[match.group_member_id]
             tx.parent_owner_name = owner_name_by_group.get(tx.group_id)
-            # Hide attachment count on shared rows — Bob can see the
+            # Hide attachment count on shared rows -- Bob can see the
             # paperclip but the API would 403 the actual download
             # (attachment auth is owner-only). Avoid the dead-end UX
             # by not advertising files he can't open.
@@ -1078,7 +1078,7 @@ async def create_transfer(
     apply_effective_date(debit_tx, from_account)
     session.add(debit_tx)
 
-    # Credit transaction (to account) — convert if cross-currency
+    # Credit transaction (to account) -- convert if cross-currency
     if is_cross_currency:
         if data.destination_amount is not None:
             credit_amount = _to_cents(data.destination_amount)
@@ -1218,7 +1218,7 @@ async def get_transfer_pair(
     """Return the counterpart leg of a linked transfer, or None.
 
     Both legs share the same ``transfer_pair_id``, so the counterpart is the
-    other row carrying that id — not a foreign key on the anchor itself.
+    other row carrying that id -- not a foreign key on the anchor itself.
     """
     anchor = await get_transaction(session, transaction_id, workspace_id)
     if not anchor or anchor.transfer_pair_id is None:
@@ -1392,10 +1392,10 @@ async def _resync_bill_link_from_override(
 ) -> None:
     """Re-link transaction.bill_id when the manual effective_bill_date changes.
 
-    - Override SET to a date matching an existing bill's due_date → link to it.
-    - Override SET to a date with no matching bill → keep bill_id null (the
+    - Override SET to a date matching an existing bill's due_date -> link to it.
+    - Override SET to a date with no matching bill -> keep bill_id null (the
       override still sets effective_date directly).
-    - Override CLEARED → fall back to whatever the provider originally tagged via
+    - Override CLEARED -> fall back to whatever the provider originally tagged via
       `creditCardMetadata.billId` in raw_data, if recoverable; else null.
     """
     from app.models.credit_card_bill import CreditCardBill  # local: avoid circular
@@ -1691,8 +1691,8 @@ async def update_transaction(
     #
     # Scoped edits only repeat the fields that make sense across a series:
     # description, amount, currency (+FX override), category, type, payee,
-    # account, and notes. Everything else — date, status, ignore flag,
-    # bill-cycle override, splits — stays untouched on sibling installments
+    # account, and notes. Everything else -- date, status, ignore flag,
+    # bill-cycle override, splits -- stays untouched on sibling installments
     # so editing one parcel's bookkeeping never bleeds into the rest.
     # Account moves ride along so the whole series lands on the new
     # account together (the fingerprint stays coherent across the rows).
@@ -1874,16 +1874,16 @@ async def bulk_add_to_group(
 ) -> dict[str, int]:
     """Apply the same group-split configuration to every selected transaction.
 
-    Supports `share_type` of "equal" or "percent" only — exact amounts
+    Supports `share_type` of "equal" or "percent" only -- exact amounts
     can't generalize across transactions of different totals.
 
     Conservative semantics (issue #156): transactions that are transfers
-    or already have splits are skipped — never overwritten — so the
+    or already have splits are skipped -- never overwritten -- so the
     operation can't destroy prior splitting work.
     """
     if share_type not in ("equal", "percent"):
         raise ValueError(
-            "Bulk add-to-group only supports share_type 'equal' or 'percent' — "
+            "Bulk add-to-group only supports share_type 'equal' or 'percent' -- "
             "use the per-transaction dialog for exact amounts"
         )
 

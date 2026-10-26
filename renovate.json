@@ -32,7 +32,7 @@
       "groupName": "backend (non-major)"
     },
     {
-      "description": "Postgres majors need a deliberate data migration for self-hosters — never auto-PR them",
+      "description": "Postgres majors need a deliberate data migration for self-hosters -- never auto-PR them",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["pgvector/pgvector"],
       "matchUpdateTypes": ["major"],

@@ -1,4 +1,4 @@
-"""HTTP coverage for /api/agents/connections — LLM connection CRUD plus
+"""HTTP coverage for /api/agents/connections -- LLM connection CRUD plus
 the /test probe endpoint."""
 from __future__ import annotations
 

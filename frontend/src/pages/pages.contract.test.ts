@@ -2,8 +2,8 @@
  * Evaluates every page module.
  *
  * Every route in App.tsx is a `lazy(() => import(...))`. A page that fails to
- * evaluate — a bad export, a circular import, a top-level call into something
- * undefined — does not fail the build, because `tsc` checks modules in
+ * evaluate -- a bad export, a circular import, a top-level call into something
+ * undefined -- does not fail the build, because `tsc` checks modules in
  * isolation and Vite only resolves the chunk when a user navigates to it. The
  * first person to find out is whoever clicks the nav link.
  *

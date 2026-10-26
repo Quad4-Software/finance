@@ -3,8 +3,8 @@
 Runs as a separate container (`mcp-server` in docker-compose, gated by the
 `agents` profile). Exposes Quad4 Finance's read APIs as MCP tools over JSON-RPC 2.0.
 
-The server reuses the backend's Python image — same SQLAlchemy models,
-same services — but listens on its own port (8765). The agent runtime
+The server reuses the backend's Python image -- same SQLAlchemy models,
+same services -- but listens on its own port (8765). The agent runtime
 mints a short-lived JWT scoped to (user_id, conversation_id) and passes
 it as a Bearer token; the MCP server verifies it and runs each tool with
 that user's identity.

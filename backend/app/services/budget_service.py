@@ -296,7 +296,7 @@ async def get_budget_vs_actual(
         if net > 0:
             spending_map[str(row[0])] = net
 
-    # Subtract non-owner shares of own splits — only the user's share counts.
+    # Subtract non-owner shares of own splits -- only the user's share counts.
     own_offset = await owner_split_offset_by_category(
         session, user_id, month_start, month_end,
         use_effective_date=accounting_mode == "accrual",
@@ -312,7 +312,7 @@ async def get_budget_vs_actual(
             if spending_map[cat_id] <= 0:
                 spending_map.pop(cat_id)
 
-    # Layer in the user's share from group splits — concert tickets
+    # Layer in the user's share from group splits -- concert tickets
     # paid by a friend are still the user's expense in the budget
     # picture for the matching category. FX-convert per currency to
     # match the rest of the budget (everything else is in primary).

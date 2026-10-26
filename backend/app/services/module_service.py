@@ -7,11 +7,11 @@ the registries below, never an edit to navigation code.
 
 The chain, in order:
 
-    0. Deployment   — capability flags from the environment. Veto only.
-    1. Catalog      — each module declares whether it is on by default.
-    2. Kind policy  — the only layer with opinions today.
-    3. Workspace    — per-workspace override. Abstains for now.
-    4. Supplemental — extension point. Abstains in this codebase.
+    0. Deployment   -- capability flags from the environment. Veto only.
+    1. Catalog      -- each module declares whether it is on by default.
+    2. Kind policy  -- the only layer with opinions today.
+    3. Workspace    -- per-workspace override. Abstains for now.
+    4. Supplemental -- extension point. Abstains in this codebase.
 
 Layer 0 is listed first because it is the outermost constraint, and
 applied last because that is the only ordering in which it is genuinely
@@ -23,7 +23,7 @@ What this is NOT:
     module", never "may this user write". Nothing here belongs next to
     `require_write`; there is no API-level enforcement, by design.
   - Not a feature-flag framework. No per-user toggles, no remote config,
-    no rollouts. `ModuleId` is closed on purpose — a stringly-typed
+    no rollouts. `ModuleId` is closed on purpose -- a stringly-typed
     module id is exactly how this would drift into one.
   - Not navigation metadata. Icons, paths and labels stay in the
     frontend. This answers *which* modules, never *how* to render them.
@@ -32,7 +32,7 @@ Deployment flags and this resolver answer different questions and
 coexist deliberately: a flag turns a capability off for the whole
 install (the operator's call), a kind policy turns it off for one
 workspace. `AGENTS_ENABLED` is still read directly by the frontend and
-is not part of the catalog — see MODULE_DEPLOYMENT_FLAGS.
+is not part of the catalog -- see MODULE_DEPLOYMENT_FLAGS.
 """
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -44,7 +44,7 @@ from app.models.workspace import Workspace
 
 
 class ModuleId(str, Enum):
-    """Top-level destinations. Closed set — see the module docstring."""
+    """Top-level destinations. Closed set -- see the module docstring."""
 
     TRANSACTIONS = "transactions"
     ACCOUNTS = "accounts"
@@ -63,7 +63,7 @@ class ModuleId(str, Enum):
 
 @dataclass(frozen=True)
 class ModuleSpec:
-    """Layer 1 — a module's base availability, before any policy runs."""
+    """Layer 1 -- a module's base availability, before any policy runs."""
 
     module_id: ModuleId
     # True for everything a workspace gets unless a later layer removes
@@ -96,7 +96,7 @@ def catalog_defaults(catalog: Mapping[ModuleId, ModuleSpec] = CATALOG) -> frozen
 
 
 # ---------------------------------------------------------------------------
-# Layer 2 — kind policy (the Strategy)
+# Layer 2 -- kind policy (the Strategy)
 # ---------------------------------------------------------------------------
 class ModulePolicy(Protocol):
     """One implementation per workspace kind."""
@@ -132,7 +132,7 @@ KIND_POLICIES: Mapping[str, ModulePolicy] = {
 
 
 # ---------------------------------------------------------------------------
-# Layers 3 and 4 — providers
+# Layers 3 and 4 -- providers
 # ---------------------------------------------------------------------------
 class ModuleProvider(Protocol):
     """A layer that may add, remove, or abstain.
@@ -149,10 +149,10 @@ class ModuleProvider(Protocol):
 
 
 class WorkspaceOverrideProvider:
-    """Layer 3 — per-workspace opt-in/opt-out.
+    """Layer 3 -- per-workspace opt-in/opt-out.
 
     Abstains: nothing is stored per workspace yet. When it becomes a DB
-    read, memoize it on the request's WorkspaceContext — never in a
+    read, memoize it on the request's WorkspaceContext -- never in a
     global cache that outlives the request, or one workspace's answer
     leaks into another's.
     """
@@ -164,7 +164,7 @@ class WorkspaceOverrideProvider:
 
 
 class SupplementalProvider:
-    """Layer 4 — extension point.
+    """Layer 4 -- extension point.
 
     A deployment can supply an implementation that further restricts the
     resolved set. This codebase ships one that always abstains, so the
@@ -185,7 +185,7 @@ DEFAULT_PROVIDERS: Sequence[ModuleProvider] = (
 
 
 # ---------------------------------------------------------------------------
-# Layer 0 — deployment veto
+# Layer 0 -- deployment veto
 # ---------------------------------------------------------------------------
 # ModuleId -> environment flag name. Ships empty: no module in the
 # catalog is deployment-gated today. The layer is wired and tested so

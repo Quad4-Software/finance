@@ -49,7 +49,7 @@ async def test_set_tool_enabled_inserts_then_updates_existing_row(session, test_
         session, test_agent.id, "quad4", "list_accounts", True
     )
     assert row.enabled is True
-    # Same (server, tool) pair → updates the existing row, no second insert.
+    # Same (server, tool) pair -> updates the existing row, no second insert.
     row2 = await agent_service.set_tool_enabled(
         session, test_agent.id, "quad4", "list_accounts", False
     )
@@ -59,12 +59,12 @@ async def test_set_tool_enabled_inserts_then_updates_existing_row(session, test_
 
     # And allowed_tool_pairs reflects it.
     pairs = await agent_service.allowed_tool_pairs(session, test_agent.id)
-    assert pairs == set()  # disabled → not in allowed set
+    assert pairs == set()  # disabled -> not in allowed set
 
 
 @pytest.mark.asyncio
 async def test_allowed_tool_pairs_returns_none_when_no_rows(session, test_agent):
-    """No explicit AgentTool rows → returns None ('allow all')."""
+    """No explicit AgentTool rows -> returns None ('allow all')."""
     out = await agent_service.allowed_tool_pairs(session, test_agent.id)
     assert out is None
 
@@ -141,7 +141,7 @@ async def test_get_agent_tools_returns_merged_state(
         body = r.json()
         assert body["servers"] == [{"name": "quad4"}]
         by_name = {t["name"]: t for t in body["tools"]}
-        # First-run with no AgentTool rows yet → enabled defaults to True.
+        # First-run with no AgentTool rows yet -> enabled defaults to True.
         assert by_name["list_accounts"]["enabled"] is True
         assert by_name["propose_x"]["is_proposal"] is True
 
@@ -186,7 +186,7 @@ async def test_generate_title_returns_unchanged_when_no_messages(
     client, auth_headers, test_user, session
 ):
     """generate-title shortcuts to the existing row when transcript is
-    empty — covers the early-return branch."""
+    empty -- covers the early-return branch."""
     from app.agents.models.agent import Agent
     from app.agents.models.conversation import Conversation
 

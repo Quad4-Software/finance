@@ -113,7 +113,7 @@ def test_date_points_monthly_end_of_month_snapshots():
         date(2025, 1, 31),  # end of Jan
         date(2025, 2, 28),  # end of Feb
         date(2025, 3, 31),  # end of Mar
-        date(2025, 4, 15),  # capped at end (Apr 30 → Apr 15)
+        date(2025, 4, 15),  # capped at end (Apr 30 -> Apr 15)
     ]
 
 
@@ -490,7 +490,7 @@ async def test_net_worth_api_requires_auth(client):
 # ---------------------------------------------------------------------------
 
 
-    # Just verify the endpoint works — transfer exclusion is enforced by the SQL filter
+    # Just verify the endpoint works -- transfer exclusion is enforced by the SQL filter
 
 
 @pytest.mark.asyncio
@@ -1069,7 +1069,7 @@ async def test_net_worth_negative_account_in_composition(session: AsyncSession, 
 
 
 # ---------------------------------------------------------------------------
-# get_net_worth_report — composition and intervals
+# get_net_worth_report -- composition and intervals
 # ---------------------------------------------------------------------------
 
 
@@ -1232,7 +1232,7 @@ def test_add_months_year_rollover():
 
 
 def test_add_months_clamps_to_last_day():
-    # Jan 31 + 1 month → Feb 28 (or 29 in leap year)
+    # Jan 31 + 1 month -> Feb 28 (or 29 in leap year)
     assert _add_months(date(2025, 1, 31), 1) == date(2025, 2, 28)
     assert _add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)
 
@@ -1246,7 +1246,7 @@ def test_add_months_twelve_keeps_same_day():
 
 
 # ---------------------------------------------------------------------------
-# Cash flow report — service-level tests
+# Cash flow report -- service-level tests
 # ---------------------------------------------------------------------------
 
 
@@ -1333,11 +1333,11 @@ async def test_cash_flow_starting_balance_matches_today(
 async def test_cash_flow_no_data_is_flat_at_zero(
     session: AsyncSession, test_user, test_workspace: User
 ):
-    """User with no accounts → flat line at 0."""
+    """User with no accounts -> flat line at 0."""
     report = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=3, interval="daily")
     assert report.summary.primary_value == 0.0
     assert report.summary.change_amount == 0.0
-    assert report.summary.change_percent is None  # zero starting → percent undefined
+    assert report.summary.change_percent is None  # zero starting -> percent undefined
     # Every trend point should be 0
     assert all(p.value == 0.0 for p in report.trend)
     assert report.composition == []
@@ -1347,7 +1347,7 @@ async def test_cash_flow_no_data_is_flat_at_zero(
 async def test_cash_flow_no_data_with_balance_is_flat(
     session: AsyncSession, test_user, test_workspace: User
 ):
-    """Account with balance but no recurring → flat line at starting balance."""
+    """Account with balance but no recurring -> flat line at starting balance."""
     account = await _make_manual_account(session, test_user.id, "CF Flat")
     await _add_txn(
         session, test_user.id, account.id, 2500, "credit",
@@ -1594,7 +1594,7 @@ async def test_cash_flow_months_range(session: AsyncSession, test_user, test_wor
     rep_6 = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=6, interval="daily")
     rep_12 = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=12, interval="daily")
 
-    # Daily intervals → 1mo ≈ 30 points, 6mo ≈ 184, 12mo ≈ 366
+    # Daily intervals -> 1mo ≈ 30 points, 6mo ≈ 184, 12mo ≈ 366
     assert len(rep_1.trend) < len(rep_6.trend) < len(rep_12.trend)
 
 
@@ -1706,7 +1706,7 @@ async def test_cash_flow_only_recurrings_after_today(
     )
 
     today = date.today()
-    # next_occurrence is today — same day as starting balance, should be excluded
+    # next_occurrence is today -- same day as starting balance, should be excluded
     await _make_recurring(
         session, test_user.id, account.id,
         amount=999, txn_type="credit", frequency="monthly",
@@ -1716,7 +1716,7 @@ async def test_cash_flow_only_recurrings_after_today(
     report = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=2, interval="daily")
     proj_income = next(b for b in report.summary.breakdowns if b.key == "projectedIncome")
     # Over 2 months: 3 raw monthly occurrences (today, +1mo, +2mo) but the
-    # one ON today is excluded — so we expect exactly 2 × 999 = 1998.
+    # one ON today is excluded -- so we expect exactly 2 × 999 = 1998.
     assert proj_income.value == 1998.0
 
 
@@ -1819,7 +1819,7 @@ async def test_cash_flow_api_trend_point_shape(client, auth_headers, test_transa
 
 
 # ---------------------------------------------------------------------------
-# Cash flow — credit card accounting mode (cash vs accrual)
+# Cash flow -- credit card accounting mode (cash vs accrual)
 # ---------------------------------------------------------------------------
 
 
@@ -1852,7 +1852,7 @@ async def test_cash_flow_cash_mode_uses_transaction_date(
     session: AsyncSession, test_user, test_workspace: User
 ):
     """In cash mode: a CC purchase made today (effective_date in future) is
-    already counted in starting balance via the CC liability — and is NOT
+    already counted in starting balance via the CC liability -- and is NOT
     re-projected on its effective_date."""
     await _set_accounting_mode(session, "cash")
 
@@ -1883,7 +1883,7 @@ async def test_cash_flow_cash_mode_uses_transaction_date(
 
     # Cash mode: total balance = bank ($1000) - CC debt ($100) = $900
     assert starting.value == 900.0
-    # No future flows queued — Transaction.date == today (not > today)
+    # No future flows queued -- Transaction.date == today (not > today)
     assert proj_exp.value == 0.0
     assert ending.value == 900.0
 
@@ -1920,7 +1920,7 @@ async def test_cash_flow_accrual_mode_projects_cc_on_effective_date(
     proj_exp = next(b for b in report.summary.breakdowns if b.key == "projectedExpenses")
     ending = next(b for b in report.summary.breakdowns if b.key == "endingBalance")
 
-    # Accrual: pending CC ($100 debt) is added back → $900 + $100 = $1000.
+    # Accrual: pending CC ($100 debt) is added back -> $900 + $100 = $1000.
     assert starting.value == 1000.0
     # Future outflow on day +20: $100.
     assert proj_exp.value == 100.0
@@ -1943,7 +1943,7 @@ async def test_cash_flow_accrual_mode_no_double_count(
     session: AsyncSession, test_user, test_workspace: User
 ):
     """Accrual mode: the same CC purchase must not appear in both starting
-    balance AND future flows — sum of (starting + inflow - outflow) over the
+    balance AND future flows -- sum of (starting + inflow - outflow) over the
     window must equal final 'true' total balance (= what cash mode shows)."""
     await _set_accounting_mode(session, "accrual")
 
@@ -1984,7 +1984,7 @@ async def test_cash_flow_accrual_mode_cc_purchase_outside_window_ignored(
     session: AsyncSession, test_user, test_workspace: User
 ):
     """A CC purchase whose effective_date falls past the projection window is
-    not added back nor projected — its impact remains in starting balance."""
+    not added back nor projected -- its impact remains in starting balance."""
     await _set_accounting_mode(session, "accrual")
 
     bank = await _make_manual_account(session, test_user.id, "CF Outside Bank")
@@ -2016,7 +2016,7 @@ async def test_cash_flow_accrual_mode_cc_purchase_outside_window_ignored(
 
 
 # ---------------------------------------------------------------------------
-# Cash flow — multi-currency
+# Cash flow -- multi-currency
 # ---------------------------------------------------------------------------
 
 
@@ -2033,7 +2033,7 @@ async def _seed_fx_rate(
 
 
 def _next_first_of_month(d: date) -> date:
-    """Return the 1st day of the next month after `d` — useful to anchor
+    """Return the 1st day of the next month after `d` -- useful to anchor
     a monthly recurring at a predictable day_of_month=1 cadence."""
     if d.month == 12:
         return date(d.year + 1, 1, 1)
@@ -2056,7 +2056,7 @@ async def test_cash_flow_recurring_in_foreign_currency(
     )
     today = date.today()
     nxt = _next_first_of_month(today)
-    # Recurring in USD: $200 on the 1st of each month → 1000 BRL @ rate 5.0
+    # Recurring in USD: $200 on the 1st of each month -> 1000 BRL @ rate 5.0
     await _make_recurring(
         session, test_user.id, account.id,
         amount=200, txn_type="credit", frequency="monthly",
@@ -2085,7 +2085,7 @@ async def test_cash_flow_mixed_currencies(session: AsyncSession, test_user, test
     )
     today = date.today()
     nxt = _next_first_of_month(today)
-    # 100 EUR on the 1st → 1000 BRL/month
+    # 100 EUR on the 1st -> 1000 BRL/month
     await _make_recurring(
         session, test_user.id, account.id,
         amount=100, txn_type="credit", frequency="monthly",
@@ -2142,7 +2142,7 @@ async def test_cash_flow_currency_conversion_uses_amount_primary_when_present(
 
 
 # ---------------------------------------------------------------------------
-# Cash flow — end_date stricter assertions
+# Cash flow -- end_date stricter assertions
 # ---------------------------------------------------------------------------
 
 
@@ -2151,7 +2151,7 @@ async def test_cash_flow_end_date_exact_occurrence_count(
     session: AsyncSession, test_user, test_workspace: User
 ):
     """When end_date falls mid-window, exactly the expected number of
-    occurrences is projected — not more, not fewer."""
+    occurrences is projected -- not more, not fewer."""
     account = await _make_manual_account(session, test_user.id, "CF EndDateExact")
     await _add_txn(
         session, test_user.id, account.id, 0, "credit",
@@ -2169,7 +2169,7 @@ async def test_cash_flow_end_date_exact_occurrence_count(
         next_occurrence=nxt, end_date=end_d,
     )
 
-    # Window of 6 months — well past end_date
+    # Window of 6 months -- well past end_date
     report = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=6, interval="daily")
     proj_income = next(b for b in report.summary.breakdowns if b.key == "projectedIncome")
     # Exactly 3 × 50 = 150
@@ -2198,7 +2198,7 @@ async def test_cash_flow_end_date_balance_freezes_after(
 
     report = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=4, interval="daily")
 
-    # Balance after end_date should match ending balance — it shouldn't keep
+    # Balance after end_date should match ending balance -- it shouldn't keep
     # growing once the recurring stops contributing.
     after_end_label = (end_d + timedelta(days=10)).isoformat()
     after_end_point = next(p for p in report.trend if p.date == after_end_label)
@@ -2212,7 +2212,7 @@ async def test_cash_flow_end_date_balance_freezes_after(
 async def test_cash_flow_end_date_at_exact_occurrence(
     session: AsyncSession, test_user, test_workspace: User
 ):
-    """end_date == an occurrence date — that occurrence should still count."""
+    """end_date == an occurrence date -- that occurrence should still count."""
     account = await _make_manual_account(session, test_user.id, "CF EndDateExactDay")
     await _add_txn(
         session, test_user.id, account.id, 0, "credit",
@@ -2270,7 +2270,7 @@ async def test_cash_flow_overdraft_crunch_point_goes_negative(
     )
     today = date.today()
     nxt = _next_first_of_month(today)
-    # $200 monthly debit on the 1st — burns through the $100 starting balance
+    # $200 monthly debit on the 1st -- burns through the $100 starting balance
     await _make_recurring(
         session, test_user.id, account.id,
         amount=200, txn_type="debit", frequency="monthly",
@@ -2280,7 +2280,7 @@ async def test_cash_flow_overdraft_crunch_point_goes_negative(
     report = await get_cash_flow_report(session, test_workspace.id, test_user.id, months=3, interval="daily")
 
     negative_points = [p for p in report.trend if p.value < 0]
-    assert len(negative_points) > 0, "Trend never dips below zero — clamped?"
+    assert len(negative_points) > 0, "Trend never dips below zero -- clamped?"
     ending = next(b for b in report.summary.breakdowns if b.key == "endingBalance")
     # 100 starting - 3*200 outflows = -500
     assert ending.value == -500.0
@@ -2292,7 +2292,7 @@ async def test_cash_flow_paycheck_timing_dip(
 ):
     """Classic paycheck-timing dip: rent on day 5, salary on day 15. End of
     month is positive, but mid-month should drop below the starting balance
-    (and possibly below 0). The trend must show that intra-month dip — not
+    (and possibly below 0). The trend must show that intra-month dip -- not
     just the net monthly figure."""
     account = await _make_manual_account(session, test_user.id, "CF PayTiming")
     await _add_txn(
@@ -2448,7 +2448,7 @@ async def test_cash_flow_large_one_off_purchase(
     assert pre_pt.value == 5000.0
     assert purchase_pt.value == 3200.0
     assert purchase_pt.breakdowns["outflow"] == 1800.0
-    # No recurrings → balance stays at 3200 for rest of window
+    # No recurrings -> balance stays at 3200 for rest of window
     assert end_pt.value == 3200.0
 
 
@@ -2581,14 +2581,14 @@ async def test_cash_flow_running_balance_arithmetic(
             expected += daily_signed[d]
         pt = by_date.get(d.isoformat())
         if pt is None:
-            continue  # day past report window — not all 25 days fit
+            continue  # day past report window -- not all 25 days fit
         assert abs(pt.value - expected) < 0.01, (
             f"Day {d}: got {pt.value}, expected {expected}"
         )
 
 
 # ---------------------------------------------------------------------------
-# Baseline mode (historical-mean forecast) — issue #179
+# Baseline mode (historical-mean forecast) -- issue #179
 # ---------------------------------------------------------------------------
 
 
@@ -2644,7 +2644,7 @@ async def test_cash_flow_baseline_on_replaces_recurring_with_mean(
         date.today(), source="opening_balance",
     )
     today = date.today()
-    # Past actuals: 30 daily R$100 debits → total R$3000 over the lookback.
+    # Past actuals: 30 daily R$100 debits -> total R$3000 over the lookback.
     for offset in range(1, 31):
         await _add_txn(
             session, test_user.id, account.id, 100, "debit",
@@ -2730,7 +2730,7 @@ async def test_cash_flow_baseline_lookback_adapts_to_short_history(
     # Earliest tx is 7 days ago, so lookback is 7 days.
     assert report.meta.baseline_lookback_days == 7
     proj_exp = next(b for b in report.summary.breakdowns if b.key == "projectedExpenses")
-    # 7 days × R$20 = R$140 over 7 days → R$20/day → ~R$1820 over ~91 days.
+    # 7 days × R$20 = R$140 over 7 days -> R$20/day -> ~R$1820 over ~91 days.
     assert proj_exp.value > 1500.0
     assert proj_exp.value < 2200.0
 
@@ -2739,7 +2739,7 @@ async def test_cash_flow_baseline_lookback_adapts_to_short_history(
 async def test_cash_flow_baseline_no_history_returns_empty_projection(
     session: AsyncSession, test_user, test_workspace: User
 ):
-    """User with no qualifying transactions → baseline contributes zero.
+    """User with no qualifying transactions -> baseline contributes zero.
 
     Chart should still show starting balance flat across the forecast.
     """
@@ -2800,7 +2800,7 @@ async def test_cash_flow_chart_includes_past_history(
     first_date = date.fromisoformat(report.trend[0].date)
     today = date.today()
     delta_days = (today - first_date).days
-    # _PAST_HISTORY_MONTHS = 1 (28–31 days depending on month).
+    # _PAST_HISTORY_MONTHS = 1 (28-31 days depending on month).
     assert 27 <= delta_days <= 32
 
 

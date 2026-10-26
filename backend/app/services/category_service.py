@@ -43,7 +43,7 @@ async def create_default_categories(
 ) -> list[Category]:
     # Guard against double-creation. Scope the check to the workspace
     # when one is provided so a user creating a SECOND workspace still
-    # gets the defaults seeded there — the prior guard checked
+    # gets the defaults seeded there -- the prior guard checked
     # user_id and short-circuited every workspace after the first.
     if workspace_id is not None:
         existing = await session.execute(
@@ -52,7 +52,7 @@ async def create_default_categories(
         if existing.scalar_one_or_none():
             return await get_categories(session, workspace_id)
     else:
-        # Legacy/test path with no explicit workspace_id — fall back to
+        # Legacy/test path with no explicit workspace_id -- fall back to
         # the user's first workspace via the autostamp listener.
         existing = await session.execute(
             select(Category).where(Category.user_id == user_id).limit(1)

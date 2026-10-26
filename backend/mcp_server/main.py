@@ -47,7 +47,7 @@ async def health():
 
 @app.post("/mcp")
 async def mcp(request: Request) -> JSONResponse:
-    # Auth first — never accept unauthenticated calls.
+    # Auth first -- never accept unauthenticated calls.
     try:
         ctx = verify_request(request)
     except Exception as exc:  # HTTPException from verify_request
@@ -94,7 +94,7 @@ async def mcp(request: Request) -> JSONResponse:
             async with async_session_maker() as session:
                 result = await call_tool(session, ctx, name, arguments)
             # MCP wraps tool output in `content` blocks. Use the structured
-            # variant — many clients (and our own runtime) prefer JSON.
+            # variant -- many clients (and our own runtime) prefer JSON.
             return JSONResponse(content=_ok(req_id, {
                 "content": [{"type": "text", "text": _safe_json(result)}],
                 "structuredContent": result,

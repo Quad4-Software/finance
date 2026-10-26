@@ -583,7 +583,7 @@ async def test_unlink_recurring_noop_when_not_linked(session, test_user, test_wo
     result = await transaction_service.unlink_recurring_transaction(
         session, tx.id, test_workspace.id
     )
-    assert result is None  # nothing to unlink → 404 at the API layer
+    assert result is None  # nothing to unlink -> 404 at the API layer
 
 
 # ---------------------------------------------------------------------------

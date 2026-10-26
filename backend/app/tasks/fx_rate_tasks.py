@@ -69,12 +69,12 @@ async def _restamp_fallback_transactions() -> int:
     Targets rows left NULL or stamped with the legacy 1:1 fallback (issue #353)
     and *upgrades* them once a real rate for their date is available. Uses only
     already-stored rates (``allow_fetch=False``) so a large heal never hammers
-    the FX provider — the daily ``sync_fx_rates`` task keeps rates fresh.
+    the FX provider -- the daily ``sync_fx_rates`` task keeps rates fresh.
 
     Conservative by construction: ``stamp_primary_amount`` only writes when a real
     rate resolves and leaves the fields untouched otherwise, so an existing row is
     never overwritten with NULL. A transaction that is currently visible in totals
-    (even with a stale 1:1 value) is never pushed into a "not converted" limbo — it
+    (even with a stale 1:1 value) is never pushed into a "not converted" limbo -- it
     stays as-is until a real rate lets us fix it for good.
     """
     from sqlalchemy import or_, select
@@ -103,7 +103,7 @@ async def _restamp_fallback_transactions() -> int:
             for tx in result.scalars().all():
                 primary = users.get(tx.user_id, settings.default_currency)
                 if tx.currency == primary:
-                    continue  # genuine same-currency row — never touch
+                    continue  # genuine same-currency row -- never touch
                 before = (tx.amount_primary, tx.fx_rate_used)
                 await stamp_primary_amount(session, tx.user_id, tx, allow_fetch=False)
                 if (tx.amount_primary, tx.fx_rate_used) != before:

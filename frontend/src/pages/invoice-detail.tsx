@@ -81,7 +81,7 @@ import {
 /**
  * One invoice: what is owed, the money bound to it, and the document.
  *
- * The tab split is the point. "Details" is the operator's view — the
+ * The tab split is the point. "Details" is the operator's view -- the
  * ledger side, where money gets linked. "Document" is what the client
  * receives, rendered from the same structure the PDF is. Mixing the two
  * on one screen is what made the first version feel like neither.
@@ -246,7 +246,7 @@ export default function InvoiceDetailPage() {
         setTimeout(() => setCopied(false), 2500)
         toast.success(t('invoices.shareCopied'))
       } catch {
-        // A blocked clipboard is not a failed share — the link exists.
+        // A blocked clipboard is not a failed share -- the link exists.
         toast.success(url)
       }
       refresh()
@@ -350,7 +350,7 @@ export default function InvoiceDetailPage() {
                 <>
                   {/* Downloading an imported invoice with nothing filed
                       would hand over a page we drew for a document
-                      somebody else issued — the same invention the
+                      somebody else issued -- the same invention the
                       Document tab refuses to make. Nothing to download
                       until the real file arrives. */}
                   {offerStatement ? (
@@ -587,7 +587,7 @@ export default function InvoiceDetailPage() {
           {documentPayload ? (
             // Every page this invoice has, in one browser: the files down
             // the left, the selected one read on the right. Our own
-            // render is one entry among them — and not offered at all on
+            // render is one entry among them -- and not offered at all on
             // an import, where drawing it would invent a document
             // somebody else issued.
             <InvoiceDocumentBrowser
@@ -720,7 +720,7 @@ export default function InvoiceDetailPage() {
                 )}
 
                 {/* Driven by the workspace's definitions, so the label
-                    the sender chose is what shows — never the raw key —
+                    the sender chose is what shows -- never the raw key --
                     and a field removed from settings stops appearing. */}
                 {customFields.length > 0 && (
                   <div className="flex flex-wrap gap-x-8 gap-y-2">
@@ -1072,7 +1072,7 @@ export function LinkPaymentDialog({
 
   // Money moving the way this invoice is settled: a receivable by money
   // coming in, a payable by money going out. Asking for credits either
-  // way — which this did — means the payment that actually settled a
+  // way -- which this did -- means the payment that actually settled a
   // supplier's bill is never in the list, and the bill stays open
   // forever with no way to close it.
   const settlingType = direction === 'payable' ? 'debit' : 'credit'
@@ -1082,7 +1082,7 @@ export function LinkPaymentDialog({
     enabled: open,
   })
 
-  // Same currency only — the server refuses a cross-currency allocation
+  // Same currency only -- the server refuses a cross-currency allocation
   // rather than inventing a rate, so offering one here would only be
   // offering an error.
   //
@@ -1192,7 +1192,7 @@ export function LinkPaymentDialog({
             onChange={(e) => setAmount(e.target.value)}
             placeholder={balance}
           />
-          {/* Leaving it blank is the common case — one payment closing one
+          {/* Leaving it blank is the common case -- one payment closing one
               invoice should not require typing the number twice. */}
           <p className="text-[11px] text-muted-foreground">{t('invoices.field.amountHint')}</p>
         </div>
@@ -1298,7 +1298,7 @@ function EditDraftDialog({
         // recomputes the total from them and ignores what was typed.
         //
         // An empty list is sent when the draft had lines and no longer
-        // does, because omitting the key means "leave them alone" — so
+        // does, because omitting the key means "leave them alone" -- so
         // deleting every row used to save successfully and change
         // nothing, and the rows came back on the next read.
         ...(lines.length

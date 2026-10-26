@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Frontend dev watcher — rebuilds on file change and auto-deploys to Docker.
+ * Frontend dev watcher -- rebuilds on file change and auto-deploys to Docker.
  *
  * Usage:  node scripts/dev-frontend.mjs
  *         npm run dev:frontend   (once the script is added to package.json)
@@ -33,7 +33,7 @@ function scheduleDeploy() {
   deployTimer = setTimeout(deploy, 300)
 }
 
-console.log('\x1b[36m→ Starting Vite watch build + Docker auto-deploy\x1b[0m')
+console.log('\x1b[36m-> Starting Vite watch build + Docker auto-deploy\x1b[0m')
 console.log(`  Container: ${CONTAINER}`)
 console.log(`  Watching:  ${FRONTEND_DIR}/src\n`)
 

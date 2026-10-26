@@ -1,7 +1,7 @@
 import type { ElementType } from 'react'
 import { Building2, PiggyBank, CreditCard, TrendingUp, Wallet, Landmark } from 'lucide-react'
 
-// Account-type → icon/color, the fallback shown when an account has no bank
+// Account-type -> icon/color, the fallback shown when an account has no bank
 // logo (manual accounts, and connected accounts whose provider exposes none).
 export const ACCOUNT_TYPE_CONFIG: Record<
   string,

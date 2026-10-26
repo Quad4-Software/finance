@@ -73,7 +73,7 @@ export function TransactionSplitsSection({
   // group has finished loading).
   const seedRef = useRef<TransactionSplitsInput | null>(value)
   // Once rows have been hydrated for the seeded value, stop applying
-  // it — further edits are user-driven.
+  // it -- further edits are user-driven.
   const hydratedRef = useRef(false)
 
   const queryClient = useQueryClient()

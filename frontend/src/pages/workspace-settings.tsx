@@ -291,7 +291,7 @@ export default function WorkspaceSettingsPage() {
 
   return (
     <div className="container max-w-5xl py-8 space-y-6">
-      {/* Header card — identity + role + stats strip */}
+      {/* Header card -- identity + role + stats strip */}
       <section className="rounded-xl border bg-card overflow-hidden">
         <div className="p-6 flex items-center gap-5 border-b">
           <CategoryIcon
@@ -335,7 +335,7 @@ export default function WorkspaceSettingsPage() {
         </div>
       </section>
 
-      {/* Details card — 4-column form */}
+      {/* Details card -- 4-column form */}
       <section className="space-y-4 rounded-xl border bg-card p-6">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold">{t('workspace.details')}</h2>
@@ -352,7 +352,7 @@ export default function WorkspaceSettingsPage() {
           )}
         </div>
         <div className="space-y-4">
-          {/* Identity row — icon button + color swatch align with the
+          {/* Identity row -- icon button + color swatch align with the
               input (not the label) so the label sits over the name
               field only. */}
           <div className="flex items-end gap-2">
@@ -411,7 +411,7 @@ export default function WorkspaceSettingsPage() {
             </div>
           </div>
 
-          {/* Region row — currency, language, and where the workspace files */}
+          {/* Region row -- currency, language, and where the workspace files */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="ws-currency" className="text-[13px]">
@@ -448,7 +448,7 @@ export default function WorkspaceSettingsPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__none__">—</SelectItem>
+                  <SelectItem value="__none__">--</SelectItem>
                   {SUPPORTED_LANGS.map(({ code, label }) => (
                     <SelectItem key={code} value={code}>{label}</SelectItem>
                   ))}
@@ -468,7 +468,7 @@ export default function WorkspaceSettingsPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__none__">—</SelectItem>
+                  <SelectItem value="__none__">--</SelectItem>
                   {sortedJurisdictions.map((code) => (
                     <SelectItem key={code} value={code}>
                       <span className="mr-2">{countryFlag(code)}</span>
@@ -596,7 +596,7 @@ export default function WorkspaceSettingsPage() {
         )}
       </section>
 
-      {/* Danger zone — owners only */}
+      {/* Danger zone -- owners only */}
       {canManage && (
         <section className="space-y-4 rounded-xl border bg-card p-6">
           <div className="flex items-center justify-between">
@@ -672,7 +672,7 @@ export default function WorkspaceSettingsPage() {
               >
                 {(['owner', 'editor', 'viewer'] as WorkspaceRole[]).map((r) => (
                   <option key={r} value={r}>
-                    {labelForRole(r, t)} — {hintForRole(r, t)}
+                    {labelForRole(r, t)} -- {hintForRole(r, t)}
                   </option>
                 ))}
               </select>

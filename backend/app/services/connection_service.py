@@ -69,7 +69,7 @@ def _clean_logo_url(value: object) -> Optional[str]:
 
     Guards the DB column against anything a provider hands back that isn't a
     usable URL (None, empty string, a non-string, or one longer than the
-    column — truncating would store a broken URL, so it's dropped), so a
+    column -- truncating would store a broken URL, so it's dropped), so a
     misbehaving integration can never write junk into a ``logo_url`` column
     or abort a sync with a DataError.
     """
@@ -99,7 +99,7 @@ def _wallet_external_id(connection_external_id: str, account_key: Optional[str])
 
 
 def _is_auto_wallet_name(name: str, institution_name: str) -> bool:
-    """True while a wallet still carries its creation-time auto-name — the
+    """True while a wallet still carries its creation-time auto-name -- the
     institution label, possibly with _unique_default_name's " N" suffix."""
     if name == institution_name:
         return True
@@ -119,7 +119,7 @@ async def _resolve_institution(
     a new one (review on #654); name identity is the fallback for servers
     that only send a name. Most connections are one institution and never
     send this hint (returns None, serialization falls back to the
-    connection's own fields) — the exception is a connection spanning a
+    connection's own fields) -- the exception is a connection spanning a
     banking group's brokerage arm (issue #723), which the provider detects
     and hints the same way SimpleFIN does.
     """
@@ -156,7 +156,7 @@ async def _resolve_institution(
             if inst is not None:
                 inst.external_id = ext
     else:
-        # Name-only hint. Match any row with this name — id-keyed rows
+        # Name-only hint. Match any row with this name -- id-keyed rows
         # included, so a payload that intermittently drops org ids doesn't
         # spawn duplicates. NULLS FIRST keeps the pick deterministic.
         inst = (
@@ -181,7 +181,7 @@ async def _resolve_institution(
         try:
             # Savepoint: a concurrent sync (scheduled + manual) can insert
             # the same identity between our SELECT and this flush. The
-            # partial unique index rejects the loser — reuse the winner's
+            # partial unique index rejects the loser -- reuse the winner's
             # row instead of failing the whole sync.
             async with session.begin_nested():
                 session.add(inst)
@@ -201,7 +201,7 @@ async def _resolve_institution(
         if inst.name != name:
             inst.name = name  # provider-side rename
         # The logo is favicon-derived from the org's website, never user-set,
-        # so it follows the provider too — a rename that moves domains would
+        # so it follows the provider too -- a rename that moves domains would
         # otherwise keep the old bank's icon forever.
         new_logo = _clean_logo_url(acc_data.institution_logo_url)
         if new_logo is not None and inst.logo_url != new_logo:
@@ -471,7 +471,7 @@ async def _sync_holdings(
     today = app_today()
 
     # Find-or-create the wallet(s) that own this connection's holdings. A
-    # holding carrying its owning account (SimpleFIN — issue #345) gets one
+    # holding carrying its owning account (SimpleFIN -- issue #345) gets one
     # wallet per investment account, named after it; the rest share the
     # connection-named wallet. Users can rename wallets freely without
     # breaking future syncs (matching is by external_id).
@@ -480,10 +480,10 @@ async def _sync_holdings(
     # Snapshots before any bucket runs, so payload order can't change them.
     # Once per-account wallets exist under the current connection key, the
     # plain-keyed wallet is the live connection-default, not a legacy row
-    # awaiting its first split — adopting it would hijack it. A keyed
+    # awaiting its first split -- adopting it would hijack it. A keyed
     # bucket applies the stricter test: any split wallet in scope (old
     # prefixes included) means past the legacy era, so a genuinely new
-    # account must mint even right after a reconnect rotated the prefix —
+    # account must mint even right after a reconnect rotated the prefix --
     # only the keyless bucket may still adopt the stale default then.
     has_split_wallets = bool(
         await session.scalar(
@@ -535,7 +535,7 @@ async def _sync_holdings(
         key = holding.account_external_id
         if key not in groups_by_key:
             # The owning account's institution backs the wallet's
-            # "Synced from …" subtitle (issue #345).
+            # "Synced from ..." subtitle (issue #345).
             institution_id = (
                 await session.scalar(
                     select(Account.institution_id).where(
@@ -551,10 +551,10 @@ async def _sync_holdings(
                 _clean_institution_name(holding.account_name) or connection.institution_name
             )
             # The first claim on a wallet key adopts the wallet these
-            # holdings lived in before — the legacy connection-keyed one, or
+            # holdings lived in before -- the legacy connection-keyed one, or
             # one left on a stale key by a reconnect (plain or per-account:
-            # a "…::{account}" suffix match is this very account's wallet
-            # under an older connection key) — instead of minting a new
+            # a "...::{account}" suffix match is this very account's wallet
+            # under an older connection key) -- instead of minting a new
             # row, so an existing user's rename/icon/color/position
             # survive. Only an untouched auto-name is refreshed. Guards, in
             # order: never adopt when a wallet already owns the key
@@ -562,9 +562,9 @@ async def _sync_holdings(
             # (user, source, external_id) index and fail every sync); never
             # adopt a wallet another bucket of this run claimed; never
             # reach into another workspace; a plain candidate only counts
-            # before the first split — afterwards it is the live
+            # before the first split -- afterwards it is the live
             # connection-default wallet, not a legacy awaiting adoption; a
-            # stale-keyed candidate must be provably this bank's — still
+            # stale-keyed candidate must be provably this bank's -- still
             # linked to this connection, or an orphan holding assets this
             # payload re-syncs (a deleted sibling connection's orphan is
             # neither); ambiguity means minting, not guessing.
@@ -673,7 +673,7 @@ async def _sync_holdings(
         return groups_by_key[key]
 
     # Wallets this sync owns: this connection's, plus orphans a prior
-    # disconnect left behind (connection_id went NULL via SET NULL) — their
+    # disconnect left behind (connection_id went NULL via SET NULL) -- their
     # re-adopted assets must still split into per-account wallets instead of
     # staying stranded. An asset sitting in one may be re-attributed below;
     # a user's custom wallet (source "manual") and other workspaces' wallets
@@ -691,8 +691,8 @@ async def _sync_holdings(
     )
     sync_owned = sync_owned_rows.all()
     sync_owned_group_ids = {row[0] for row in sync_owned}
-    # Per-account wallets, by their "…::…" keys. A holding that lost its
-    # account hint must not drain one of these into the default bucket — a
+    # Per-account wallets, by their "...::..." keys. A holding that lost its
+    # account hint must not drain one of these into the default bucket -- a
     # single degraded payload would empty them and the reap would delete
     # the user's customization with them.
     split_group_ids = {row[0] for row in sync_owned if row[1] and "::" in row[1]}
@@ -725,7 +725,7 @@ async def _sync_holdings(
         #     while it was active, no reason to surface it closed.
         #   - Existing + withdrawn: mark sell_date (if not already set by
         #     the user) so it drops out of current totals but historical
-        #     AssetValues remain visible in reports. No new AssetValue —
+        #     AssetValues remain visible in reports. No new AssetValue --
         #     appending today's zero would bury the real closing value.
         if holding.is_withdrawn:
             if existing is None:
@@ -787,7 +787,7 @@ async def _sync_holdings(
         # Attach to its institution's wallet. NOTE this deliberately moves
         # holdings between sync-owned wallets, not just out of a null group
         # like it used to: re-attribution corrects the sync's own earlier
-        # bucketing (one-wallet-per-connection → per-account). A wallet the
+        # bucketing (one-wallet-per-connection -> per-account). A wallet the
         # user made themselves ("US Stocks", source "manual") is never
         # touched.
         group = await _wallet_for(holding)
@@ -799,7 +799,7 @@ async def _sync_holdings(
         ):
             asset.group_id = group.id
         # Seed a historical value at purchase_date so users get a real
-        # evolution curve from day one — not just today's snapshot.
+        # evolution curve from day one -- not just today's snapshot.
         # Idempotent: skips if any AssetValue already exists at that date.
         if holding.purchase_date and holding.purchase_price is not None:
             await _ensure_historical_seed(
@@ -818,7 +818,7 @@ async def _sync_holdings(
 
     # Sync owns its wallets: drop any it emptied by re-attribution above
     # (e.g. the single connection-named wallet that predates per-institution
-    # ones). Wallets still holding assets — or used this run — are kept, and
+    # ones). Wallets still holding assets -- or used this run -- are kept, and
     # so is anything a goal tracks or a collection contains: deleting those
     # would SET NULL the goal's target and CASCADE the membership away,
     # silently breaking things the user built on the wallet.
@@ -858,7 +858,7 @@ async def _upsert_asset_from_holding(
     """Create or update an Asset from a HoldingData payload.
 
     Synced fields (name, currency, quantity, purchase_price, maturity,
-    metadata) are always overwritten — the UI disables editing these on
+    metadata) are always overwritten -- the UI disables editing these on
     synced assets. Provider-reported withdrawal is handled by the caller
     via `sell_date`, not here, so this function only ever sees ACTIVE
     holdings and never flips `is_archived` on its own.
@@ -886,7 +886,7 @@ async def _upsert_asset_from_holding(
         await session.flush()
         return asset
 
-    # Fields providers consistently return — safe to overwrite each sync.
+    # Fields providers consistently return -- safe to overwrite each sync.
     asset.name = holding.name
     asset.currency = holding.currency
     asset.user_id = user_id
@@ -905,7 +905,7 @@ async def _upsert_asset_from_holding(
         asset.workspace_id = workspace_id
         asset.group_id = None
 
-    # Sparse fields — merge, don't clobber. Providers sometimes return
+    # Sparse fields -- merge, don't clobber. Providers sometimes return
     # these on first sync and null on later ones. Keeping the
     # first-seen value is better than wiping data we already have.
     if holding.quantity is not None:
@@ -932,7 +932,7 @@ async def _ensure_historical_seed(
     """Insert a one-time AssetValue at purchase_date with purchase_price.
 
     Called on every sync but a no-op once the seed exists. Skips if ANY
-    AssetValue already exists on that date (even a manual one) — we don't
+    AssetValue already exists on that date (even a manual one) -- we don't
     want to stomp a value the user may have entered themselves.
     """
     existing = await session.execute(
@@ -1209,7 +1209,7 @@ async def handle_oauth_callback(
         consumed = await oauth_state.consume_state(state)
         if not consumed:
             raise ValueError("OAuth state is invalid or expired")
-        # The state is authoritative — caller-supplied provider_name is a hint.
+        # The state is authoritative -- caller-supplied provider_name is a hint.
         if consumed.get("user_id") != str(user_id):
             raise ValueError("OAuth state user does not match authenticated user")
         if consumed.get("workspace_id") != str(workspace_id):
@@ -1443,7 +1443,7 @@ async def handle_oauth_callback(
         )
         await reconciliation_service.match_incoming(session, workspace_id, landed)
 
-    # Investment holdings live on /investments — separate endpoint from
+    # Investment holdings live on /investments -- separate endpoint from
     # /accounts. Fetched before the account loop and stored here once the
     # accounts exist, so holdings are available on the Assets page
     # immediately after the widget closes.
@@ -1687,12 +1687,12 @@ async def _find_synced_duplicate(
     """Find an existing row that the incoming `txn_data` is a twin of.
 
     The `(account_id, external_id)` lookup only catches the case where a
-    provider keeps the same id while a row's `status` flips pending→posted.
+    provider keeps the same id while a row's `status` flips pending->posted.
     It misses two patterns where the same logical operation comes back with
     two different external ids:
 
     1. The provider re-emits the operation with a new id when its state
-       changes — e.g. a scheduled/pending row replaced by a posted row.
+       changes -- e.g. a scheduled/pending row replaced by a posted row.
        Same account/date/amount/type with statuses differing.
     2. A credit-card installment that lands on the current bill but is also
        still scheduled against the next bill. Two different external ids
@@ -1700,9 +1700,9 @@ async def _find_synced_duplicate(
        `(purchase_date, number, total, amount, type)`.
 
     Returns the existing Transaction the caller should reuse; the caller
-    decides whether to upgrade its status (pending→posted + swap external_id),
+    decides whether to upgrade its status (pending->posted + swap external_id),
     enrich an imported row, or skip the incoming insert. Synthetic bill-charge rows
-    (`bill_charge:*`) are excluded — they have their own idempotency keys.
+    (`bill_charge:*`) are excluded -- they have their own idempotency keys.
     """
     # Path 1: installment fingerprint. Highly specific, so we don't require a
     # description match on top.
@@ -1729,7 +1729,7 @@ async def _find_synced_duplicate(
             return candidate
 
     # Path 2: pending↔posted twin on the same account/date/amount/type. The
-    # status differential is the load-bearing signal — without it we'd risk
+    # status differential is the load-bearing signal -- without it we'd risk
     # collapsing two genuinely separate transactions that happen to share a
     # day and amount. A light description-similarity check guards against
     # the residual false positive of two different merchants charging the
@@ -1918,7 +1918,7 @@ async def _cleanup_phantom_duplicates(
 
 
 def _compute_bill_close_date(due_date: date, close_day: Optional[int]) -> date:
-    """The cycle's close date — when the bank snapshots the bill and applies
+    """The cycle's close date -- when the bank snapshots the bill and applies
     finance charges. We don't get this from the provider directly; we derive
     it as "the most recent statement_close_day on or before the bill's
     due_date" (a few days before due, the typical close-to-due gap). When
@@ -1928,7 +1928,7 @@ def _compute_bill_close_date(due_date: date, close_day: Optional[int]) -> date:
     pays the bill. Stamping them at due_date makes them appear chronologically
     after the payment in the tx list, which doesn't match real bank semantics.
     """
-    import calendar  # local — not used elsewhere in this file
+    import calendar  # local -- not used elsewhere in this file
 
     if not close_day:
         return due_date
@@ -1969,7 +1969,7 @@ async def _sync_bill_finance_charges(
     """Materialize a bill's finance charges (fees, interest, etc.) as
     synthetic transactions linked to the bill.
 
-    Without this, the cycle's tx sum can't reconcile to bill.total_amount —
+    Without this, the cycle's tx sum can't reconcile to bill.total_amount --
     the bank charges these but the provider doesn't always emit them as
     standalone transactions.
 
@@ -2071,7 +2071,7 @@ async def _sync_credit_card_bills(
 
     Returns a {external_id: bill} dict so the caller can resolve transaction
     bill_id without N+1 queries. For non-CC accounts or providers that don't
-    expose bills, returns an empty dict — the read path then falls back to
+    expose bills, returns an empty dict -- the read path then falls back to
     locally-computed cycle math via apply_effective_date.
 
     Failures are intentionally swallowed (logged at info): a connection
@@ -2083,7 +2083,7 @@ async def _sync_credit_card_bills(
 
     try:
         bills_data = await provider.get_bills(credentials, account.external_id)
-    except Exception as e:  # noqa: BLE001 — provider failures must not fail sync
+    except Exception as e:  # noqa: BLE001 -- provider failures must not fail sync
         logger.info("Skipping credit-card bills sync for account %s: %s", account.id, e)
         return {}
 
@@ -2170,7 +2170,7 @@ async def sync_connection(
 
     # Authorization is workspace-scoped and happens before this service is
     # called. Data imported from a bank connection, however, must always be
-    # owned by the user who owns that connection — not by whichever workspace
+    # owned by the user who owns that connection -- not by whichever workspace
     # member clicked Sync. Mixing those identities creates duplicate holdings
     # and wallets because provider external IDs are unique per user.
     if requesting_user_id != connection.user_id:
@@ -2238,7 +2238,7 @@ async def sync_connection(
                     code="credentials_invalid",
                 )
             # "refreshed", "skipped", or "failed" all fall through to a read.
-            # On "failed" we read whatever cached copy the provider has —
+            # On "failed" we read whatever cached copy the provider has --
             # better than aborting the entire sync over a transient hiccup.
 
         # Update accounts
@@ -2299,7 +2299,7 @@ async def sync_connection(
             # rewrite, no new transactions) but the connection link is kept so
             # the next sync still finds it here instead of creating a duplicate
             # active account (issue #90). Its institution pointer still follows
-            # the provider, though — otherwise a renamed org's abandoned row
+            # the provider, though -- otherwise a renamed org's abandoned row
             # would stay pinned forever and keep a single-bank link presenting
             # as multi-institution.
             if account and account.is_closed:
@@ -2333,7 +2333,7 @@ async def sync_connection(
                 # Backfills existing accounts on next sync (issue #345).
                 if institution is not None:
                     account.institution_id = institution.id
-                    # Only when the user hasn't named the account themselves —
+                    # Only when the user hasn't named the account themselves --
                     # never overwrite a manual display_name.
                     if account.display_name is None:
                         account.display_name = institution.name
@@ -2392,7 +2392,7 @@ async def sync_connection(
                 session.add(account)
                 await session.flush()
 
-            # Fetch the bills feed before transactions so transaction → bill
+            # Fetch the bills feed before transactions so transaction -> bill
             # FK resolution happens in-memory (no N+1). Empty dict for non-CC
             # accounts or providers without /bills.
             bills_by_external_id = await _sync_credit_card_bills(
@@ -2455,7 +2455,7 @@ async def sync_connection(
                     # a different bill (e.g. a chargeback).
                     #
                     # User's manual override wins: if effective_bill_date is
-                    # set, we don't touch bill_id or effective_date — the
+                    # set, we don't touch bill_id or effective_date -- the
                     # user has explicitly overridden the auto bucketing.
                     if txn_data.bill_external_id and existing_tx.effective_bill_date is None:
                         bill = bills_by_external_id.get(txn_data.bill_external_id)
@@ -2686,7 +2686,7 @@ async def sync_connection(
         # Reap institution rows referenced by nothing. Id-carrying servers
         # never orphan a row (renames update in place), but a name-only
         # server that renames its bank mints a fresh row and repoints the
-        # accounts — the abandoned row would otherwise keep a single-bank
+        # accounts -- the abandoned row would otherwise keep a single-bank
         # link presenting as multi-institution forever. Requiring zero
         # account AND zero wallet references means a wallet's "Synced from"
         # label can never be taken away. Runs after the holdings sync so a
@@ -2724,7 +2724,7 @@ async def sync_connection(
         return connection, merged_count, "refreshed"
 
     except SessionExpiredError:
-        # Provider consent expired — distinct from a generic error so the UI
+        # Provider consent expired -- distinct from a generic error so the UI
         # can show a clearer "reauthorize" prompt.
         await session.rollback()
         async with session.begin():
@@ -2746,7 +2746,7 @@ async def sync_connection(
     except ProviderRateLimited:
         # The bank/aggregator is throttling data requests (PSD2 caps unattended
         # access, commonly ~4/day). The connection is healthy, so don't error
-        # it or 500 the request — skip this run, keep it active, and leave
+        # it or 500 the request -- skip this run, keep it active, and leave
         # last_sync_at untouched so the next sync retries the same window.
         await session.rollback()
         async with session.begin():

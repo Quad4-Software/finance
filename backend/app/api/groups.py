@@ -62,7 +62,7 @@ async def get_group(
     ctx: WorkspaceContext = Depends(current_workspace),
     session: AsyncSession = Depends(get_async_session),
 ):
-    # Read endpoint — visible to workspace members and to cross-workspace
+    # Read endpoint -- visible to workspace members and to cross-workspace
     # linked members (the Splitwise case where someone is added from
     # outside this workspace).
     group = await group_service.get_group_visible(

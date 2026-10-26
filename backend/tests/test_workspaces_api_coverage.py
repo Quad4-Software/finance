@@ -1,7 +1,7 @@
 """Coverage-focused API tests for app/api/workspaces.py.
 
 Exercises list/create/get-current/update, member invite/list/role-change/
-remove, stats, and archive — plus the error branches (404, 403, 400).
+remove, stats, and archive -- plus the error branches (404, 403, 400).
 """
 import uuid
 

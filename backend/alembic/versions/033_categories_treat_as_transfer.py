@@ -5,7 +5,7 @@ Revises: 032
 Create Date: 2026-04-20
 
 Adds a boolean `treat_as_transfer` on categories. Categories with this
-flag are treated like paired transfers in report aggregations — their
+flag are treated like paired transfers in report aggregations -- their
 transactions are excluded from income/expense sums. This makes one-sided
 movements (investment applications/redemptions, loan repayments) stop
 polluting P&L figures without needing a real counterpart transaction.
@@ -14,10 +14,10 @@ For every existing user we:
   1. Create an "Investments" / "Investimentos" category if missing, with
      the flag set and is_system=true.
   2. Create a default rule matching PT investment keywords
-     (APLICACAO, RESGATE, CDB, TESOURO, ...) → that category.
+     (APLICACAO, RESGATE, CDB, TESOURO, ...) -> that category.
   3. Backfill: apply the rule to existing uncategorized transactions.
 
-User intent is respected — already-categorized transactions are never
+User intent is respected -- already-categorized transactions are never
 touched. The PT rule is a harmless no-op for users whose bank data
 doesn't contain those patterns.
 """
@@ -40,7 +40,7 @@ INVESTMENTS_COLOR = "#0EA5E9"
 RULE_NAME = "Investimentos (Aplicação / Resgate)"
 # Keywords checked one-by-one as OR'd `contains` conditions. The rule engine
 # normalizes both sides (uppercase + strip accents) so "APLICACAO" matches
-# "Aplicação", "aplicacao", etc. — no need for per-accent variants.
+# "Aplicação", "aplicacao", etc. -- no need for per-accent variants.
 RULE_KEYWORDS = [
     "APLICACAO",
     "RESGATE",
@@ -80,7 +80,7 @@ def upgrade() -> None:
     bind = op.get_bind()
 
     # 2. Resolve each user's language from preferences JSON. Default to
-    #    pt-BR if unreadable — the app is Brazilian-first and the rule
+    #    pt-BR if unreadable -- the app is Brazilian-first and the rule
     #    patterns won't match EN descriptions anyway.
     users = bind.execute(
         sa.text("SELECT id, preferences FROM users")
@@ -101,7 +101,7 @@ def upgrade() -> None:
             {"uid": user_id},
         ).scalar()
 
-        # 3. Upsert the category — idempotent on re-run; don't clobber
+        # 3. Upsert the category -- idempotent on re-run; don't clobber
         #    an existing one the user may have renamed or customized.
         category_id = bind.execute(
             sa.text(
@@ -168,7 +168,7 @@ def upgrade() -> None:
                 },
             )
 
-        # 5. Backfill — assign the new category to uncategorized transactions
+        # 5. Backfill -- assign the new category to uncategorized transactions
         #    whose description matches the regex. Only touches uncategorized
         #    rows so a user who manually categorized an APLICACAO into
         #    "Poupança" or similar keeps their choice. Postgres regex
@@ -192,6 +192,6 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    # Keep seeded categories and rules — users may have re-categorized
+    # Keep seeded categories and rules -- users may have re-categorized
     # transactions against them. Only drop the column.
     op.drop_column("categories", "treat_as_transfer")

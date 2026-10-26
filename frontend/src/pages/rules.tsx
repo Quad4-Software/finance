@@ -138,17 +138,17 @@ function actionSummary(actions: RuleAction[], categories: Category[], payeesList
   return actions.map(a => {
     if (a.op === 'set_category') {
       const cat = findCategoryReference(categories, a.value)
-      return cat ? `→ ${cat.name}` : `→ ${t('transactions.category')}`
+      return cat ? `-> ${cat.name}` : `-> ${t('transactions.category')}`
     }
     if (a.op === 'set_payee') {
       const p = payeesList.find(p => p.id === a.value)
-      return p ? `→ ${t('payees.payee')}: ${p.name}` : `→ ${t('payees.payee')}`
+      return p ? `-> ${t('payees.payee')}: ${p.name}` : `-> ${t('payees.payee')}`
     }
     if (a.op === 'set_description') {
-      return `→ ${t('rules.fieldDescription')}: ${a.value}`
+      return `-> ${t('rules.fieldDescription')}: ${a.value}`
     }
-    if (a.op === 'append_notes') return `→ ${t('rules.fieldNotes')}: ${a.value}`
-    if (a.op === 'ignore') return `→ ${t('rules.ignoreAction')}`
+    if (a.op === 'append_notes') return `-> ${t('rules.fieldNotes')}: ${a.value}`
+    if (a.op === 'ignore') return `-> ${t('rules.ignoreAction')}`
     return a.op
   }).join('  ') || t('rules.noActions')
 }

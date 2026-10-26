@@ -4,13 +4,13 @@ Under this model, an owner-side split transaction contributes only the
 *owner's share* to user-level P/L (dashboard summary, spending-by-
 category, reports, budgets). The non-owner shares are reimbursable, not
 real cost. Settlement credits are also dropped from P/L because the
-share already captured the cost — counting the credit again would
+share already captured the cost -- counting the credit again would
 double-book.
 
 Account-level stats (per-account income/expenses, balance history) keep
 full amounts because they track real cash through the account.
 
-The tests here pin those guarantees end-to-end: split layout → service
+The tests here pin those guarantees end-to-end: split layout -> service
 output. Most run in single-currency USD; the cross-currency ones seed
 USD↔EUR rates explicitly so SQLite has something to convert with.
 """
@@ -213,7 +213,7 @@ async def test_summary_owner_with_zero_share(
 async def test_summary_no_split_full_amount_counts(
     session: AsyncSession, test_user, test_workspace
 ):
-    """A regular non-split transaction must still count its full amount —
+    """A regular non-split transaction must still count its full amount --
     the offset only applies when splits exist."""
     await _force_user_currency(session, test_user, "USD")
     today = date.today()
@@ -231,7 +231,7 @@ async def test_summary_no_split_full_amount_counts(
 async def test_summary_drops_settlement_credits_from_income(
     session: AsyncSession, test_user, test_workspace
 ):
-    """Receiver-side settlement credits no longer count as income — the
+    """Receiver-side settlement credits no longer count as income -- the
     parent share already booked the expense, so the credit would
     double-count."""
     await _force_user_currency(session, test_user, "USD")
@@ -255,7 +255,7 @@ async def test_summary_drops_settlement_credits_from_income(
         ),
         test_user.id,
     )
-    # Friend pays the owner $30 — both the payer-side debit and the
+    # Friend pays the owner $30 -- both the payer-side debit and the
     # receiver-side credit get auto-stamped as source='settlement'.
     await settlement_service.create_settlement(
         session,
@@ -283,7 +283,7 @@ async def test_summary_drops_settlement_credits_from_income(
 async def test_summary_settlement_debit_excluded_for_payer(
     session: AsyncSession, test_user, test_workspace
 ):
-    """Linked-member side: paying back a debt is not an expense — the
+    """Linked-member side: paying back a debt is not an expense -- the
     share already captured it."""
     await _force_user_currency(session, test_user, "USD")
     today = date.today()
@@ -313,13 +313,13 @@ async def test_spending_by_category_uses_owner_share(
     session: AsyncSession, test_user, test_workspace, test_categories
 ):
     """A categorized split contributes only the owner's share to its
-    bucket. No share → category drops out."""
+    bucket. No share -> category drops out."""
     await _force_user_currency(session, test_user, "USD")
     today = date.today()
     food = test_categories[0]  # Alimentação
     account = await _make_account(session, test_user.id)
 
-    # Brunch $50, owner share $25 → category should show $25
+    # Brunch $50, owner share $25 -> category should show $25
     brunch = await _make_tx(
         session,
         test_user.id,
@@ -405,7 +405,7 @@ async def test_owner_self_member_recognized_without_link(
     session: AsyncSession, test_user, test_workspace
 ):
     """The owner's GroupMember has is_self=True but linked_user_id=NULL.
-    The offset query must still recognize it as the owner's own share —
+    The offset query must still recognize it as the owner's own share --
     otherwise the regression we hit before returns: the owner's share
     would be subtracted as if it were a non-owner share, blowing the
     expense down to $0."""
@@ -446,7 +446,7 @@ async def test_owner_self_member_recognized_without_link(
 
 
 async def _seed_eur_rate(session: AsyncSession, when: date) -> None:
-    """Seed a USD→EUR rate so balance_service can FX-convert. Stored as
+    """Seed a USD->EUR rate so balance_service can FX-convert. Stored as
     base=USD,quote=EUR per the rate model convention."""
     session.add(
         FxRate(
@@ -554,8 +554,8 @@ async def test_owner_split_offset_pnl_helper(
     session: AsyncSession, test_user, test_workspace
 ):
     """The income/expenses report uses Postgres `to_char`, so we can't
-    exercise it under SQLite. Instead pin its underlying helper — the
-    same one the dashboard uses — directly."""
+    exercise it under SQLite. Instead pin its underlying helper -- the
+    same one the dashboard uses -- directly."""
     from app.services._query_filters import owner_split_offset_pnl
 
     await _force_user_currency(session, test_user, "USD")
@@ -581,7 +581,7 @@ async def test_owner_split_offset_pnl_helper(
     income_offset, expense_offset = await owner_split_offset_pnl(
         session, test_user.id, month_start, month_end, primary_currency="USD"
     )
-    # Three friends each owe $30 → offset is $90; the owner's $30 share
+    # Three friends each owe $30 -> offset is $90; the owner's $30 share
     # is what survives in the dashboard math.
     assert income_offset == 0.0
     assert expense_offset == pytest.approx(90.0, abs=0.01)

@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/auth-context'
  *
  * Combines the admin-wide `number_format` setting with the signed-in user's
  * display currency. When the admin leaves the format on "auto" the separators
- * follow the currency (EUR → 1.000,00, USD → 1,000.00); an explicit choice
+ * follow the currency (EUR -> 1.000,00, USD -> 1,000.00); an explicit choice
  * overrides that for everyone. Falls back to the UI language when neither is
  * known.
  *

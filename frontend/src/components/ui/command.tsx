@@ -8,12 +8,12 @@ import { cn } from "@/lib/utils"
 // inside the transaction dialog), Radix's body scroll lock (react-remove-scroll)
 // registers a bubble-phase `wheel`/`touchmove` listener on `document` that
 // preventDefault()s events whose target isn't inside the dialog's own DOM
-// subtree — which is exactly this list's situation, since its Popover portals
+// subtree -- which is exactly this list's situation, since its Popover portals
 // to document.body. That listener only fires once the event has bubbled all
 // the way up, so React's own (passive, non-preventable) onWheel/onTouchMove
 // props can't detect or work around it in time. The only reliable fix is to
 // attach our own non-passive native listener directly on the list and drive
-// scrollTop ourselves, unconditionally — this works the same whether or not
+// scrollTop ourselves, unconditionally -- this works the same whether or not
 // a Dialog's scroll lock is active.
 function useManualScroll<T extends HTMLElement>() {
   const ref = React.useRef<T>(null)

@@ -236,7 +236,7 @@ async def test_balance_line_dropped_when_settlement_zeroes_out_split(
     session: AsyncSession, test_user, test_workspace
 ):
     """A friend who pays back exactly their share should drop off the
-    balance ledger — no zero-amount line should be returned."""
+    balance ledger -- no zero-amount line should be returned."""
     group, self_m, friends = await _setup(
         session, test_user, test_workspace.id, n_others=1
     )
@@ -292,7 +292,7 @@ async def test_cross_member_settlements_are_ignored_in_owner_ledger(
     a, b = friends
     account = await _make_account(session, test_user.id)
 
-    # Owner pays $30 split equally with A — A owes $15.
+    # Owner pays $30 split equally with A -- A owes $15.
     tx = await _make_tx(session, test_user.id, account.id, "30.00")
     await split_service.replace_splits(
         session,
@@ -306,7 +306,7 @@ async def test_cross_member_settlements_are_ignored_in_owner_ledger(
         ),
         test_user.id,
     )
-    # A "settles" with B — neither side is self. Should be a no-op for
+    # A "settles" with B -- neither side is self. Should be a no-op for
     # the owner's balance ledger.
     await settlement_service.create_settlement(
         session,
@@ -328,9 +328,9 @@ async def test_cross_member_settlements_are_ignored_in_owner_ledger(
     )
     assert balances is not None
     by_member = {ln["member_id"]: ln["amount"] for ln in balances["lines"]}
-    # A still owes their original $15 — not adjusted by the cross-member tx.
+    # A still owes their original $15 -- not adjusted by the cross-member tx.
     assert by_member[a.id] == Decimal("15.00")
-    # B has no obligation to the owner — no line.
+    # B has no obligation to the owner -- no line.
     assert b.id not in by_member
 
 
@@ -339,7 +339,7 @@ async def test_no_self_member_means_only_split_totals(
     session: AsyncSession, test_user, test_workspace
 ):
     """Without a self member, settlements can't be applied (cross-member
-    settlements are out of scope for v1) — only split shares accumulate."""
+    settlements are out of scope for v1) -- only split shares accumulate."""
     group = await group_service.create_group(
         session, test_workspace.id, test_user.id, GroupCreate(name="NoSelf")
     )

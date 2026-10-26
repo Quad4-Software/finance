@@ -7,7 +7,7 @@
 #
 # The hooks call the ruff and ty from backend/.[dev], so they always match the
 # versions CI uses. If ty reports errors CI doesn't, your venv is behind
-# pyproject.toml — re-run the install above.
+# pyproject.toml -- re-run the install above.
 
 repos:
   - repo: local

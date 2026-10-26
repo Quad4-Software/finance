@@ -365,7 +365,7 @@ def test_advance_date_yearly():
 
 
 def test_advance_date_monthly_intended_day_recovers_after_february():
-    # After Jan 31 clamps to Feb 28, advancing again must hit Mar 31 — not drift to Mar 28.
+    # After Jan 31 clamps to Feb 28, advancing again must hit Mar 31 -- not drift to Mar 28.
     feb = _advance_date(date(2026, 1, 31), "monthly", intended_day=31)
     assert feb == date(2026, 2, 28)
     mar = _advance_date(feb, "monthly", intended_day=31)
@@ -984,7 +984,7 @@ async def test_generate_pending_no_duplicates(
 
     # Generate once
     count1 = await generate_pending(session, test_user.id, up_to=date(2025, 3, 1))
-    # Generate again with same cutoff — should produce 0
+    # Generate again with same cutoff -- should produce 0
     count2 = await generate_pending(session, test_user.id, up_to=date(2025, 3, 1))
     assert count1 == 3
     assert count2 == 0

@@ -1,4 +1,4 @@
-"""Cover mcp_server/tools/groups.py — the three group/balance/settlement
+"""Cover mcp_server/tools/groups.py -- the three group/balance/settlement
 tools exposed to the agent. Service-layer behaviour is already covered
 in tests/test_groups.py; here we focus on the MCP serialization layer:
 name resolution, error pass-through, decimal coercion, etc.
@@ -154,7 +154,7 @@ async def test_get_group_balances_resolves_member_names(session, test_user, monk
 
 @pytest.mark.asyncio
 async def test_get_group_balances_handles_none_self_member(session, test_user, monkeypatch):
-    """If the user isn't a member, self_member_id comes back None — we
+    """If the user isn't a member, self_member_id comes back None -- we
     must serialize that as null, not crash."""
     gid = uuid.uuid4()
 

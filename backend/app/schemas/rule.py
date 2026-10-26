@@ -14,7 +14,7 @@ class RuleCondition(BaseModel):
     @field_validator("value")
     @classmethod
     def value_must_not_be_blank(cls, v: Any) -> Any:
-        """Reject blank values — they silently match every transaction.
+        """Reject blank values -- they silently match every transaction.
 
         A blank value turns `contains`/`starts_with`/`ends_with`/`regex` into a
         tautology, and numeric comparisons fall back to 0, so the rule applies
@@ -28,7 +28,7 @@ class RuleCondition(BaseModel):
 class RuleConditionGroup(BaseModel):
     """A nested group of conditions joined by its own operator.
 
-    Groups let a rule mix AND and OR — `type is debit AND (contains UBER OR
+    Groups let a rule mix AND and OR -- `type is debit AND (contains UBER OR
     contains 99POP)`. They hold leaf conditions only: `conditions` is typed as
     `list[RuleCondition]`, so a nested group fails validation and rule depth
     stays capped at two levels, which is what the engine and editor support.
@@ -54,7 +54,7 @@ class RuleConditionGroup(BaseModel):
 
 
 # A rule's condition list mixes leaves and one level of groups. The two shapes
-# are disjoint — a leaf has no `conditions`, a group has no `field`/`value` — so
+# are disjoint -- a leaf has no `conditions`, a group has no `field`/`value` -- so
 # Pydantic's smart union resolves them without a discriminator.
 RuleConditionNode = Union[RuleConditionGroup, RuleCondition]
 
@@ -138,7 +138,7 @@ class RuleImportResponse(BaseModel):
 class RulePreviewRequest(BaseModel):
     """A draft rule sent from the editor, before it is saved.
 
-    Carries the same save-time flags as `RuleCreate` — the preview answers
+    Carries the same save-time flags as `RuleCreate` -- the preview answers
     "what happens when I save this?", and saving an inactive rule, or one not
     being applied to existing transactions, changes nothing right now.
     Name and priority play no part: neither decides what a rule matches.
@@ -172,7 +172,7 @@ class RulePreviewItem(BaseModel):
     current_category_name: Optional[str] = None
     new_category_id: Optional[uuid.UUID] = None
     new_category_name: Optional[str] = None
-    # False when the rule matches but leaves the transaction as it is — most
+    # False when the rule matches but leaves the transaction as it is -- most
     # often because it already has a category and the draft does not overwrite.
     will_change: bool
 
@@ -184,7 +184,7 @@ class RulePreviewResponse(BaseModel):
     # inactive rule, or one not being applied to existing transactions. The
     # matches are still reported, so the conditions can be checked either way.
     will_apply: bool
-    # The requested window of the matches — `offset` through `offset + limit`,
+    # The requested window of the matches -- `offset` through `offset + limit`,
     # newest first. Compare `offset + len(sample)` with `matched` to know
     # whether more can be fetched.
     sample: list[RulePreviewItem]

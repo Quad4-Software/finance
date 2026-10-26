@@ -3,8 +3,8 @@ import type { TFunction } from 'i18next'
 /** Turn the server's machine-readable rejection into something a person can
  *  act on.
  *
- *  The codes carry the part the user has to look at — which document, or that
- *  the name is taken — and the sentence around it is translated here, because
+ *  The codes carry the part the user has to look at -- which document, or that
+ *  the name is taken -- and the sentence around it is translated here, because
  *  the server has no idea what language anyone reads. Anything else returns
  *  null so the caller falls back to its generic message rather than putting a
  *  raw code, or a stack of English prose, in front of someone. */

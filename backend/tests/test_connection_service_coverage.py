@@ -477,7 +477,7 @@ async def test_sync_holdings_does_not_adopt_another_connections_wallet(
 
 @pytest.mark.asyncio
 async def test_sync_holdings_provider_error_swallowed(session: AsyncSession, test_user):
-    """A failing get_holdings must not raise — investment data is best-effort."""
+    """A failing get_holdings must not raise -- investment data is best-effort."""
     conn = await _make_connection(session, test_user.id, "FlakyBroker")
     mock_provider = AsyncMock()
     mock_provider.get_holdings = AsyncMock(side_effect=RuntimeError("500"))
@@ -998,7 +998,7 @@ async def test_sync_unregistered_provider_keeps_status(
     test_workspace,
 ):
     """A provider missing from the registry is a server misconfiguration (e.g.
-    the Celery worker not loading .env) — the connection must keep its status
+    the Celery worker not loading .env) -- the connection must keep its status
     instead of flipping to "error", which would show a misleading reconnect
     banner for perfectly healthy credentials."""
     conn = await _make_connection(session, test_user.id, "GhostBank")
@@ -1276,7 +1276,7 @@ async def test_sync_new_transaction_with_payee_and_fx(
         ]
     )
 
-    # Don't patch stamp_primary_amount here — the fx branch must bypass it.
+    # Don't patch stamp_primary_amount here -- the fx branch must bypass it.
     with (
         patch("app.services.connection_service.get_provider", return_value=mock_provider),
         patch("app.services.connection_service.detect_transfer_pairs", new_callable=AsyncMock),

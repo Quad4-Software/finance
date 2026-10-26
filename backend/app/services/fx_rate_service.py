@@ -25,7 +25,7 @@ async def sync_rates(
     """Fetch rates from the provider for the given date and upsert into fx_rates.
 
     Only saves rates for currencies in `supported_currencies`.
-    Idempotent — existing rates for the same date are updated.
+    Idempotent -- existing rates for the same date are updated.
     Returns the number of rates synced.
     """
     requested_target = target_date or app_today()
@@ -74,7 +74,7 @@ async def _resolve_rate(
     """Resolve the true FX rate, or None when no rate can be found.
 
     Uses cross-rate through USD: rate = usd_to_target / usd_to_source.
-    Priority: exact date → on-demand fetch → closest available.
+    Priority: exact date -> on-demand fetch -> closest available.
     Returns None (not a fake 1:1) when no rate is available, so callers that
     persist a conversion can honestly leave it NULL instead of storing a wrong
     amount (issue #353). Pass ``allow_fetch=False`` to skip the on-demand
@@ -135,7 +135,7 @@ async def get_rate(
 
     Uses cross-rate through USD. When no rate can be resolved, returns a 1:1
     fallback so live reads (balances, dashboards) still render a number. This
-    fallback is NOT meant to be persisted — persisting paths use
+    fallback is NOT meant to be persisted -- persisting paths use
     :func:`_resolve_rate` directly and leave the value NULL instead (issue #353).
     """
     rate = await _resolve_rate(
@@ -298,7 +298,7 @@ async def stamp_primary_amount(
     the fields are left untouched instead of persisting a fake 1:1 conversion
     (issue #353). A brand-new object therefore stays NULL (honest "not converted",
     reads fall back to the native amount via ``COALESCE(amount_primary, amount)``),
-    while an already-stamped row keeps its current value — so re-stamping never
+    while an already-stamped row keeps its current value -- so re-stamping never
     pushes a visible transaction into limbo. The row heals on a later pass once a
     rate for its date lands. Pass ``allow_fetch=False`` to avoid the on-demand
     provider call (used by the healer to stay frugal).
@@ -316,7 +316,7 @@ async def stamp_primary_amount(
 
     amount_dec = Decimal(str(obj_amount))
 
-    # Genuine same-currency 1:1 — always safe to persist.
+    # Genuine same-currency 1:1 -- always safe to persist.
     if obj_currency == primary_currency:
         setattr(obj, primary_field, amount_dec.quantize(Decimal("0.01")))
         if hasattr(obj, rate_field):

@@ -49,7 +49,7 @@ export function BulkAddToGroupDialog({
     <Dialog open={open} onOpenChange={(v) => { if (!v) onClose() }}>
       <DialogContent className="sm:max-w-md">
         {/* DialogContent only renders while open, so the form below
-            mounts fresh on every open and unmounts on close — no
+            mounts fresh on every open and unmounts on close -- no
             reset effects needed. */}
         <BulkAddToGroupForm
           selectedCount={selectedCount}
@@ -91,7 +91,7 @@ function BulkAddToGroupForm({
   const [newMemberEmail, setNewMemberEmail] = useState('')
   const [newMemberLinkedUserId, setNewMemberLinkedUserId] = useState<string | null>(null)
 
-  // Track only the user's explicit group choice — the effective `groupId`
+  // Track only the user's explicit group choice -- the effective `groupId`
   // is derived below so we don't need an effect to "auto-pick" the first
   // group when data arrives.
   const [explicitGroupId, setExplicitGroupId] = useState<string | null>(null)

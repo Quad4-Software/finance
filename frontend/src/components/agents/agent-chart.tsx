@@ -93,7 +93,7 @@ function formatY(v: number | string | undefined | null, currency?: string): stri
 }
 
 /**
- * Compact axis labels — "R$100K", "R$1.2M", "12K" — so big numbers
+ * Compact axis labels -- "R$100K", "R$1.2M", "12K" -- so big numbers
  * actually fit in the axis gutter. Tooltips still get the full
  * precision via formatY().
  */
@@ -271,7 +271,7 @@ function renderChart(
 
 /** Memoized export. The whole reason this exists: every keystroke in
  *  the chat textarea triggers a parent re-render, and Recharts treats
- *  any new prop reference as new data — reanimating slices and bars.
+ *  any new prop reference as new data -- reanimating slices and bars.
  *  We compare specs by serialized string (cheap; specs are tiny JSON
  *  blobs the LLM emitted once) so a re-render with the same spec is a
  *  no-op. */

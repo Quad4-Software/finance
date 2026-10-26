@@ -108,7 +108,7 @@ function AssetIcon({
 // Compact relative-time formatter ("2h ago" / "há 2h"). Used for the price
 // preview "last updated" hint. Intl.RelativeTimeFormat handles the locale
 // grammar so we don't hand-roll plurals. Falls back to absolute date only
-// when the input is missing — otherwise always returns a relative string.
+// when the input is missing -- otherwise always returns a relative string.
 function formatRelativeTime(dateInput: string | null | undefined, locale: string): string | null {
   if (!dateInput) return null
   const then = new Date(dateInput).getTime()
@@ -152,7 +152,7 @@ const ASSET_TYPES = [
 
 // Map a yfinance `quoteType` to Quad4 Finance's asset type. Lives here (not the
 // backend) so if we ever swap the market-price provider the service stays
-// clean — all provider-specific vocabulary is translated at the edge.
+// clean -- all provider-specific vocabulary is translated at the edge.
 function assetTypeFromQuoteType(quoteType: string | null | undefined): string {
   switch ((quoteType || '').toUpperCase()) {
     case 'EQUITY':
@@ -178,9 +178,9 @@ const HOLDINGS_GRID = 'minmax(0,2.4fr) 0.7fr 1.1fr 1fr 0.9fr 1.3fr 0.6fr 4.5rem'
 
 // Surface the backend's actual error message (FastAPI puts it in
 // response.data.detail) instead of a generic toast. Makes failures
-// diagnosable — e.g. the oversell guard message, or a "Not Found" when a
+// diagnosable -- e.g. the oversell guard message, or a "Not Found" when a
 // transaction endpoint is missing because the backend is older than the
-// frontend (issue #315) — rather than a cryptic "Error".
+// frontend (issue #315) -- rather than a cryptic "Error".
 function assetErrorMessage(e: unknown, fallback: string): string {
   const resp = (e as { response?: { data?: { detail?: unknown }; status?: number } })?.response
   const detail = resp?.data?.detail
@@ -222,7 +222,7 @@ export default function AssetsPage() {
   const [walletFormName, setWalletFormName] = useState('')
   const [walletFormColor, setWalletFormColor] = useState('#0EA5E9')
   const [deletingWalletId, setDeletingWalletId] = useState<string | null>(null)
-  // Collapsed wallet IDs — default is expanded (empty set), user can collapse manually
+  // Collapsed wallet IDs -- default is expanded (empty set), user can collapse manually
   const [collapsedWallets, setCollapsedWallets] = useState<Set<string>>(new Set())
   // Asset being moved to a wallet (null = no picker open)
   const [movingAsset, setMovingAsset] = useState<Asset | null>(null)
@@ -253,7 +253,7 @@ export default function AssetsPage() {
   const [formUnits, setFormUnits] = useState('')
   // Per-unit purchase price for the opening buy of a market-priced holding.
   // Defaults to the live quote (buying at market now) and is the SAME input
-  // model as the buy/sell ledger — no total-purchase-price for tickers, so
+  // model as the buy/sell ledger -- no total-purchase-price for tickers, so
   // "Add asset" and "Add transaction" stay consistent.
   const [formUnitPrice, setFormUnitPrice] = useState('')
   const [quoteLoading, setQuoteLoading] = useState(false)
@@ -265,7 +265,7 @@ export default function AssetsPage() {
 
   // Active Collection filter (issue #105): when a collection is active, scope
   // the Assets page to the assets in its wallets (asset_groups). A collection
-  // with no wallets → no assets shown. "All accounts" (null) → show everything.
+  // with no wallets -> no assets shown. "All accounts" (null) -> show everything.
   const { activeWalletIds } = useCollectionFilter()
   const assetsList = useMemo(() => {
     if (!activeWalletIds) return rawAssetsList
@@ -519,12 +519,12 @@ export default function AssetsPage() {
   }, [activeAssets, userCurrency])
 
   // Debounced ticker search. Runs only when the market-price method is
-  // selected and the query is non-trivial — keeps the autocomplete snappy
+  // selected and the query is non-trivial -- keeps the autocomplete snappy
   // without flooding the yfinance-backed endpoint.
   useEffect(() => {
     if (formMethod !== 'market_price') return
     const q = formTickerQuery.trim()
-    // Don't search if the field matches the already-selected quote — the
+    // Don't search if the field matches the already-selected quote -- the
     // user just picked it and we'd spam the endpoint for no reason.
     if (selectedQuote && q === selectedQuote.symbol) return
     if (q.length < 1) {
@@ -552,17 +552,17 @@ export default function AssetsPage() {
     try {
       const quote = await assets.marketQuote(match.symbol)
       setSelectedQuote(quote)
-      // Prefill the unit price with the live quote — "buying at market now"
+      // Prefill the unit price with the live quote -- "buying at market now"
       // is the common case; the user overrides it with their real cost.
-      // Trim float noise to the DB's 6-decimal scale (39.41999… → 39.42).
+      // Trim float noise to the DB's 6-decimal scale (39.41999... -> 39.42).
       setFormUnitPrice(String(Number(quote.price.toFixed(6))))
       // Auto-fill name/currency from the authoritative quote so the user
-      // doesn't have to think about it — they can still edit name after.
+      // doesn't have to think about it -- they can still edit name after.
       if (!formName || formName === (selectedQuote?.name ?? selectedQuote?.symbol ?? '')) {
         setFormName(quote.name || quote.symbol)
       }
       setFormCurrency(quote.currency)
-      // Classify the asset from the quote type (EQUITY → stock, etc.) so
+      // Classify the asset from the quote type (EQUITY -> stock, etc.) so
       // the Tipo dropdown lands on something meaningful by default. We
       // skip this when the user already picked a non-default type, so
       // manual overrides stick.
@@ -630,7 +630,7 @@ export default function AssetsPage() {
       setFormTickerQuery(asset.ticker)
       setFormUnits(asset.units?.toString() ?? '')
       // Synthesize a quote from the cached fields so the preview shows
-      // immediately — we skip a round-trip to yfinance on edit open.
+      // immediately -- we skip a round-trip to yfinance on edit open.
       if (asset.last_price != null) {
         setSelectedQuote({
           symbol: asset.ticker,
@@ -748,7 +748,7 @@ export default function AssetsPage() {
   // Consolidated holdings table (issue #235). One row per holding (ticker),
   // Investidor10/Status Invest style: Ativo · Quant. · Preço Médio ·
   // Preço Atual · Rentabilidade · Saldo · % da carteira. Market-priced rows
-  // are fully populated; holdings with no recorded cost show "—" for the
+  // are fully populated; holdings with no recorded cost show "--" for the
   // cost-based columns and offer a one-tap way to add their buys.
   function renderHoldingRow(asset: Asset) {
     const config = getTypeConfig(asset.type)
@@ -814,7 +814,7 @@ export default function AssetsPage() {
           </div>
           {/* Quant. */}
           <div className="text-right tabular-nums text-muted-foreground">
-            {asset.units != null ? mask(`${asset.units}`) : '—'}
+            {asset.units != null ? mask(`${asset.units}`) : '--'}
           </div>
           {/* Preço Médio */}
           <div className="text-right tabular-nums">
@@ -826,12 +826,12 @@ export default function AssetsPage() {
                 >
                   + {t('assets.addBuys')}
                 </button>
-              ) : <span className="text-muted-foreground">—</span>
+              ) : <span className="text-muted-foreground">--</span>
             )}
           </div>
           {/* Preço Atual */}
           <div className="text-right tabular-nums text-muted-foreground">
-            {asset.last_price != null ? mask(formatCurrency(asset.last_price, asset.currency, locale)) : '—'}
+            {asset.last_price != null ? mask(formatCurrency(asset.last_price, asset.currency, locale)) : '--'}
           </div>
           {/* Rentabilidade */}
           <div className="text-right tabular-nums">
@@ -846,7 +846,7 @@ export default function AssetsPage() {
                   </span>
                 )}
               </span>
-            ) : <span className="text-muted-foreground">—</span>}
+            ) : <span className="text-muted-foreground">--</span>}
           </div>
           {/* Saldo */}
           <div className="text-right tabular-nums">
@@ -860,11 +860,11 @@ export default function AssetsPage() {
                   <span className="block text-[10px] text-amber-600 dark:text-amber-400">{t('assets.noFxRate')}</span>
                 )}
               </>
-            ) : <span className="text-muted-foreground">—</span>}
+            ) : <span className="text-muted-foreground">--</span>}
           </div>
           {/* % carteira */}
           <div className="text-right tabular-nums text-muted-foreground">
-            {pctOfPortfolio != null ? `${pctOfPortfolio.toFixed(1)}%` : '—'}
+            {pctOfPortfolio != null ? `${pctOfPortfolio.toFixed(1)}%` : '--'}
           </div>
           {/* actions */}
           <div className="flex items-center justify-end gap-0.5">
@@ -919,7 +919,7 @@ export default function AssetsPage() {
     )
   }
 
-  // Column header for a holdings section — same grid template as the rows.
+  // Column header for a holdings section -- same grid template as the rows.
   function renderHoldingsHeader() {
     return (
       <div
@@ -1025,7 +1025,7 @@ export default function AssetsPage() {
     }
 
     // Only show the institution as a subtitle when it's actually
-    // additional information — if the user hasn't renamed the wallet,
+    // additional information -- if the user hasn't renamed the wallet,
     // name and institution are identical and the subtitle would be
     // redundant noise.
     const showInstitutionSubtitle =
@@ -1239,7 +1239,7 @@ export default function AssetsPage() {
               <Input value={formName} onChange={e => setFormName(e.target.value)} />
             </div>
 
-            {/* Wallet picker — lets users place the asset in a specific
+            {/* Wallet picker -- lets users place the asset in a specific
                 wallet at creation time instead of dropping it in
                 "Ungrouped" and moving it after (issue #138). */}
             <div className="space-y-2">
@@ -1300,7 +1300,7 @@ export default function AssetsPage() {
               </div>
             </div>
 
-            {/* Valuation Method — locked on edit */}
+            {/* Valuation Method -- locked on edit */}
             <div className="space-y-2">
               <Label>{t('assets.valuationMethod')}</Label>
               <div className="grid gap-2 grid-cols-3">
@@ -1326,7 +1326,7 @@ export default function AssetsPage() {
               </div>
             </div>
 
-            {/* Market Price (yfinance) — ticker search + quantity */}
+            {/* Market Price (yfinance) -- ticker search + quantity */}
             {formMethod === 'market_price' && (
               <div className="space-y-3 p-3.5 rounded-xl border border-primary/20 bg-primary/5">
                 <div className="space-y-2">
@@ -1339,7 +1339,7 @@ export default function AssetsPage() {
                       onChange={e => {
                         setFormTickerQuery(e.target.value)
                         // Clear the quote so we don't keep the old preview
-                        // while the user is editing the symbol — prevents
+                        // while the user is editing the symbol -- prevents
                         // a stale price from being saved accidentally.
                         if (selectedQuote && e.target.value.toUpperCase() !== selectedQuote.symbol) {
                           setSelectedQuote(null)
@@ -1384,7 +1384,7 @@ export default function AssetsPage() {
                         {selectedQuote.name && (
                           <span className="text-xs text-muted-foreground truncate">{selectedQuote.name}</span>
                         )}
-                        {/* Staleness hint — only meaningful when editing an
+                        {/* Staleness hint -- only meaningful when editing an
                             existing asset (last_price_at is set). Hidden
                             during create because the quote is inline-live. */}
                         {editingAsset?.last_price_at && (
@@ -1404,7 +1404,7 @@ export default function AssetsPage() {
                             </div>
                           )}
                         </div>
-                        {/* Manual refresh — only on edit. Daily cron handles
+                        {/* Manual refresh -- only on edit. Daily cron handles
                             the rest; this button is the escape hatch when a
                             user wants a fresh quote right now. */}
                         {editingAsset && (
@@ -1458,7 +1458,7 @@ export default function AssetsPage() {
                   </div>
                 )}
 
-                {/* Buy total — same qty × unit price model as the ledger, so
+                {/* Buy total -- same qty × unit price model as the ledger, so
                     the value matches the Add-transaction dialog exactly. */}
                 {!editingAsset && formUnits && parseFloat(formUnits) > 0 && (selectedQuote || formUnitPrice) && (
                   <div className="flex items-center justify-between p-3 rounded-lg border border-primary/30 bg-primary/10">
@@ -1545,7 +1545,7 @@ export default function AssetsPage() {
               )}
             </div>
 
-            {/* Sell Info — manual assets only. Tickers record sells through the
+            {/* Sell Info -- manual assets only. Tickers record sells through the
                 buy/sell ledger, not the create form. */}
             {formMethod !== 'market_price' && (
               <div className="grid grid-cols-2 gap-4">
@@ -1560,7 +1560,7 @@ export default function AssetsPage() {
               </div>
             )}
 
-            {/* Current Value — manual only */}
+            {/* Current Value -- manual only */}
             {!editingAsset && formMethod === 'manual' && (
               <div className="space-y-2">
                 <Label>{t('assets.currentValue')}</Label>
@@ -1573,7 +1573,7 @@ export default function AssetsPage() {
               </div>
             )}
 
-            {/* Projected Value — growth rule preview */}
+            {/* Projected Value -- growth rule preview */}
             {formMethod === 'growth_rule' && projectedGrowthValue != null && (() => {
               const base = parseFloat(formPurchasePrice) || 0
               const isLoss = projectedGrowthValue < base
@@ -2066,7 +2066,7 @@ function AssetDetail({ assetId, currency, locale: loc, dateLocale: dateLoc, purc
   valuationMethod: string
   canWrite: boolean
   // When true, render only the value-evolution chart (used above the ledger
-  // for market-priced holdings) — no manual value form / value-history list.
+  // for market-priced holdings) -- no manual value form / value-history list.
   chartOnly?: boolean
 }) {
   const { t } = useTranslation()
@@ -2103,7 +2103,7 @@ function AssetDetail({ assetId, currency, locale: loc, dateLocale: dateLoc, purc
 
   // Buy/sell markers on the value chart (shares the ledger's query cache).
   // Without these, a jump in the line could be either a price move or a
-  // quantity change — the markers label "you bought/sold here".
+  // quantity change -- the markers label "you bought/sold here".
   const { data: assetTrades } = useQuery({
     queryKey: ['asset-transactions', assetId],
     queryFn: () => assets.transactions(assetId),
@@ -2252,7 +2252,7 @@ function AssetDetail({ assetId, currency, locale: loc, dateLocale: dateLoc, purc
         </div>
       )}
 
-      {/* Add Value Form — only for manual assets */}
+      {/* Add Value Form -- only for manual assets */}
       {!chartOnly && valuationMethod === 'manual' && canWrite && <div className="flex items-end gap-2">
         <div className="flex-1">
           <Label className="text-[11px] text-muted-foreground">{t('assets.amount')}</Label>
@@ -2378,7 +2378,7 @@ function AssetTransactionsTab({
     () => holdings.filter((h) => h.valuation_method === 'market_price' && !h.sell_date),
     [holdings],
   )
-  // Market holdings that exist but have no recorded buys → flagged in amber so
+  // Market holdings that exist but have no recorded buys -> flagged in amber so
   // the user knows their average price / return can't be computed yet.
   const holdingsWithoutCost = useMemo(
     () => marketHoldings.filter((h) => h.average_price == null && h.units != null),
@@ -2512,7 +2512,7 @@ function AssetTransactionsTab({
         )}
       </div>
 
-      {/* Holdings with no recorded buys — flagged in amber so the user knows
+      {/* Holdings with no recorded buys -- flagged in amber so the user knows
           the average price / return is missing until they add their purchases. */}
       {holdingsWithoutCost.length > 0 && (
         <div className="space-y-1.5">
@@ -2619,7 +2619,7 @@ function AssetTransactionsTab({
             <DialogTitle>{editingTx ? t('assets.editTransaction') : t('assets.addTransaction')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Holding picker — only when adding (kind is locked on edit too) */}
+            {/* Holding picker -- only when adding (kind is locked on edit too) */}
             {!editingTx && (
               <div className="space-y-2">
                 <Label>{t('assets.holding')}</Label>
@@ -2667,7 +2667,7 @@ function AssetTransactionsTab({
               </div>
             )}
 
-            {/* Buy/Sell toggle — only for existing holdings (can't sell a new ticker) */}
+            {/* Buy/Sell toggle -- only for existing holdings (can't sell a new ticker) */}
             {!isNewTicker && (
               <div className="space-y-2">
                 <Label>{t('assets.txType')}</Label>
@@ -2755,7 +2755,7 @@ function AssetTransactionsTab({
 
 // Inline buy/sell ledger shown when a holding row is expanded (the
 // "Lançamentos" of the reference). Lists the holding's transactions and
-// offers a one-tap add — the consolidated row above is recomputed server-side.
+// offers a one-tap add -- the consolidated row above is recomputed server-side.
 function HoldingLedger({
   asset,
   locale,

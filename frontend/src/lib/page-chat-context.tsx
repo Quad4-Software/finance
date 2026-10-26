@@ -1,11 +1,11 @@
 /**
- * Lightweight page→chat context registry.
+ * Lightweight page&rarr;chat context registry.
  *
  * Pages call `useRegisterPageChatContext({...})` to publish what's
  * currently visible (route, filters, selection). The global slide-over
  * chat reads the latest snapshot at send time via `getPageChatContext()`
  * and forwards it to the executor as `page_context`. Free-form by
- * design — the backend renders whatever it gets into a system primer.
+ * design -- the backend renders whatever it gets into a system primer.
  *
  * Implementation note: we deliberately use a plain ref, NOT React
  * context, so the slide-over can read it without re-rendering on every
@@ -23,7 +23,7 @@ export function getPageChatContext(): PageChatContext {
 
 /** Synthesized fallback when a page hasn't registered explicit context.
  *  Gives the agent at least the route + title + a hint that no detailed
- *  page state was published — beats sending nothing and having the
+ *  page state was published -- beats sending nothing and having the
  *  agent ask "what page?". */
 export function getDefaultPageChatContext(): PageChatContext {
   if (typeof window === 'undefined') return null
@@ -32,7 +32,7 @@ export function getDefaultPageChatContext(): PageChatContext {
   return {
     path,
     label: title,
-    summary: `User is on ${title} (${path}). No detailed page state has been published — ask the user what they want explained.`,
+    summary: `User is on ${title} (${path}). No detailed page state has been published -- ask the user what they want explained.`,
   }
 }
 
@@ -47,7 +47,7 @@ export function getEffectivePageChatContext(): PageChatContext {
  *  still matches (so navigating away doesn't leave a stale snapshot). */
 export function useRegisterPageChatContext(
   ctx: PageChatContext,
-  // Pass a stable string — when it changes the registration updates.
+  // Pass a stable string -- when it changes the registration updates.
   // If you want every render to publish, pass a JSON.stringify of ctx.
   depKey: string,
 ) {
@@ -56,7 +56,7 @@ export function useRegisterPageChatContext(
     currentRef.current = ctx
     _ref.current = ctx
     return () => {
-      // Only clear if our registration is still the active one — avoids
+      // Only clear if our registration is still the active one -- avoids
       // racing with the next page's mount.
       if (_ref.current === currentRef.current) {
         _ref.current = null

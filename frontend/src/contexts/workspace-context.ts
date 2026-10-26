@@ -14,7 +14,7 @@ interface WorkspaceContextType {
   role: WorkspaceRole | null
   /** True for owner OR manager (the manager has effective owner rights). */
   canManage: boolean
-  /** True for owner, manager, OR editor — anyone allowed to mutate financial data. */
+  /** True for owner, manager, OR editor -- anyone allowed to mutate financial data. */
   canWrite: boolean
   /** Modules the active workspace shows, as resolved by the server. */
   enabledModules: ModuleId[]

@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 # (cost_center / project / client) without a schema change.
 GROUP_KINDS = ("social", "cost_center", "project", "client", "other")
 
-# Allowed values for TransactionSplit.share_type — kept here so models
+# Allowed values for TransactionSplit.share_type -- kept here so models
 # importing Group don't pull from the splits module.
 SHARE_TYPES = ("equal", "exact", "percent")
 
@@ -31,7 +31,7 @@ class Group(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     # Single owner today; will become workspace_id when multi-user
     # workspaces land. Service code never assumes
-    # transaction.user_id == group.user_id — always join through this FK.
+    # transaction.user_id == group.user_id -- always join through this FK.
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE")
     )

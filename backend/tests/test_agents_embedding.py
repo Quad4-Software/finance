@@ -1,6 +1,6 @@
 """Native embedder dispatch tests.
 
-We do NOT actually download or run fastembed in CI — these tests stub
+We do NOT actually download or run fastembed in CI -- these tests stub
 the underlying _get_native_embedder factory so the dispatch logic can
 be exercised without the 120MB model download.
 """
@@ -28,7 +28,7 @@ async def test_native_embedder_is_lazy_imported_only_on_call():
     from app.agents.services import embedding  # noqa: F401
 
     assert "fastembed" not in sys.modules, (
-        "fastembed must not be eagerly imported — wrap the import inside the function body"
+        "fastembed must not be eagerly imported -- wrap the import inside the function body"
     )
 
 
@@ -40,12 +40,12 @@ async def test_native_dispatch_calls_lazy_factory():
     class _FakeEmbedder:
         def embed(self, texts):
             for _ in texts:
-                yield [0.1, 0.2, 0.3, 0.4]  # 4-dim — far below target 1536
+                yield [0.1, 0.2, 0.3, 0.4]  # 4-dim -- far below target 1536
 
     with patch.object(embedding, "_get_native_embedder", return_value=_FakeEmbedder()), \
          patch.object(embedding.get_agent_settings(), "embedding_provider", "native"):
         # The lru_cache on _get_native_embedder caches the FAKE for the
-        # rest of this session — fine because it's a fresh fake each test.
+        # rest of this session -- fine because it's a fresh fake each test.
         embedding._get_native_embedder.cache_clear()
         with patch.object(embedding, "_get_native_embedder", return_value=_FakeEmbedder()):
             vecs, label = await embedding.embed_texts(["hello", "world"])
@@ -62,7 +62,7 @@ async def test_native_dispatch_calls_lazy_factory():
 
 async def test_remote_dispatch_when_provider_is_not_native():
     """provider=ollama (or openai/openai_compatible) routes to the LLM
-    provider abstraction's embed() method — not the native path."""
+    provider abstraction's embed() method -- not the native path."""
     from unittest.mock import AsyncMock
     from app.agents.services import embedding
 
@@ -80,14 +80,14 @@ async def test_remote_dispatch_when_provider_is_not_native():
 
 
 async def test_empty_input_short_circuits():
-    """No texts → no work, no provider import, no remote call."""
+    """No texts -> no work, no provider import, no remote call."""
     from app.agents.services import embedding
     vecs, _ = await embedding.embed_texts([])
     assert vecs == []
 
 
 async def test_dimension_padding_preserves_signal():
-    """Padding with zeros must not destroy the front of the vector — it
+    """Padding with zeros must not destroy the front of the vector -- it
     just rounds out to the target dim. Cosine similarity is unaffected
     because zero dims contribute nothing to the dot product."""
     from app.agents.services.embedding import _adjust_dim

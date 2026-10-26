@@ -175,7 +175,7 @@ async def test_settlement_owner_isolation(
     session: AsyncSession, test_user, test_workspace
 ):
     group, a, b = await _setup_group(session, test_user.id, test_workspace.id)
-    # A different workspace with a different user — neither can see the
+    # A different workspace with a different user -- neither can see the
     # group through their own scope.
     other_user, other_ws = await _make_user_with_workspace(
         session, "isolated@example.com"
@@ -264,7 +264,7 @@ async def test_receiver_credit_created_when_to_member_is_linked_with_account(
 async def test_receiver_credit_skipped_when_to_member_is_shadow(
     session: AsyncSession, test_user, test_workspace
 ):
-    """Shadow member (no linked_user_id, not is_self) — there's no real
+    """Shadow member (no linked_user_id, not is_self) -- there's no real
     user on the receiving side, so no credit transaction is created."""
     payer_account = await _make_account(session, test_user.id)
     group = await group_service.create_group(
@@ -307,7 +307,7 @@ async def test_receiver_credit_skipped_when_linked_user_has_no_cash_account(
 ):
     """Linked receiver, but their only account is a credit card (not
     checking/savings). The mirror credit can't be placed and is silently
-    skipped — settlement is still recorded."""
+    skipped -- settlement is still recorded."""
     receiver, _receiver_ws = await _make_user_with_workspace(
         session, "rx-cc-only@example.com"
     )
@@ -356,7 +356,7 @@ async def test_receiver_credit_lands_on_owner_when_self_member_unlinked(
     session: AsyncSession, test_user, test_workspace
 ):
     """When the to_member is the owner's self-member with no
-    linked_user_id, the service falls back to group.user_id — the
+    linked_user_id, the service falls back to group.user_id -- the
     credit lands on the owner's checking account."""
     owner_account = await _make_account(session, test_user.id)
     group = await group_service.create_group(
@@ -376,7 +376,7 @@ async def test_receiver_credit_lands_on_owner_when_self_member_unlinked(
     assert friend is not None
 
     # Friend pays the owner back. Caller is the owner (allowed to record
-    # on any from_member). No account_id — friend is a shadow, no real
+    # on any from_member). No account_id -- friend is a shadow, no real
     # account to debit. Receiver fallback should still kick in.
     s = await settlement_service.create_settlement(
         session,

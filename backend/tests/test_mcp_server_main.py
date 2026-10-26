@@ -149,7 +149,7 @@ async def test_mcp_tools_list(test_user):
     assert r.status_code == 200
     tools = r.json()["result"]["tools"]
     names = {t["name"] for t in tools}
-    # A representative sampling — these all live in mcp_server/tools/.
+    # A representative sampling -- these all live in mcp_server/tools/.
     assert {"list_accounts", "list_categories", "list_payees", "aggregate", "list_groups"} <= names
 
 
@@ -216,7 +216,7 @@ async def test_mcp_unknown_method(test_user):
 
 @pytest.mark.asyncio
 async def test_mcp_tools_call_runs_real_tool(test_user, monkeypatch):
-    """End-to-end happy path: auth → tools/call → real tool → structured
+    """End-to-end happy path: auth -> tools/call -> real tool -> structured
     JSON response. Uses list_categories because it has no pgvector
     dependency and is safe on SQLite.
 

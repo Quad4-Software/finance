@@ -29,7 +29,7 @@ class LlmConnection(Base):
 
     # Endpoint base URL. Optional for openai/anthropic (they have defaults).
     base_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    # Fernet ciphertext (base64). Decrypted on use only — see crypto.py.
+    # Fernet ciphertext (base64). Decrypted on use only -- see crypto.py.
     api_key_encrypted: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Just a hint shown in the agent form when picking this connection.

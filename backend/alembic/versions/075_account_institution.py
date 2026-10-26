@@ -74,7 +74,7 @@ def upgrade() -> None:
     # row's ON DELETE SET NULL scans it too.
     op.create_index("ix_accounts_institution_id", "accounts", ["institution_id"])
     # Synced wallets are per investment account, so they carry the backing
-    # institution for their "Synced from …" subtitle.
+    # institution for their "Synced from ..." subtitle.
     op.add_column(
         "asset_groups",
         sa.Column(

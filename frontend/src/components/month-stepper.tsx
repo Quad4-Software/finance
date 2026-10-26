@@ -17,7 +17,7 @@ interface MonthStepperProps {
 }
 
 /**
- * Compact month stepper: `‹  Month Year  ›`. Stateless — it only renders the
+ * Compact month stepper: `‹  Month Year  ›`. Stateless -- it only renders the
  * given month and emits onChange. Wiring (URL/date-range/query) lives in the
  * parent so the stepper stays a single source of truth on top of existing filters.
  */

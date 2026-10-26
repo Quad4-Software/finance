@@ -5,7 +5,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-#: Decisions a human took. The API accepts none of these directly — a
+#: Decisions a human took. The API accepts none of these directly -- a
 #: status changes through the action that causes it (`/issue`, `/void`),
 #: never by PATCHing a string, because "why is this void" must always
 #: have an answer.
@@ -29,10 +29,10 @@ TaxFieldsMode = Literal["hidden", "optional", "required"]
 class InvoiceLineInput(BaseModel):
     description: str = Field(..., max_length=500)
     quantity: Decimal = Field(default=Decimal("1"), ge=0)
-    #: What the quantity counts — hours, words, pieces. Free text.
+    #: What the quantity counts -- hours, words, pieces. Free text.
     unit: Optional[str] = Field(default=None, max_length=20)
     unit_price: Decimal = Field(default=Decimal("0"))
-    # A percentage, not an amount — and only meaningful when the
+    # A percentage, not an amount -- and only meaningful when the
     # workspace shows tax fields at all.
     tax_rate: Optional[Decimal] = Field(default=None, ge=0, le=100)
     #: Where the line came from, when it came from the catalog. The
@@ -129,15 +129,15 @@ class InvoiceAllocationRead(BaseModel):
 
 #: Where a document came from. `local` is one someone typed here;
 #: `imported` is one that arrived from somewhere else and was
-#: reconstructed — a gateway sync, a forwarded email, a photographed
+#: reconstructed -- a gateway sync, a forwarded email, a photographed
 #: supplier invoice. The *source* goes in `external_source`.
 InvoiceOrigin = Literal["local", "imported"]
 
 
 class InvoiceCreate(BaseModel):
     direction: Optional[InvoiceDirection] = None
-    #: Provenance. Every future intake — gateway sync, email, upload,
-    #: OCR — writes through these three fields, which is why they are
+    #: Provenance. Every future intake -- gateway sync, email, upload,
+    #: OCR -- writes through these three fields, which is why they are
     #: accepted here before any of those intakes exist.
     origin: Optional[InvoiceOrigin] = None
     external_source: Optional[str] = Field(default=None, max_length=50)
@@ -149,7 +149,7 @@ class InvoiceCreate(BaseModel):
     #: workspace's own counter.
     external_number: Optional[str] = Field(default=None, max_length=60)
     #: Keep it a draft even where the workspace would open it. Not a
-    #: status field — the caller cannot ask for `void` here — only the
+    #: status field -- the caller cannot ask for `void` here -- only the
     #: difference between "I am still writing this" and "this is owed".
     as_draft: bool = False
     payee_id: Optional[uuid.UUID] = None
@@ -224,7 +224,7 @@ class InvoiceRead(BaseModel):
     #: The derived answers. Defaults exist only so the ORM row can be
     #: validated before they are attached; `api/invoices.py::_serialize`
     #: is the sole constructor and always fills all four. They are never
-    #: stored — see `invoice_service.derive_state`.
+    #: stored -- see `invoice_service.derive_state`.
     state: InvoiceState = "draft"
     issue_date: _Date
     due_date: _Date
@@ -338,7 +338,7 @@ class InvoiceFacets(BaseModel):
     """What the filter bar needs to render itself.
 
     `years` is every year that has an invoice, newest first, and is never
-    narrowed by the `year` parameter — otherwise picking a year would
+    narrowed by the `year` parameter -- otherwise picking a year would
     remove every other year from the picker.
     """
 
@@ -371,13 +371,13 @@ class InvoiceSettingsUpdate(BaseModel):
     initial_state: Optional[Literal["draft", "open"]] = None
     tax_fields: Optional[TaxFieldsMode] = None
     default_payment_terms_days: Optional[int] = Field(default=None, ge=0, le=365)
-    #: These five are blankable on purpose — clearing a logo is a thing
+    #: These five are blankable on purpose -- clearing a logo is a thing
     #: people do, and it must not read as "leave it alone".
     number_prefix: Optional[str] = Field(default=None, max_length=20)
     series: Optional[str] = Field(default=None, max_length=20)
     issuer_display_name: Optional[str] = Field(default=None, max_length=255)
     footer_note: Optional[str] = None
-    #: Free text on purpose — a Pix key, an IBAN and a routing number have
+    #: Free text on purpose -- a Pix key, an IBAN and a routing number have
     #: nothing structural in common, and picking one shape would pick a
     #: country.
     payment_details: Optional[str] = None
@@ -387,7 +387,7 @@ class InvoiceSettingsUpdate(BaseModel):
     template: Optional[dict[str, Any]] = None
 
 
-#: What a filed document proves. Roles, not file types — the vocabulary
+#: What a filed document proves. Roles, not file types -- the vocabulary
 #: that names them for a user comes from the jurisdiction pack.
 InvoiceAttachmentKind = Literal["bill", "fiscal", "receipt", "contract", "other"]
 

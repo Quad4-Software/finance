@@ -73,7 +73,7 @@ def _patch_empty_fitids(text: str) -> str:
         synthetic = f"SYNTH-{seed}"
         if fitid_match:
             return block[: fitid_match.start(1)] + synthetic + block[fitid_match.end(1):]
-        # No FITID tag at all — inject one right after the opening <STMTTRN>
+        # No FITID tag at all -- inject one right after the opening <STMTTRN>
         return re.sub(
             r"(<STMTTRN>)",
             rf"\1\n<FITID>{synthetic}",
@@ -122,8 +122,8 @@ def _normalize_ofx_encoding(text: str, encoding: str) -> str:
     the two byte layouts Python's ``latin-1`` codec can represent, so
     ofxparse decodes the same bytes the same way the source declared:
     ``CHARSET:1252`` when the file declared WINDOWS-1252/CP1252 (whose
-    0x80-0x9F range holds real typographic characters — em dash, curly
-    quotes — that ISO-8859-1 leaves as undefined control codes), and
+    0x80-0x9F range holds real typographic characters -- em dash, curly
+    quotes -- that ISO-8859-1 leaves as undefined control codes), and
     ``CHARSET:8859-1`` otherwise. UTF-8 files get ``ENCODING:UTF-8`` with
     ``CHARSET:NONE``.
     """
@@ -138,12 +138,12 @@ def _normalize_ofx_encoding(text: str, encoding: str) -> str:
     raw_value = raw_match.group(2).strip().upper().replace("-", "").replace(" ", "")
 
     # Only the three exact values that ofxparse 0.21 handles are left alone.
-    # Everything else — including valid IANA names like ISO-8859-1 — must be
+    # Everything else -- including valid IANA names like ISO-8859-1 -- must be
     # rewritten so ofxparse doesn't crash on the UnboundLocalError.
     if raw_value in ("USASCII", "UNICODE", "UTF8"):
         return text
 
-    # Unknown or unsupported encoding — rewrite to match the actual byte
+    # Unknown or unsupported encoding -- rewrite to match the actual byte
     # encoding so ofxparse decodes consistently.
     if encoding == "latin-1":
         new_encoding = "USASCII"
@@ -187,7 +187,7 @@ def _ensure_ofx_sgml_header(text: str, encoding: str) -> str:
     if not first_tag:
         return text
     if preamble.strip():
-        # File already has a header — normalise the ENCODING value so
+        # File already has a header -- normalise the ENCODING value so
         # ofxparse doesn't crash on values it doesn't handle (e.g.
         # ISO-8859-1, WINDOWS-1252). Only the preamble is touched;
         # transaction body content is preserved verbatim.
@@ -280,7 +280,7 @@ def _qif_date_formats(date_format: str | None, raw_dates: list[str]) -> list[str
 
     An explicit user choice is strict (like parse_csv): only that format and
     its 2-digit-year variant are accepted. Otherwise the order is inferred
-    from the whole file — a first component > 12 can only be a day, so the
+    from the whole file -- a first component > 12 can only be a day, so the
     file is DD/MM; per-line first-match parsing would silently mix MM/DD and
     DD/MM within a single import for the ambiguous days 1-12.
     """
@@ -514,7 +514,7 @@ def parse_camt(content: bytes) -> tuple[list[TransactionImport], list[FailedRow]
     transactions = []
 
     # Navigate: Document > BkToCstmrStmt > Stmt > Ntry (CAMT.053, end-of-day statement)
-    # Fallback: Document > BkToCstmrAcctRpt > Rpt > Ntry (CAMT.052, intraday report —
+    # Fallback: Document > BkToCstmrAcctRpt > Rpt > Ntry (CAMT.052, intraday report --
     # same Ntry sub-schema, different root/container element). Several European banks,
     # including German Volksbanken/Raiffeisenbanken, only offer CAMT.052 exports.
     stmts = findall(root, 'BkToCstmrStmt/Stmt') or findall(root, 'BkToCstmrAcctRpt/Rpt')
@@ -1004,7 +1004,7 @@ async def import_transactions(
         account = account_result.scalar_one()
     account_currency = account.currency if account else get_settings().default_currency
 
-    # Build category name → id map scoped to the workspace, on the same terms
+    # Build category name -> id map scoped to the workspace, on the same terms
     # the preview used: hidden categories excluded, names matched
     # case-insensitively. Diverging here meant a CSV category the preview
     # deliberately withheld was still persisted on the imported row, and that

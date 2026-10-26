@@ -262,7 +262,7 @@ export function ImportReviewTable({
                 disabled={safePage >= totalPages}
                 onClick={() => onPageChange(safePage + 1)}
               >
-                {t('common.next', 'Next')} →
+                {t('common.next', 'Next')} &rarr;
               </button>
             </div>
           ) : (

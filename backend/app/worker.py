@@ -60,7 +60,7 @@ celery_app.conf.beat_schedule = {
     },
     "refresh-market-prices-daily": {
         "task": "app.tasks.asset_tasks.refresh_market_prices",
-        # Once a day is enough for personal portfolio tracking — keeps us
+        # Once a day is enough for personal portfolio tracking -- keeps us
         # well under Yahoo's unofficial per-IP caps and avoids the bot
         # heuristics that trip on a chatty schedule. Task upserts today's
         # AssetValue so history stays at one row per day per asset.
@@ -76,7 +76,7 @@ celery_app.conf.beat_schedule = {
     },
     "restamp-fallback-fx-daily": {
         "task": "app.tasks.fx_rate_tasks.restamp_fallback_fx",
-        # Twice daily, after FX rate sync — heals transactions that were
+        # Twice daily, after FX rate sync -- heals transactions that were
         # stamped with the 1:1 fallback (or left NULL) once real rates land.
         "schedule": 60 * 60 * 12,
     },
@@ -95,7 +95,7 @@ celery_app.conf.include = [
     "app.tasks.asset_tasks",
     "app.tasks.fx_rate_tasks",
     "app.tasks.backup_tasks",
-    # Optional agents module — registering the import is harmless when
+    # Optional agents module -- registering the import is harmless when
     # AGENTS_ENABLED=false (the task just won't be dispatched).
     "app.agents.tasks.ingest",
 ]

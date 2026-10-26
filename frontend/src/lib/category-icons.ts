@@ -123,7 +123,7 @@ export const CATEGORY_ICONS: CategoryIconEntry[] = [
   { name: 'circle-help', pt: 'Outros / Indefinido', icon: CircleHelp },
 ]
 
-// O(1) lookup map: icon-name → LucideIcon component
+// O(1) lookup map: icon-name -> LucideIcon component
 export const ICON_MAP: Record<string, LucideIcon> = Object.fromEntries(
   CATEGORY_ICONS.map((entry) => [entry.name, entry.icon])
 )

@@ -40,5 +40,5 @@ class SendMessageRequest(BaseModel):
     # Where the user is in the app when this message was sent. The
     # executor injects a short system message so the agent can answer
     # context-aware questions like "what about THIS row?". Format is
-    # free-form — the frontend builds it from the active page.
+    # free-form -- the frontend builds it from the active page.
     page_context: Optional[dict[str, Any]] = None

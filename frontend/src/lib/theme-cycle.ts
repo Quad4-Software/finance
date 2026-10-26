@@ -1,4 +1,4 @@
-// The header's theme button steps Light → Dark → System → Light (issue
+// The header's theme button steps Light -> Dark -> System -> Light (issue
 // #1203). "System" follows the OS colour scheme and switches with it.
 export type ThemeChoice = 'light' | 'dark' | 'system'
 

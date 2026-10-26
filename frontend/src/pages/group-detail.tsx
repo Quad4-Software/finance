@@ -206,7 +206,7 @@ export default function GroupDetailPage() {
   const [memberName, setMemberName] = useState('')
   const [memberEmail, setMemberEmail] = useState('')
   // The Quad4 Finance user this member should be linked to (if any). When set,
-  // name+email are derived from that user and the inputs are locked —
+  // name+email are derived from that user and the inputs are locked --
   // is_self is auto-inferred (true iff the linked user is the viewer).
   const [memberLinkedUserId, setMemberLinkedUserId] = useState<string | null>(null)
 
@@ -268,7 +268,7 @@ export default function GroupDetailPage() {
   const saveMember = () => {
     // is_self is derived: a linked-to-viewer member is always "you".
     // Unlinked members can still represent the viewer if explicitly the
-    // first member of their own group (legacy data) — we preserve that
+    // first member of their own group (legacy data) -- we preserve that
     // flag during edits via the existing record.
     const linkedToViewer =
       memberLinkedUserId !== null && memberLinkedUserId === user?.id
@@ -301,7 +301,7 @@ export default function GroupDetailPage() {
   const [settleTxSearch, setSettleTxSearch] = useState('')
   const [settleTxQuery, setSettleTxQuery] = useState('')
 
-  // Accounts of the requesting user — needed only when the optional
+  // Accounts of the requesting user -- needed only when the optional
   // "create transaction" toggle is enabled.
   const { data: accountsList } = useQuery({
     queryKey: ['accounts'],
@@ -316,7 +316,7 @@ export default function GroupDetailPage() {
     return () => clearTimeout(id)
   }, [settleTxSearch])
 
-  // The payer's debit transactions, searched server-side and capped —
+  // The payer's debit transactions, searched server-side and capped --
   // offered when linking an existing transaction instead of creating one.
   const { data: settleTxOptions } = useQuery({
     queryKey: ['settle-tx-options', settleTxQuery],
@@ -406,12 +406,12 @@ export default function GroupDetailPage() {
     return map
   }, [group?.members])
 
-  const memberName_ = (memberId: string) => memberById.get(memberId)?.name ?? '—'
+  const memberName_ = (memberId: string) => memberById.get(memberId)?.name ?? '--'
 
   // ── KPIs ─────────────────────────────────────────────────────
   const groupCurrency = group?.default_currency ?? 'USD'
 
-  // Sum cross-currency rows in the group's primary terms — using
+  // Sum cross-currency rows in the group's primary terms -- using
   // amount_primary when available, otherwise the native amount. Without
   // this, EUR rows would silently add as USD (a €100 hotel would count
   // as $100, throwing off the KPI vs. spending-by-category breakdown).
@@ -426,7 +426,7 @@ export default function GroupDetailPage() {
   // KPIs roll up across currencies using each line's
   // amount_in_default_currency (FX-converted server-side). Filtering by
   // a single currency would otherwise hide debts in another currency
-  // — e.g. a EUR-only line wouldn't show up for a USD-default group.
+  // -- e.g. a EUR-only line wouldn't show up for a USD-default group.
   const owedToViewer = useMemo(() => {
     if (!balances) return 0
     if (isOwner) {
@@ -456,7 +456,7 @@ export default function GroupDetailPage() {
   }, [balances, isOwner, viewerMember])
 
   // Per-line breakdown for the two debt KPIs. Each row shows the other
-  // party's name and the amount in its native currency — so a EUR line
+  // party's name and the amount in its native currency -- so a EUR line
   // stays "€100" instead of being lossy-rolled into the USD KPI total.
   const memberNameById = useMemo(() => {
     const map = new Map<string, string>()
@@ -470,7 +470,7 @@ export default function GroupDetailPage() {
       return balances.lines
         .filter((l) => l.amount > 0)
         .map((l) => ({
-          name: memberNameById.get(l.member_id) ?? '—',
+          name: memberNameById.get(l.member_id) ?? '--',
           amountText: formatCurrency(Number(l.amount), l.currency, locale),
         }))
     }
@@ -489,7 +489,7 @@ export default function GroupDetailPage() {
       return balances.lines
         .filter((l) => l.amount < 0)
         .map((l) => ({
-          name: memberNameById.get(l.member_id) ?? '—',
+          name: memberNameById.get(l.member_id) ?? '--',
           amountText: formatCurrency(Math.abs(Number(l.amount)), l.currency, locale),
         }))
     }
@@ -517,7 +517,7 @@ export default function GroupDetailPage() {
       }))
   }, [groupTxs, dateLocale])
 
-  // Group spending broken down by category — for the stacked horizontal
+  // Group spending broken down by category -- for the stacked horizontal
   // bar. We sum debits only (income/credits aren't "spending"). When a
   // tx has amount_primary we use that so cross-currency rows are
   // comparable; otherwise fall back to the native amount, which is fine
@@ -635,7 +635,7 @@ export default function GroupDetailPage() {
         </SectionCard>
       )}
 
-      {/* Category distribution — single horizontal stacked bar split
+      {/* Category distribution -- single horizontal stacked bar split
           by category, with a legend showing absolute and % per slice. */}
       {categoryBreakdownTotal > 0 && (
         <SectionCard>
@@ -755,7 +755,7 @@ export default function GroupDetailPage() {
               //   - Owner sees "X owes you" / "you owe X" (their direct relationship).
               //   - A linked member sees their own line as "you owe / owes you {owner}",
               //     and other lines as "{name} owes / is owed by {owner}".
-              const ownerName = ownerMember?.name ?? '—'
+              const ownerName = ownerMember?.name ?? '--'
               const otherName = memberName_(line.member_id)
               const isViewerLine = viewerMember?.id === line.member_id
               const label = isOwner
@@ -798,10 +798,10 @@ export default function GroupDetailPage() {
                           onClick={() => {
                             if (!balances.self_member_id) return
                             if (positive) {
-                              // Member owes the owner → from = member, to = owner
+                              // Member owes the owner -> from = member, to = owner
                               openSettleUp(line.member_id, balances.self_member_id, Math.abs(line.amount), line.currency)
                             } else {
-                              // Owner owes the member → from = owner, to = member
+                              // Owner owes the member -> from = owner, to = member
                               openSettleUp(balances.self_member_id, line.member_id, Math.abs(line.amount), line.currency)
                             }
                           }}
@@ -1041,7 +1041,7 @@ export default function GroupDetailPage() {
                 ))}
               </select>
             </div>
-            {/* Transaction action — placed right after the members so
+            {/* Transaction action -- placed right after the members so
                 the payer can decide upfront whether a real transaction
                 will back this settlement. When linking an existing
                 transaction, the amount/currency/date below mirror that

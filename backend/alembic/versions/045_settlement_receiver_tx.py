@@ -1,4 +1,4 @@
-"""group_settlements.receiver_transaction_id — receiver-side credit link
+"""group_settlements.receiver_transaction_id -- receiver-side credit link
 
 Settlements that involve a Quad4 Finance-linked receiver now mirror the
 payer's debit with a corresponding credit on the receiver's account.

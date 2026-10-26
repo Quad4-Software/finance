@@ -1,7 +1,7 @@
 """Public capability/feature-flag endpoint.
 
 Tells the frontend which optional features are enabled so it can hide
-nav items, routes, etc. Lightweight — no auth required.
+nav items, routes, etc. Lightweight -- no auth required.
 """
 from fastapi import APIRouter
 

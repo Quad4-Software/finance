@@ -180,7 +180,7 @@ async def test_bulk_add_unknown_group_returns_400(client, auth_headers):
 
 @pytest.mark.asyncio
 async def test_bulk_add_percent_split(client, auth_headers):
-    """Same percentages applied to each tx — sums must match each tx's amount."""
+    """Same percentages applied to each tx -- sums must match each tx's amount."""
     account = await _create_account(client, auth_headers)
     _, members = await _create_group_with_members(client, auth_headers, "Me", "A", "B")
     group_id = members[0]["group_id"]
@@ -246,7 +246,7 @@ async def test_bulk_add_partial_member_subset(client, auth_headers):
 
 @pytest.mark.asyncio
 async def test_bulk_add_rejects_exact_share_type(client, auth_headers):
-    """Exact amounts can't generalize across many txs — must be 400."""
+    """Exact amounts can't generalize across many txs -- must be 400."""
     account = await _create_account(client, auth_headers)
     _, members = await _create_group_with_members(client, auth_headers, "Me", "A")
     group_id = members[0]["group_id"]

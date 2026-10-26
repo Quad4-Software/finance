@@ -51,7 +51,7 @@ router = APIRouter(prefix="/api/assets", tags=["assets"])
 # ----------------------------------------------------------------------------
 #
 # Lives under /api/assets/market/... rather than a top-level /market so the
-# RBAC and auth middleware inherited by this router applies automatically —
+# RBAC and auth middleware inherited by this router applies automatically --
 # ticker lookups are gated behind an authenticated session just like other
 # asset endpoints.
 
@@ -66,7 +66,7 @@ async def market_search(
 ) -> list[MarketSymbolMatch]:
     """Autocomplete ticker symbols for the Add-Asset form.
 
-    Intentionally thin — just proxies to the configured market-price
+    Intentionally thin -- just proxies to the configured market-price
     provider. Upstream errors turn into an empty list so the UI degrades
     gracefully (a user typing a query shouldn't ever see a 500).
     """
@@ -88,7 +88,7 @@ async def market_quote(
     symbol: str = Query(..., min_length=1, max_length=32),
     _: User = Depends(current_active_user),
 ) -> MarketSymbolQuote:
-    """Fetch a single live quote — used to preview value before saving an asset."""
+    """Fetch a single live quote -- used to preview value before saving an asset."""
     provider = get_market_price_provider()
     try:
         quote = await provider.get_quote(symbol)
@@ -115,7 +115,7 @@ async def refresh_asset_price(
 ) -> AssetRead:
     """Trigger an immediate price refresh for a single market-priced asset.
 
-    Mirrors what the scheduled daily task does for one asset — re-quotes
+    Mirrors what the scheduled daily task does for one asset -- re-quotes
     the ticker, updates ``last_price`` + ``last_price_at``, and upserts
     today's ``AssetValue``. Returns the refreshed asset with the same
     shape as the list endpoint (including ``current_value_primary``).
@@ -156,7 +156,7 @@ async def refresh_asset_price(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asset not found")
 
     # Stamp the primary-currency fields so the refresh response has the same
-    # shape as the list endpoint — the React Query cache update needs them
+    # shape as the list endpoint -- the React Query cache update needs them
     # to keep the row rendering consistent (BRL rollup, gain/loss). When no
     # FX rate can be resolved the fields stay NULL: the UI then shows the
     # native value flagged as unconverted instead of a fake 1:1 number
@@ -233,7 +233,7 @@ async def list_workspace_transactions(
     ctx: WorkspaceContext = Depends(current_workspace),
     session: AsyncSession = Depends(get_async_session),
 ):
-    """All buy/sell transactions in the workspace — powers the Transactions tab."""
+    """All buy/sell transactions in the workspace -- powers the Transactions tab."""
     return await asset_transaction_service.list_workspace_transactions(
         session, ctx.workspace.id, ticker=ticker, kind=kind, limit=limit
     )
@@ -297,7 +297,7 @@ async def preview_asset_import(
             detail="Market data provider is currently rate-limiting. Try again in a minute.",
         )
 
-    # The dry run rejects rows the parser could not know about — an unknown
+    # The dry run rejects rows the parser could not know about -- an unknown
     # ticker, a sell with nothing to sell. Drop those from the list too, so the
     # table, the count and the button all describe the same import.
     rejected = {e.row for e in summary["errors"]}

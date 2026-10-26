@@ -85,7 +85,7 @@ async def _backfill_primary_amounts() -> dict:
                         session, tx.currency, primary_currency, tx.date,
                     )
                     if rate is None:
-                        continue  # still no rate — leave as-is, heal next run
+                        continue  # still no rate -- leave as-is, heal next run
                     tx.amount_primary = (Decimal(str(tx.amount)) * rate).quantize(Decimal("0.01"))
                     tx.fx_rate_used = rate
                     stats["transactions"] += 1

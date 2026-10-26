@@ -175,4 +175,4 @@ def downgrade() -> None:
     op.drop_table("agent_conversations")
     op.drop_table("agent_tools")
     op.drop_table("agents")
-    # Leave the `vector` extension in place — other features may use it later.
+    # Leave the `vector` extension in place -- other features may use it later.

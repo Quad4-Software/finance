@@ -125,7 +125,7 @@ export function ReconciliationHistory() {
               <div className="flex-1 min-w-0">
                 <p className="text-foreground">
                   {t(`reconciliation.history.action.${event.action}`, {
-                    name: event.expectation_label ?? '—',
+                    name: event.expectation_label ?? '--',
                   })}
                   <span className="text-muted-foreground">
                     {' · '}

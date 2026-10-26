@@ -1,4 +1,4 @@
-"""Cover app/agents/mcp/client.py — the JSON-RPC client used by the
+"""Cover app/agents/mcp/client.py -- the JSON-RPC client used by the
 agents runtime to talk to MCP servers.
 
 Strategy: replace httpx.AsyncClient with a thin fake driven by a queue
@@ -126,7 +126,7 @@ async def test_list_tools_parses_quad4_extras_and_defaults_schema():
                 {
                     "name": "create_payee",
                     "description": "Create a payee",
-                    # no inputSchema — should default
+                    # no inputSchema -- should default
                     "_quad4": {"is_proposal": True},
                 },
             ]
@@ -209,7 +209,7 @@ async def test_call_tool_marks_error_when_is_error_true():
 @pytest.mark.asyncio
 async def test_call_tool_falls_back_when_no_structured_content():
     """Servers that don't emit structuredContent still get a sensible
-    response shape — `data` is the raw result, ok defaults from isError."""
+    response shape -- `data` is the raw result, ok defaults from isError."""
     _FakeAsyncClient.queue.append(_FakeResponse(json_body={
         "jsonrpc": "2.0",
         "id": 1,
@@ -231,7 +231,7 @@ def test_to_provider_tools_namespaces_and_filters():
         ToolHandle(server="quad4", name="create_payee", description="d2", parameters={}),
         ToolHandle(server="extra", name="list_accounts", description="d3", parameters={}),
     ]
-    # No filter → all three.
+    # No filter -> all three.
     all_tools = MCPRegistry.to_provider_tools(handles, allowed=None)
     assert {t.name for t in all_tools} == {"quad4__list_accounts", "quad4__create_payee", "extra__list_accounts"}
 
@@ -250,7 +250,7 @@ async def test_registry_discover_aggregates_across_servers(monkeypatch):
 
     monkeypatch.setattr(get_agent_settings(), "extra_mcp_servers", "http://extra:9000/mcp|extra")
 
-    # Two list_tools responses — one per registered server.
+    # Two list_tools responses -- one per registered server.
     _FakeAsyncClient.queue.extend([
         _FakeResponse(json_body={"jsonrpc": "2.0", "id": 1, "result": {"tools": [
             {"name": "a", "description": "", "inputSchema": {}}]}}),
@@ -271,7 +271,7 @@ async def test_registry_discover_swallows_per_server_errors(monkeypatch):
 
     monkeypatch.setattr(get_agent_settings(), "extra_mcp_servers", "http://down:9000/mcp|down")
 
-    # First server returns tools, second errors out — discover should
+    # First server returns tools, second errors out -- discover should
     # surface only the successful one.
     _FakeAsyncClient.queue.extend([
         _FakeResponse(json_body={"jsonrpc": "2.0", "id": 1, "result": {"tools": [
@@ -333,7 +333,7 @@ async def test_registry_call_falls_back_to_bare_name(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_registry_call_raises_on_unknown_tool():
-    # list_tools on the only server (quad4) returns no tools → unknown.
+    # list_tools on the only server (quad4) returns no tools -> unknown.
     _FakeAsyncClient.queue.append(_FakeResponse(json_body={
         "jsonrpc": "2.0", "id": 1, "result": {"tools": []},
     }))

@@ -46,7 +46,7 @@ export default function OAuthCallbackPage() {
     // The state token is single-use server-side, so React StrictMode's
     // double-mount in dev (or any accidental remount) would fire a second
     // POST that gets rejected. Guard via sessionStorage so only the first
-    // mount actually submits — and don't cancel on unmount; we want the
+    // mount actually submits -- and don't cancel on unmount; we want the
     // side-effect to finish even if the user navigates away mid-sync.
     const submitKey = `oauth-submitted:${code}:${state}`
     if (sessionStorage.getItem(submitKey)) return

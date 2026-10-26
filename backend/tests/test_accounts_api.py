@@ -231,8 +231,8 @@ async def test_account_summary(
     """Summary endpoint returns computed balance from transactions (current month).
 
     Fixture transactions (current month, no opening_balance):
-      credit: SALARIO FEV 8000.00, PIX RECEBIDO 150.00  → income = 8150.00
-      debit:  UBER TRIP 25.50, IFOOD 45.00, NETFLIX 39.90 → expenses = 110.40
+      credit: SALARIO FEV 8000.00, PIX RECEBIDO 150.00  -> income = 8150.00
+      debit:  UBER TRIP 25.50, IFOOD 45.00, NETFLIX 39.90 -> expenses = 110.40
 
     Note: test_account is bank-connected so current_balance uses the stored
     Account.balance (1500.00), not the computed sum from transactions.
@@ -312,7 +312,7 @@ async def test_credit_card_account_returns_negative_current_balance(
     assert create_resp.status_code == 201
     account_id = create_resp.json()["id"]
 
-    # Fetch the individual account — raw balance unchanged
+    # Fetch the individual account -- raw balance unchanged
     response = await client.get(f"/api/accounts/{account_id}", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
@@ -688,7 +688,7 @@ async def test_get_account_bills_returns_newest_first(
 async def test_get_account_bills_empty_for_non_cc_account(
     client: AsyncClient, auth_headers, test_account: Account,
 ):
-    """Checking accounts return [] — caller treats this same as "no bills"."""
+    """Checking accounts return [] -- caller treats this same as "no bills"."""
     resp = await client.get(f"/api/accounts/{test_account.id}/bills", headers=auth_headers)
     assert resp.status_code == 200
     assert resp.json() == []
@@ -698,7 +698,7 @@ async def test_get_account_bills_empty_for_non_cc_account(
 async def test_get_account_bills_empty_for_cc_with_no_bills(
     client: AsyncClient, auth_headers, session: AsyncSession, test_user,
 ):
-    """A CC account that hasn't synced bills yet returns [] — the UI must
+    """A CC account that hasn't synced bills yet returns [] -- the UI must
     fall back to cycle math, not 404 / error."""
     cc = await _make_cc_account(session, test_user.id, "Empty CC")
     resp = await client.get(f"/api/accounts/{cc.id}/bills", headers=auth_headers)
@@ -733,7 +733,7 @@ async def test_get_account_bills_respects_limit_param(
     assert resp.status_code == 200
     data = resp.json()
     assert len(data) == 2
-    # Newest first — May (i=4) and April (i=3)
+    # Newest first -- May (i=4) and April (i=3)
     assert data[0]["external_id"] == "b-4"
     assert data[1]["external_id"] == "b-3"
 

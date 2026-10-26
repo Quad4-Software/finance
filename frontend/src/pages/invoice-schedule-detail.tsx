@@ -308,7 +308,7 @@ export default function InvoiceScheduleDetailPage() {
                 value:
                   schedule.status === 'active' && schedule.next_period_start
                     ? showDate(schedule.next_period_start)
-                    : '—',
+                    : '--',
                 tone: schedule.past_due_count > 0 ? 'text-amber-600' : undefined,
                 hint:
                   schedule.past_due_count > 0

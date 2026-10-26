@@ -1,4 +1,4 @@
-"""Celery task: parse → chunk → embed an uploaded knowledge document.
+"""Celery task: parse -> chunk -> embed an uploaded knowledge document.
 
 Registered with the existing celery_app. Only fires when AGENTS_ENABLED
 is on, because the upload endpoint that dispatches it lives behind the

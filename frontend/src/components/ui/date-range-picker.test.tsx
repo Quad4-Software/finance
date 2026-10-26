@@ -9,7 +9,7 @@ vi.mock('@/hooks/use-display-locale', () => ({
   useDateLocale: () => 'en-US',
 }))
 
-// The segment variant's active label drops the year — same compact form the
+// The segment variant's active label drops the year -- same compact form the
 // transactions filter bar's applied-range chip uses.
 function fmtCompact(iso: string): string {
   return new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', {
@@ -18,7 +18,7 @@ function fmtCompact(iso: string): string {
   })
 }
 
-describe('DateRangePicker — segment variant', () => {
+describe('DateRangePicker -- segment variant', () => {
   it('shows the plain label while inactive, even if a range is already stored', () => {
     renderWithProviders(
       <DateRangePicker
@@ -31,7 +31,7 @@ describe('DateRangePicker — segment variant', () => {
       />,
     )
 
-    // The picked dates only surface once the segment is the active range —
+    // The picked dates only surface once the segment is the active range --
     // otherwise it reads exactly like the other preset segments beside it.
     expect(screen.getByRole('button', { name: 'Custom' })).toHaveTextContent('Custom')
   })
@@ -70,7 +70,7 @@ describe('DateRangePicker — segment variant', () => {
     )
 
     // Crossing a year boundary is exactly the case a year-inclusive format
-    // would need to disambiguate — the segment still drops it, since the
+    // would need to disambiguate -- the segment still drops it, since the
     // year is visible while the calendar itself is open.
     expect(screen.getByRole('button', { name: 'Custom' })).toHaveTextContent(
       `${fmtCompact('2025-09-26')} - ${fmtCompact('2026-01-30')}`,
@@ -130,7 +130,7 @@ describe('DateRangePicker — segment variant', () => {
   })
 })
 
-describe('DateRangePicker — standalone button variant (regression)', () => {
+describe('DateRangePicker -- standalone button variant (regression)', () => {
   it('still renders as a bordered button with a placeholder when unset', () => {
     renderWithProviders(
       <DateRangePicker
@@ -165,7 +165,7 @@ describe('DateRangePicker — standalone button variant (regression)', () => {
 })
 
 
-describe('DateRangePicker — draft lifecycle', () => {
+describe('DateRangePicker -- draft lifecycle', () => {
   it('keeps calendar selections in draft state until Apply', async () => {
     const onChange = vi.fn()
     const { user } = renderWithProviders(
@@ -227,7 +227,7 @@ describe('DateRangePicker — draft lifecycle', () => {
     ['2026-05-15', '2026-05-01', '2026-05-01', '2026-05-15'],
     ['2026-05-15', '', '2026-05-15', '2026-05-15'],
     ['', '2026-05-15', '2026-05-15', '2026-05-15'],
-  ])('normalizes %s → %s on Apply', async (from, to, expectedFrom, expectedTo) => {
+  ])('normalizes %s -> %s on Apply', async (from, to, expectedFrom, expectedTo) => {
     const onChange = vi.fn()
     const { user } = renderWithProviders(
       <DateRangePicker from={from} to={to} onChange={onChange} label="Custom" />,
@@ -239,7 +239,7 @@ describe('DateRangePicker — draft lifecycle', () => {
   })
 })
 
-describe('DateRangePicker — draft validation', () => {
+describe('DateRangePicker -- draft validation', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date(2026, 5, 15)) // June 15, 2026

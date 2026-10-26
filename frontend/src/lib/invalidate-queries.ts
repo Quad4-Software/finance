@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
 
 // Invalidate every "money view" query that can reflect the outcome of a
-// financial mutation — transaction list, dashboard summary/totals/charts,
+// financial mutation -- transaction list, dashboard summary/totals/charts,
 // account balances (sidebar + accounts page), budget comparison, and any
 // open drill-down overlay. Call this from every mutation that creates/
 // updates/deletes a transaction, transfer, or anything that shifts account

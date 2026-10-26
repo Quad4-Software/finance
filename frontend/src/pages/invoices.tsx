@@ -71,7 +71,7 @@ import type {
 /**
  * Receivables: what is owed, what is late, what landed.
  *
- * Reachable only from a business workspace — the module resolver leaves
+ * Reachable only from a business workspace -- the module resolver leaves
  * `invoices` out of a personal one, so nothing here is ever rendered
  * there.
  */
@@ -104,8 +104,8 @@ export default function InvoicesPage() {
 
   // `null` is "every year". The default is the current one, which is
   // what someone opening the page is almost always asking about.
-  // Which ledger is on screen. A bigger axis than the state filter — the
-  // totals above the list change with it — so it sits above the summary
+  // Which ledger is on screen. A bigger axis than the state filter -- the
+  // totals above the list change with it -- so it sits above the summary
   // rather than among the filters.
   const [direction, setDirection] = useState<InvoiceDirection>('receivable')
   const [year, setYear] = useState<number | null>(() => new Date().getFullYear())
@@ -337,7 +337,7 @@ export default function InvoicesPage() {
 
         {/* The year sits with the list's own controls, not with the
             summary: it scopes what is listed, and the summary above
-            deliberately has no year — an unpaid 2024 invoice is still
+            deliberately has no year -- an unpaid 2024 invoice is still
             owed today. */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -400,7 +400,7 @@ export default function InvoicesPage() {
                   : t('invoices.empty')}
             </p>
             {/* When a year emptied the list, the useful next move is to
-                widen it — not to create an invoice in a year nobody is
+                widen it -- not to create an invoice in a year nobody is
                 looking at. */}
             {filter === 'all' && year && facets && facets.years.length > 0 ? (
               <Button size="sm" variant="outline" className="mt-4" onClick={() => setYear(null)}>
@@ -504,7 +504,7 @@ export default function InvoicesPage() {
                       {Number(invoice.balance) > 0 ? (
                         money(invoice.balance, invoice.currency)
                       ) : (
-                        <span className="text-muted-foreground font-medium">—</span>
+                        <span className="text-muted-foreground font-medium">--</span>
                       )}
                     </td>
                     <td className="py-3 pr-4 sm:pr-5 text-right">
@@ -525,7 +525,7 @@ export default function InvoicesPage() {
         onCreated={(invoice) => navigate(`/invoices/${invoice.id}`)}
       />
       {/* Keyed on `open`: the dialog is mounted either way, so without
-          this its draft state outlives a Cancel — reopening showed the
+          this its draft state outlives a Cancel -- reopening showed the
           edits back, and Save wrote the change the user had rejected. */}
       <InvoiceSettingsDialog
         key={settingsOpen ? 'open' : 'closed'}
@@ -577,7 +577,7 @@ function CreateInvoiceDialog({
   const defs = customFieldDefs(settings?.template)
   const { user } = useAuth()
   // An invoice is denominated in one currency, and it is not necessarily
-  // the one this user reads the app in — a freelancer in São Paulo bills
+  // the one this user reads the app in -- a freelancer in São Paulo bills
   // a client in New York in USD and is paid into a BRL account. The
   // display preference is only the starting guess.
   const [currencyCode, setCurrencyCode] = useState(
@@ -930,7 +930,7 @@ function InvoiceSettingsDialog({
               data-testid="invoice-payment-details-input"
               value={String(value('payment_details') ?? '')}
               onChange={(e) => setDraft({ ...draft, payment_details: e.target.value })}
-              placeholder="Pix: …"
+              placeholder="Pix: ..."
             />
             <p className="text-[11px] text-muted-foreground">
               {t('invoices.settings.paymentDetailsHint')}
@@ -999,7 +999,7 @@ function InvoiceSettingsDialog({
  * Which fiscal documents are offered comes from the workspace's own
  * jurisdiction pack, so a Brazilian workspace is asked for a CNPJ and a
  * German one for a VAT number without this component knowing either
- * exists. It also never *restricts* the choice — a company can hold a
+ * exists. It also never *restricts* the choice -- a company can hold a
  * document its country's pack never anticipated.
  */
 function IssuerSection() {

@@ -155,23 +155,23 @@ export default function AgentsListPage() {
                     </div>
                     <div className="text-xs text-muted-foreground truncate mt-0.5">
                       {(() => {
-                        // Three layers of LLM config (most → least specific):
-                        //   1. connection_id → user-managed LlmConnection row
-                        //   2. provider + model → raw values, instance creds
-                        //   3. nothing → instance default
+                        // Three layers of LLM config (most -> least specific):
+                        //   1. connection_id -> user-managed LlmConnection row
+                        //   2. provider + model -> raw values, instance creds
+                        //   3. nothing -> instance default
                         // Show the most specific one we can resolve so the
                         // row tells the truth instead of always saying
-                        // "Instance default · —" when the agent uses a
+                        // "Instance default · --" when the agent uses a
                         // connection.
                         const conn = a.connection_id
                           ? connections?.find((c) => c.id === a.connection_id)
                           : undefined
                         if (conn) {
                           const model = a.model || conn.default_model
-                          return `${conn.name} · ${model || '—'}`
+                          return `${conn.name} · ${model || '--'}`
                         }
                         if (a.provider) {
-                          return `${a.provider} · ${a.model || '—'}`
+                          return `${a.provider} · ${a.model || '--'}`
                         }
                         return t('agents.instanceDefault')
                       })()}
@@ -191,7 +191,7 @@ export default function AgentsListPage() {
                     </div>
                   </div>
                 </Link>
-                {/* Default toggle — wrapper stops the click bubbling so
+                {/* Default toggle -- wrapper stops the click bubbling so
                     flipping the switch doesn't navigate into the agent. */}
                 {canWrite && (
                   <div
@@ -199,7 +199,7 @@ export default function AgentsListPage() {
                     onClick={(e) => e.stopPropagation()}
                     title={t(
                       'agents.form.isDefaultHint',
-                      'Used by the global slide-over chat (⌘J). Only one agent can be the default — turning this on clears it on others.',
+                      'Used by the global slide-over chat (⌘J). Only one agent can be the default -- turning this on clears it on others.',
                     )}
                   >
                     <span className="text-xs text-muted-foreground hidden sm:inline">

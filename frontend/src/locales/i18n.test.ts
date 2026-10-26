@@ -38,7 +38,7 @@ function extractPlaceholders(value: string): Set<string> {
   return new Set((value.match(/\{\{(\w+)\}\}/g) ?? []))
 }
 
-// i18next plural suffixes — some languages (e.g. Polish) expand a single base
+// i18next plural suffixes -- some languages (e.g. Polish) expand a single base
 // key into _zero/_one/_two/_few/_many/_other forms instead of using one string.
 const PLURAL_SUFFIXES = ['_zero', '_one', '_two', '_few', '_many', '_other']
 
@@ -183,7 +183,7 @@ describe('i18n locale files', () => {
           const enPlaceholders = extractPlaceholders(enValue)
           if (enPlaceholders.size === 0) continue
 
-          // For plural-form locales the base key won't exist — check each plural form instead.
+          // For plural-form locales the base key won't exist -- check each plural form instead.
           const keysToCheck = localeValues.has(key)
             ? [key]
             : PLURAL_SUFFIXES.map((s) => `${key}${s}`).filter((k) => localeValues.has(k))

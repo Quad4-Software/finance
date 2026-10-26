@@ -16,7 +16,7 @@ class Institution(Base):
     """One financial institution reached through a bank connection.
 
     Most providers are one institution per connection, but a single SimpleFIN
-    Setup Token can span several (bank + brokerages — issue #345), so org
+    Setup Token can span several (bank + brokerages -- issue #345), so org
     identity lives here rather than on the connection.
     """
 

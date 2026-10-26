@@ -31,7 +31,7 @@ export function todayInTimezone(timeZone?: string | null, now = new Date()) {
 }
 
 // Short weekday names for a Sunday-start calendar header. The reference week is
-// anchored in UTC, so it has to be formatted in UTC as well — otherwise a viewer
+// anchored in UTC, so it has to be formatted in UTC as well -- otherwise a viewer
 // behind UTC reads each instant as the previous day and every label shifts one
 // column, leaving the headers out of step with the dates underneath them.
 export function weekdayShortLabels(locale: string) {

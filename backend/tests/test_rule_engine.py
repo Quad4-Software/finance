@@ -569,7 +569,7 @@ def test_blank_numeric_value_never_matches():
 
 
 def test_zero_value_still_matches():
-    """0 is a real value, not a blank one — it must keep working."""
+    """0 is a real value, not a blank one -- it must keep working."""
     tx = make_tx(amount=Decimal("25.50"))
     conditions = [{"field": "amount", "op": "gt", "value": 0}]
     assert evaluate_conditions("and", conditions, tx) is True

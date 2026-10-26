@@ -93,7 +93,7 @@ export function LinkTransferDialog({
   const [counterpartAccountId, setCounterpartAccountId] = useState('')
 
   // Reset internal picker state when the dialog opens with a new anchor or
-  // when it transitions from open → closed. Done during render via the
+  // when it transitions from open -> closed. Done during render via the
   // "adjusting state on prop change" pattern to avoid effect cascades.
   const sessionKey = `${open ? '1' : '0'}-${anchor?.id ?? ''}`
   const [prevSessionKey, setPrevSessionKey] = useState(sessionKey)
@@ -118,7 +118,7 @@ export function LinkTransferDialog({
   }, [candidates, searchTerm])
 
   // The "Best match" badge should only appear when the top-ranked candidate
-  // is genuinely close to the anchor — same date neighborhood AND amount
+  // is genuinely close to the anchor -- same date neighborhood AND amount
   // close enough to suggest they're the same transfer (allowing for FX/fees).
   const bestMatchId = useMemo(() => {
     if (!candidates || candidates.length === 0 || !anchor) return null
@@ -177,7 +177,7 @@ export function LinkTransferDialog({
             <CounterpartCard
               label={t('transactions.linkTransferAnchor')}
               description={anchor!.description}
-              account={anchorAccount ? getAccountName(anchorAccount) : '—'}
+              account={anchorAccount ? getAccountName(anchorAccount) : '--'}
               date={anchor!.date}
               amount={anchorAmount}
               currency={anchor!.currency}
@@ -239,7 +239,7 @@ export function LinkTransferDialog({
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground truncate">
-                              {account ? getAccountName(account) : '—'} · {new Date(c.date + 'T00:00:00').toLocaleDateString(dateLocale)}
+                              {account ? getAccountName(account) : '--'} · {new Date(c.date + 'T00:00:00').toLocaleDateString(dateLocale)}
                             </p>
                           </div>
                           <p className={`text-sm font-bold tabular-nums ${colorClass} shrink-0`}>
@@ -299,7 +299,7 @@ export function LinkTransferDialog({
     )
   }
 
-  // Confirm view — used in direct mode and after picking a candidate.
+  // Confirm view -- used in direct mode and after picking a candidate.
   if (!effectiveDebit || !effectiveCredit) return null
 
   const fromAccount = accounts.find((a) => a.id === effectiveDebit.account_id)
@@ -325,7 +325,7 @@ export function LinkTransferDialog({
             <CounterpartCard
               label={t('transactions.linkTransferFrom')}
               description={effectiveDebit.description}
-              account={fromAccount?.name ?? '—'}
+              account={fromAccount?.name ?? '--'}
               date={effectiveDebit.date}
               amount={debitAmount}
               currency={effectiveDebit.currency}
@@ -339,7 +339,7 @@ export function LinkTransferDialog({
             <CounterpartCard
               label={t('transactions.linkTransferTo')}
               description={effectiveCredit.description}
-              account={toAccount?.name ?? '—'}
+              account={toAccount?.name ?? '--'}
               date={effectiveCredit.date}
               amount={creditAmount}
               currency={effectiveCredit.currency}

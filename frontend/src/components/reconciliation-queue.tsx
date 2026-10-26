@@ -231,9 +231,9 @@ export function ReconciliationQueue({ canWrite }: { canWrite: boolean }) {
                         name:
                           suggestion.covers.length > 1
                             ? suggestion.covers
-                                .map((c) => c.label ?? '—')
+                                .map((c) => c.label ?? '--')
                                 .join(', ')
-                            : suggestion.expectation_label ?? '—',
+                            : suggestion.expectation_label ?? '--',
                       },
                     )}
                   </p>
@@ -245,7 +245,7 @@ export function ReconciliationQueue({ canWrite }: { canWrite: boolean }) {
                           key={cover.expectation_id}
                           className="text-xs text-muted-foreground flex justify-between gap-3 max-w-xs"
                         >
-                          <span className="truncate">{cover.label ?? '—'}</span>
+                          <span className="truncate">{cover.label ?? '--'}</span>
                           <span className="tabular-nums">
                             {money(cover.amount, suggestion.scores.currency)}
                           </span>

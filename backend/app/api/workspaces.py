@@ -41,7 +41,7 @@ def _workspace_read(workspace: Workspace, role: str | None) -> WorkspaceRead:
     """Build the read model for a workspace.
 
     Every response that returns a workspace goes through here, so a new
-    read path cannot ship without `enabled_modules` — forgetting it
+    read path cannot ship without `enabled_modules` -- forgetting it
     would leave the frontend hiding modules the server enabled.
     """
     item = WorkspaceRead.model_validate(workspace)
@@ -203,7 +203,7 @@ async def invite_member(
         session, workspace_id, user.id, min_role="owner"
     )
 
-    # Find existing user by email (case-insensitive — fastapi-users
+    # Find existing user by email (case-insensitive -- fastapi-users
     # stores email lowercased on register, but be safe).
     existing = await session.execute(
         select(User).where(User.email == body.email.lower())
@@ -211,7 +211,7 @@ async def invite_member(
     target = existing.scalar_one_or_none()
 
     if target is None:
-        # Brand-new user — creating the account here mints a local password,
+        # Brand-new user -- creating the account here mints a local password,
         # so it is only allowed while local credentials are accepted.
         if body.password:
             require_local_auth_enabled()

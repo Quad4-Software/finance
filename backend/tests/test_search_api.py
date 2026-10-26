@@ -173,7 +173,7 @@ async def test_search_empty_query_returns_empty(
 async def test_search_respects_user_scope(
     client: AsyncClient, auth_headers: dict, session: AsyncSession, test_user: User
 ) -> None:
-    # Create an account owned by a different user — should NOT appear in results.
+    # Create an account owned by a different user -- should NOT appear in results.
     import bcrypt as _bcrypt
     from app.services.workspace_service import create_personal_workspace_for_user
 

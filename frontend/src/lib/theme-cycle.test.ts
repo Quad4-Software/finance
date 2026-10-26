@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { nextTheme } from './theme-cycle'
 
 describe('nextTheme', () => {
-  it('steps light → dark → system → light', () => {
+  it('steps light -> dark -> system -> light', () => {
     expect(nextTheme('light')).toBe('dark')
     expect(nextTheme('dark')).toBe('system')
     expect(nextTheme('system')).toBe('light')

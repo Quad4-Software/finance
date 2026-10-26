@@ -686,8 +686,8 @@ async def test_goal_account_tracking_cross_currency(
     client: AsyncClient, auth_headers: dict, test_user: User, test_account: Account, session: AsyncSession
 ):
     """EUR goal linked to a BRL account should convert account balance to EUR."""
-    # Seed FX rates: USD→BRL = 5.0, USD→EUR = 0.9
-    # So BRL 1500 → USD 300 → EUR 270
+    # Seed FX rates: USD->BRL = 5.0, USD->EUR = 0.9
+    # So BRL 1500 -> USD 300 -> EUR 270
     today = date.today()
     for quote, rate in [("BRL", "5.0"), ("EUR", "0.9")]:
         session.add(FxRate(
@@ -735,7 +735,7 @@ async def test_goal_account_tracking_same_currency(
     assert response.status_code == 201
     data = response.json()
     assert data["currency"] == "BRL"
-    # No conversion needed — should be exact account balance
+    # No conversion needed -- should be exact account balance
     assert float(data["current_amount"]) == 1500.00
     assert data["percentage"] == 15.0
 
@@ -745,7 +745,7 @@ async def test_goal_asset_tracking_eur_goal_usd_asset(
     client: AsyncClient, auth_headers: dict, test_user: User, session: AsyncSession
 ):
     """EUR goal linked to a USD asset should convert asset value to EUR."""
-    # Seed FX rates: USD→EUR = 0.9
+    # Seed FX rates: USD->EUR = 0.9
     today = date.today()
     session.add(FxRate(
         base_currency="USD", quote_currency="EUR",

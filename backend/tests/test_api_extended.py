@@ -11,7 +11,7 @@ from app.models.transaction import Transaction
 
 
 # ---------------------------------------------------------------------------
-# Transactions API — export and bulk categorize
+# Transactions API -- export and bulk categorize
 # ---------------------------------------------------------------------------
 
 
@@ -127,7 +127,7 @@ async def test_update_transaction_not_found(
 
 
 # ---------------------------------------------------------------------------
-# Rules API — missing coverage
+# Rules API -- missing coverage
 # ---------------------------------------------------------------------------
 
 
@@ -216,7 +216,7 @@ async def test_install_rule_pack_not_found(client: AsyncClient, auth_headers, te
 
 
 # ---------------------------------------------------------------------------
-# Accounts API — balance-history and additional endpoints
+# Accounts API -- balance-history and additional endpoints
 # ---------------------------------------------------------------------------
 
 
@@ -340,7 +340,7 @@ async def test_update_account_api_not_found(client: AsyncClient, auth_headers):
 
 
 # ---------------------------------------------------------------------------
-# Assets API — portfolio trend and missing endpoints
+# Assets API -- portfolio trend and missing endpoints
 # ---------------------------------------------------------------------------
 
 
@@ -414,7 +414,7 @@ async def test_get_asset_value_trend_not_found(client: AsyncClient, auth_headers
 
 
 # ---------------------------------------------------------------------------
-# Connections API — transfer detection and additional
+# Connections API -- transfer detection and additional
 # ---------------------------------------------------------------------------
 
 
@@ -461,7 +461,7 @@ async def test_reconnect_token_no_item_id(
 
 
 # ---------------------------------------------------------------------------
-# Dashboard API — balance-history and projected-transactions
+# Dashboard API -- balance-history and projected-transactions
 # ---------------------------------------------------------------------------
 
 
@@ -524,7 +524,7 @@ async def test_dashboard_balance_history(client: AsyncClient, auth_headers):
 
 
 # ---------------------------------------------------------------------------
-# Import API — additional edge cases
+# Import API -- additional edge cases
 # ---------------------------------------------------------------------------
 
 
@@ -554,7 +554,7 @@ async def test_import_duplicate_skips(
     assert resp1.status_code == 201
     assert resp1.json()["imported"] == 1
 
-    # Second import — same data should be skipped
+    # Second import -- same data should be skipped
     resp2 = await client.post(
         "/api/transactions/import",
         headers=auth_headers,
@@ -577,7 +577,7 @@ async def test_preview_ofx_file_unknown_extension(client: AsyncClient, auth_head
         headers=auth_headers,
         files={"file": ("data.txt", csv_content, "text/plain")},
     )
-    # Auto-detection tries ofx → qif → camt → csv.  QIF parser may "succeed"
+    # Auto-detection tries ofx -> qif -> camt -> csv.  QIF parser may "succeed"
     # with 0 transactions before reaching CSV, so we only assert the code path runs.
     assert response.status_code == 200
     data = response.json()

@@ -14,7 +14,7 @@ duplicated wallet name per user. Oldest wallet keeps the bare name (by
 created-like order: the `id` UUIDv4 isn't time-ordered, so we fall back
 to sort by `position` which was set by creation order in 034).
 
-Runs once and is safe to re-run — it only touches rows whose name is
+Runs once and is safe to re-run -- it only touches rows whose name is
 still exactly the duplicate base; wallets the user already renamed are
 left alone.
 """
@@ -58,7 +58,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    # No reliable inverse — we can't tell which wallets were renamed by
+    # No reliable inverse -- we can't tell which wallets were renamed by
     # this migration vs the user. Leaving as a no-op is safer than
     # stripping suffixes and potentially clobbering user edits.
     pass

@@ -35,7 +35,7 @@ async def _attach_invoice_links(session, ctx, items: list) -> None:
     hottest list in the product and an N+1 here would be felt.
 
     Skipped entirely unless the workspace has the invoicing module, so a
-    personal workspace pays nothing — not a query, not a field on the
+    personal workspace pays nothing -- not a query, not a field on the
     response. The import is local for the same reason the check is: the
     transaction list must not grow a hard dependency on a module most
     workspaces never enable.
@@ -126,9 +126,9 @@ class TransactionsSummary(BaseModel):
     and the frontend gets plain numbers.
 
     `excluded` (issue #242) is the absolute total of everything filtered
-    out of income/expense for the same rows — paired transfers,
+    out of income/expense for the same rows -- paired transfers,
     `treat_as_transfer` categories (transfers, investments, custom) and
-    ignored items — i.e. the complement of `counts_as_pnl()`."""
+    ignored items -- i.e. the complement of `counts_as_pnl()`."""
     income: float
     expense: float
     net: float

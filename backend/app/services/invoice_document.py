@@ -13,13 +13,13 @@ What is resolved, and in what order, is the whole subject:
     issued. A logo changed in September must not reach August's invoice,
     and a client renamed after the fact must not rename itself on a
     document they already hold.
-  - **Live settings fill only what the snapshot never captured** — an
+  - **Live settings fill only what the snapshot never captured** -- an
     invoice issued before a field existed, or a draft that has not been
     issued at all and therefore has no snapshot yet.
 
 Nothing here is jurisdiction-specific. Whether the document reads as a
 fiscal instrument or as a commercial request for payment is a matter of
-what the workspace configured and what the reader's law says — the same
+what the workspace configured and what the reader's law says -- the same
 bytes serve a French auto-entrepreneur and a Brazilian MEI whose NFS-e
 was issued at the prefeitura.
 """
@@ -239,7 +239,7 @@ LABEL_PACKS: dict[str, dict[str, str]] = {
 def default_labels(locale: Optional[str]) -> dict[str, str]:
     """The label pack for the issuer's language, English if none ships.
 
-    Keyed on the language subtag, so `pt-BR` and `pt-PT` share a pack —
+    Keyed on the language subtag, so `pt-BR` and `pt-PT` share a pack --
     the two differ in vocabulary a translator would care about and not in
     the eighteen words on an invoice.
     """
@@ -264,7 +264,7 @@ class DocumentParty:
     legal_name: Optional[str] = None
     address: Optional[str] = None
     email: Optional[str] = None
-    #: Rendered `(label, value)` pairs — already resolved through the
+    #: Rendered `(label, value)` pairs -- already resolved through the
     #: fiscal pack, so no renderer needs to know what a CNPJ is.
     tax_ids: list[tuple[str, str]] = field(default_factory=list)
 
@@ -334,7 +334,7 @@ class InvoiceDocument:
     #: receivable and a poor-looking fatura, so the UI asks first.
     has_line_items: bool
     #: Which side of the ledger. On a payable the parties are already
-    #: swapped below, so a renderer never has to know — but it is carried
+    #: swapped below, so a renderer never has to know -- but it is carried
     #: so a screen can say "received" instead of "issued", which is the
     #: difference between showing a document and claiming to have written
     #: one.
@@ -396,7 +396,7 @@ def _custom_field_pairs(
 def _format_tax_id(kind_value: str, value: str) -> tuple[str, str]:
     """A document as a person reads it, resolved through the pack.
 
-    An unrecognised kind still renders — a stored value must never become
+    An unrecognised kind still renders -- a stored value must never become
     unprintable because a pack changed underneath it.
     """
     try:
@@ -434,7 +434,7 @@ async def build_document(
     # The issuer's documents, frozen like the rest of the issuer's
     # identity. Reading the live rows here was the one thing the snapshot
     # did not cover, so correcting a CNPJ next month silently rewrote the
-    # CNPJ on an invoice a client received last month — the exact thing
+    # CNPJ on an invoice a client received last month -- the exact thing
     # freezing exists to prevent.
     #
     # Live rows still answer for a draft, and for a snapshot written
@@ -479,7 +479,7 @@ async def build_document(
     # On a payable the supplier wrote the document and we received it, so
     # the blocks swap. Doing it once here rather than in each renderer is
     # what keeps the PDF and the screen from disagreeing about who is who
-    # — and stops the product printing a supplier's bill under our own
+    # -- and stops the product printing a supplier's bill under our own
     # name, which is the wrong claim to make on paper.
     payable = invoice.direction == "payable"
     issuer = counterparty if payable else workspace_party
@@ -533,13 +533,13 @@ async def build_document(
         ],
         # The workspace's own language, because the sender writes the
         # document. Once issued, the snapshot carries the resolved labels
-        # and this is never consulted again — switching the interface to
+        # and this is never consulted again -- switching the interface to
         # English must not retitle a document already in a client's hands.
         labels=_label_map(template, snapshot.get("locale") if snapshot else workspace.locale),
         # Logo, accent, payment details and footer are the *issuer's*
         # identity, and on a payable the issuer is the supplier. Ours have
         # no business on their page: the logo would brand their document
-        # with our mark, and payment details are worse than cosmetic —
+        # with our mark, and payment details are worse than cosmetic --
         # printing our bank account under "pay to" on a bill we owe states
         # the opposite of what is true. We hold none of theirs, so the
         # blocks are simply left empty rather than filled with a stand-in.
@@ -549,8 +549,8 @@ async def build_document(
             else (issued_or_live("accent_color", settings.accent_color) or DEFAULT_ACCENT)
         ),
         # The id, not a URL: the two surfaces that draw this reach the
-        # file by different routes — one authenticated, one behind a
-        # share token — and neither should be hard-coded here.
+        # file by different routes -- one authenticated, one behind a
+        # share token -- and neither should be hard-coded here.
         logo_id=(
             None
             if payable

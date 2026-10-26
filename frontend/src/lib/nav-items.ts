@@ -31,7 +31,7 @@ export type NavItem =
 
 export const navItems: NavItem[] = [
   // The dashboard ("Painel") is now reachable by clicking the Quad4 Finance
-  // logo + name in the sidebar header — no dedicated menu item to keep
+  // logo + name in the sidebar header -- no dedicated menu item to keep
   // the sidebar focused on the main destinations. Transactions sits
   // inside the ACCOUNTS section since it's account-scoped data.
   { type: 'separator', labelKey: 'nav.groupAccounts' },

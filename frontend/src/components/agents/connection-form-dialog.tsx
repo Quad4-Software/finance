@@ -27,11 +27,11 @@ const KIND_LABELS: Record<LlmConnectionKind, { label: string; needsBaseUrl: bool
   ollama: { label: 'Ollama', needsBaseUrl: false, needsKey: false, modelHint: 'llama3.1:8b', urlHint: 'http://host.docker.internal:11434' },
   // OpenAI + Anthropic ship a sensible default model so non-tech users
   // don't need to know which id to type. Self-hosted kinds (Ollama,
-  // OpenAI-compatible) intentionally have NO default — the right model
+  // OpenAI-compatible) intentionally have NO default -- the right model
   // depends on what the user actually has installed/loaded.
   openai: { label: 'OpenAI', needsBaseUrl: false, needsKey: true, modelHint: 'gpt-4o-mini', urlHint: '', defaultModel: 'gpt-4o-mini' },
   anthropic: { label: 'Anthropic', needsBaseUrl: false, needsKey: true, modelHint: 'claude-haiku-4-5', urlHint: '', defaultModel: 'claude-haiku-4-5' },
-  openai_compatible: { label: 'OpenAI-compatible (LM Studio, vLLM, Groq, Together, …)', needsBaseUrl: true, needsKey: false, modelHint: 'llama3.1-70b', urlHint: 'http://192.168.1.142:1234' },
+  openai_compatible: { label: 'OpenAI-compatible (LM Studio, vLLM, Groq, Together, ...)', needsBaseUrl: true, needsKey: false, modelHint: 'llama3.1-70b', urlHint: 'http://192.168.1.142:1234' },
 }
 
 export function ConnectionFormDialog({ open, onOpenChange, connection }: Props) {
@@ -71,7 +71,7 @@ export function ConnectionFormDialog({ open, onOpenChange, connection }: Props) 
       setApiKey('')
       setKeyTouched(false)
       setDefaultModel(connection.default_model ?? '')
-      // Editing a saved connection — treat the field as already
+      // Editing a saved connection -- treat the field as already
       // user-touched so kind swaps don't clobber what's stored.
       setModelTouched(true)
       setIsDefault(connection.is_default)

@@ -22,7 +22,7 @@ async def _ensure_group_visible(
     user_id: uuid.UUID,
 ) -> Optional[Group]:
     """Visible when the group lives in the current workspace OR the
-    caller is linked as a cross-workspace member — for read endpoints."""
+    caller is linked as a cross-workspace member -- for read endpoints."""
     from app.services.group_service import get_group_visible
 
     return await get_group_visible(session, group_id, workspace_id, user_id)
@@ -93,7 +93,7 @@ async def _create_payment_transaction(
         date=when,
         type="debit",
         # `settlement` is a special source that excludes the row from
-        # spending reports — the underlying expense is already counted
+        # spending reports -- the underlying expense is already counted
         # via the share that produced the debt; this is the payback,
         # not a new expense.
         source="settlement",
@@ -114,7 +114,7 @@ async def _pick_default_account_for_user(
 ) -> Optional[Account]:
     """Return the user's first non-archived checking/savings account
     across any workspace they belong to. Used as the auto-target for
-    receiver-side settlement credits — the receiver may sit in a
+    receiver-side settlement credits -- the receiver may sit in a
     different workspace than where the settlement was recorded."""
     from app.models.workspace import WorkspaceMember
 
@@ -147,7 +147,7 @@ async def _create_receiver_credit(
 
     Picks the receiver's first checking/savings account from any
     workspace they belong to and stamps the credit there. Returns None
-    silently when the receiver has no suitable account — they can do
+    silently when the receiver has no suitable account -- they can do
     it manually or the next time they reconcile from their bank sync.
     """
     account = await _pick_default_account_for_user(session, receiver_user_id)
@@ -248,7 +248,7 @@ async def create_settlement(
     account_id = payload.pop("account_id", None)
     description = payload.pop("description", None)
 
-    # Resolve member metadata once — we need names for descriptions
+    # Resolve member metadata once -- we need names for descriptions
     # and the to_member's linked_user_id for the receiver-side credit.
     members_q = await session.execute(
         select(
@@ -259,9 +259,9 @@ async def create_settlement(
         ).where(GroupMember.id.in_([data.from_member_id, data.to_member_id]))
     )
     member_meta = {row.id: row for row in members_q.all()}
-    from_name = member_meta[data.from_member_id].name if data.from_member_id in member_meta else "—"
+    from_name = member_meta[data.from_member_id].name if data.from_member_id in member_meta else "--"
     to_meta = member_meta.get(data.to_member_id)
-    to_name = to_meta.name if to_meta else "—"
+    to_name = to_meta.name if to_meta else "--"
     # Resolve the receiver's Quad4 Finance user id. linked_user_id wins; fall
     # back to group.user_id when the receiver is the owner's
     # self-member (owners often don't bother linking themselves).

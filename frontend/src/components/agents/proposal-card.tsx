@@ -181,7 +181,7 @@ function renderSummary(
     case 'create_category':
       return t('agents.proposal.summary.createCategory', {
         name: String(p.name ?? '?'),
-      }) + (d.name_collision ? ` — ${t('agents.proposal.collision', { name: d.name_collision.name })}` : '')
+      }) + (d.name_collision ? ` -- ${t('agents.proposal.collision', { name: d.name_collision.name })}` : '')
     case 'create_budget':
       return t('agents.proposal.summary.createBudget', {
         category: String((p.category_name as string) ?? p.category_id ?? '?'),
@@ -194,13 +194,13 @@ function renderSummary(
         category: String((p.category_name as string) ?? p.category_id ?? '?'),
       })
     case 'create_rule':
-      return `“${String(p.name ?? '?')}”`
+      return `"${String(p.name ?? '?')}"`
     case 'update_rule': {
       const changes = (d.changes || {}) as Record<string, unknown>
-      return `${String(tgt.name ?? '?')} → ${Object.keys(changes).join(', ')}`
+      return `${String(tgt.name ?? '?')} -> ${Object.keys(changes).join(', ')}`
     }
     case 'delete_rule':
-      return `“${String(tgt.name ?? '?')}”`
+      return `"${String(tgt.name ?? '?')}"`
     case 'create_transaction':
       return t('agents.proposal.summary.createTransaction', {
         description: String(p.description ?? '?'),
@@ -221,11 +221,11 @@ function renderSummary(
       const changes = (d.changes || {}) as Record<string, unknown>
       const lines = Object.entries(changes).map(([k, v]) => {
         const before = tgt[k]
-        return `${k}: ${String(before ?? '∅')} → ${String(v ?? '∅')}`
+        return `${k}: ${String(before ?? '∅')} -> ${String(v ?? '∅')}`
       })
       return t('agents.proposal.summary.updateRecurring', {
         description: String(tgt.description ?? '?'),
-        changes: lines.join(', ') || '—',
+        changes: lines.join(', ') || '--',
       })
     }
     case 'cancel_recurring_transaction':
@@ -236,7 +236,7 @@ function renderSummary(
       return t('agents.proposal.summary.createGoal', {
         name: String(p.name ?? '?'),
         target: fmt(p.target_amount, p.currency),
-        deadline: p.deadline ? String(p.deadline) : '—',
+        deadline: p.deadline ? String(p.deadline) : '--',
       })
     case 'link_transfer':
     case 'unlink_transfer': {
@@ -308,7 +308,7 @@ function SplitPreview({ proposed }: { proposed?: Record<string, unknown> }) {
 }
 
 // Each kind maps to one Quad4 Finance endpoint already exposed via lib/api.ts.
-// Returns a string ref (id of the new entity) when available — used as a
+// Returns a string ref (id of the new entity) when available -- used as a
 // breadcrumb in the localStorage record so a future "view created entity"
 // affordance can deep-link to it.
 async function applyProposal(data: ProposalData): Promise<string | void> {

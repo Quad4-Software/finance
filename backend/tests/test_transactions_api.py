@@ -163,7 +163,7 @@ async def test_list_transactions_filter_by_min_amount(
     assert response.status_code == 200
     data = response.json()
     descriptions = {item["description"] for item in data["items"]}
-    # 45.00 IFOOD, 150.00 PIX, 8000.00 SALARIO — UBER 25.50 and NETFLIX 39.90 dropped
+    # 45.00 IFOOD, 150.00 PIX, 8000.00 SALARIO -- UBER 25.50 and NETFLIX 39.90 dropped
     assert descriptions == {"IFOOD RESTAURANTE", "PIX RECEBIDO", "SALARIO FEV"}
     assert data["total"] == 3
 
@@ -179,7 +179,7 @@ async def test_list_transactions_filter_by_max_amount(
     assert response.status_code == 200
     data = response.json()
     descriptions = {item["description"] for item in data["items"]}
-    # 25.50 UBER, 39.90 NETFLIX, 45.00 IFOOD — PIX 150 and SALARIO 8000 dropped
+    # 25.50 UBER, 39.90 NETFLIX, 45.00 IFOOD -- PIX 150 and SALARIO 8000 dropped
     assert descriptions == {"UBER TRIP", "NETFLIX", "IFOOD RESTAURANTE"}
     assert data["total"] == 3
 
@@ -479,7 +479,7 @@ async def test_update_transaction_remove_category(
     test_categories: list[Category],
 ):
     """Setting category_id to null must clear an existing category."""
-    txn_id = str(test_transactions[1].id)  # IFOOD — has category (Alimentação)
+    txn_id = str(test_transactions[1].id)  # IFOOD -- has category (Alimentação)
     assert test_transactions[1].category_id is not None
 
     response = await client.patch(
@@ -574,7 +574,7 @@ async def test_transactions_unauthenticated(client: AsyncClient, clean_db):
 async def test_create_transaction_without_account_fails(
     client: AsyncClient, auth_headers, test_account
 ):
-    """account_id is required — omitting it must return 422."""
+    """account_id is required -- omitting it must return 422."""
     response = await client.post(
         "/api/transactions",
         headers=auth_headers,
@@ -894,7 +894,7 @@ async def test_list_transactions_summary(
 async def test_list_transactions_summary_spans_all_pages(
     client: AsyncClient, auth_headers, test_transactions: list[Transaction]
 ):
-    """The summary covers every matching row, not just the current page —
+    """The summary covers every matching row, not just the current page --
     so a paginated request still totals the full result set."""
     response = await client.get(
         "/api/transactions?page=1&limit=2", headers=auth_headers
@@ -911,7 +911,7 @@ async def test_list_transactions_summary_respects_filters(
     test_categories: list[Category],
 ):
     """Filtering narrows the summary the same way it narrows the rows."""
-    cat_id = test_categories[1].id  # Transporte → UBER TRIP, 25.50 debit
+    cat_id = test_categories[1].id  # Transporte -> UBER TRIP, 25.50 debit
     response = await client.get(
         f"/api/transactions?category_id={cat_id}", headers=auth_headers
     )

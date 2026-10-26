@@ -3,8 +3,8 @@
 The one rule this module exists to enforce: **stored status is a
 decision, derived status is a fact**. Four stored values (`draft`,
 `open`, `void`, `uncollectible`) record what a person did. Everything a
-reader actually wants to know — is it paid, partly paid, late, how late
-— is computed here, from allocations and the due date, every time it is
+reader actually wants to know -- is it paid, partly paid, late, how late
+-- is computed here, from allocations and the due date, every time it is
 asked for.
 
 The cost of the alternative is visible in every peer product that stores
@@ -68,7 +68,7 @@ class InvoiceError(Exception):
 #: stored row is what the rest of the code reads.
 PRESETS: dict[str, dict[str, Any]] = {
     # The NFS-e was issued at the prefeitura, the EU invoice will be
-    # issued elsewhere, or there is no document at all — the user only
+    # issued elsewhere, or there is no document at all -- the user only
     # wants the money tracked.
     "tracking": {"document_required": False, "initial_state": "open", "tax_fields": "hidden"},
     # The invoice *is* the deliverable. Starts as a draft because a
@@ -135,7 +135,7 @@ async def update_settings(
     settings = await get_settings(session, workspace_id)
 
     # A preset change refills the three fields it owns, then any explicit
-    # values in the same request win over it — so "switch to document but
+    # values in the same request win over it -- so "switch to document but
     # keep tax hidden" is one call, not two.
     preset = data.get("preset")
     if preset and preset != settings.preset:
@@ -151,7 +151,7 @@ async def update_settings(
 
 
 # ---------------------------------------------------------------------------
-# Issuer identity — the workspace describing itself
+# Issuer identity -- the workspace describing itself
 # ---------------------------------------------------------------------------
 async def get_issuer_tax_ids(
     session: AsyncSession, workspace_id: uuid.UUID
@@ -172,7 +172,7 @@ async def set_issuer_tax_ids(
     Replace rather than merge, exactly as the payee side does: the caller
     sends the set that should remain, which makes removing a document the
     same operation as changing one. Validation goes through the same named
-    validators — one implementation, asserted from both call sites.
+    validators -- one implementation, asserted from both call sites.
     """
     normalised: dict[TaxIdKind, str] = {}
     for item in incoming:
@@ -205,7 +205,7 @@ async def set_issuer_tax_ids(
 
 
 # ---------------------------------------------------------------------------
-# Derived state — the whole point
+# Derived state -- the whole point
 # ---------------------------------------------------------------------------
 def allocated_total(invoice: Invoice) -> Decimal:
     """Money that arrived. Cash, and only cash."""
@@ -307,7 +307,7 @@ def derive_state(invoice: Invoice, today: Optional[_date] = None) -> DerivedStat
     `overdue`, `open`. The first three are the stored decisions passing
     straight through; the rest are facts about money and time.
 
-    Order matters. A decision always wins over a fact — a voided invoice
+    Order matters. A decision always wins over a fact -- a voided invoice
     is not overdue, and an uncollectible one is not "partial" just
     because something was received against it before the client went
     under.
@@ -416,7 +416,7 @@ async def list_invoices(
     allocations, and one honest pass over a workspace's invoices beats a
     correlated subquery that would have to be kept in sync with
     `derive_state` by hand. When a workspace grows past a few thousand
-    invoices this becomes a materialized balance column — and the single
+    invoices this becomes a materialized balance column -- and the single
     definition here is what makes that change safe.
     """
     query = _base_query(direction).where(
@@ -458,7 +458,7 @@ def _apply_year(query: Select, year: Optional[int]) -> Select:
 
 
 #: What the filter bar offers, and what each one counts. `overdue` is a
-#: subset of `open` on purpose — these are filters, not a partition, and
+#: subset of `open` on purpose -- these are filters, not a partition, and
 #: a freelancer wants to jump straight to the late ones.
 FACET_STATES: dict[str, tuple[str, ...]] = {
     "all": (),
@@ -479,7 +479,7 @@ async def facets(
 
     One call rather than one per chip. The counts come from the same
     derived state the list uses, so a chip that says 3 opens a list of
-    exactly 3 — a count computed a second way is a count that eventually
+    exactly 3 -- a count computed a second way is a count that eventually
     disagrees.
     """
     years_result = await session.execute(
@@ -520,7 +520,7 @@ async def aging_summary(
 ) -> dict[str, Any]:
     """A receber · vencidas · recebido no mês · próximos vencimentos.
 
-    Drafts are excluded from every figure — a document nobody has issued
+    Drafts are excluded from every figure -- a document nobody has issued
     is not money anybody owes. Voided and uncollectible invoices are
     excluded for the same reason, one decision later.
     """
@@ -562,7 +562,7 @@ async def aging_summary(
             buckets["current"] += remaining
             upcoming.append(invoice)
 
-    # Money that actually arrived this month, by the date it arrived —
+    # Money that actually arrived this month, by the date it arrived --
     # the cash view. The accrual view reads `competence_date` instead,
     # which is why both are stored.
     month_start = reference.replace(day=1)
@@ -599,8 +599,8 @@ def _recompute_totals(invoice: Invoice) -> None:
     """Totals follow the lines when there are lines, and the caller when
     there are not.
 
-    Under the `tracking` preset an invoice is three fields — "Fulano me
-    deve R$3.000" — and its total is simply what the user typed. Once
+    Under the `tracking` preset an invoice is three fields -- "Fulano me
+    deve R$3.000" -- and its total is simply what the user typed. Once
     lines exist they are the source of truth, because two places holding
     the same number is how they end up disagreeing.
     """
@@ -822,7 +822,7 @@ async def create_invoice(
     # is already owed, and making the user press "issue" on a note to
     # self is ceremony.
     #
-    # `as_draft` is the caller saying they are not finished — a document
+    # `as_draft` is the caller saying they are not finished -- a document
     # half written, to be picked up later. It overrides the preset,
     # because the preset is a default about the common case and this is
     # someone stating the uncommon one.
@@ -897,7 +897,7 @@ async def update_invoice(session: AsyncSession, invoice: Invoice, data: dict[str
         if rejected or data.get("lines") is not None or data.get("installments") is not None:
             raise InvoiceError(
                 "issued_invoice_immutable",
-                "An issued invoice's financial fields cannot change — void it and issue a new one",
+                "An issued invoice's financial fields cannot change -- void it and issue a new one",
             )
 
     for field in _ALWAYS_EDITABLE:
@@ -982,7 +982,7 @@ def _issue(
     regulates numbering forbids and no other would thank us for.
 
     An **imported** document is exempt from all of that. It already has
-    an identity — the source called it something — so taking a number
+    an identity -- the source called it something -- so taking a number
     from our sequence would burn one that is supposed to be gapless and
     rename a document its recipient already holds under another name. It
     keeps whatever number came with it, or none.
@@ -1025,7 +1025,7 @@ async def void_invoice(session: AsyncSession, invoice: Invoice) -> Invoice:
 
     Not a delete. The number stays taken, the row stays readable, and
     every total treats it as zero. Deleting it would leave a gap nobody
-    could explain later — which is precisely what numbering rules exist
+    could explain later -- which is precisely what numbering rules exist
     to prevent.
     """
     if invoice.status == "draft":
@@ -1056,7 +1056,7 @@ async def mark_uncollectible(session: AsyncSession, invoice: Invoice) -> Invoice
 
 
 async def reopen_invoice(session: AsyncSession, invoice: Invoice) -> Invoice:
-    """Undo an uncollectible decision — the client paid after all."""
+    """Undo an uncollectible decision -- the client paid after all."""
     if invoice.status != "uncollectible":
         raise InvoiceError("not_uncollectible", "Only an uncollectible invoice can be reopened")
     invoice.status = "open"
@@ -1067,10 +1067,10 @@ async def reopen_invoice(session: AsyncSession, invoice: Invoice) -> Invoice:
 async def delete_invoice(session: AsyncSession, invoice: Invoice) -> None:
     if invoice.status != "draft":
         raise InvoiceError(
-            "only_drafts_deletable", "An issued invoice is never deleted — void it instead"
+            "only_drafts_deletable", "An issued invoice is never deleted -- void it instead"
         )
     # The attachment rows go with the invoice through the cascade, but the
-    # stored files have to be asked for by name — nothing in the database
+    # stored files have to be asked for by name -- nothing in the database
     # reaches into the storage provider. Left out, every deleted draft
     # would leave its uploads behind forever.
     await invoice_attachment_service.cleanup_files(session, invoice.id)
@@ -1097,7 +1097,7 @@ async def allocate(
     later, which a step that writes can never be.
 
     `method` records *who or what* decided: `manual`, or the id of the
-    strategy that fired. The guards below run either way — an automatic
+    strategy that fired. The guards below run either way -- an automatic
     decision is not a trusted one.
     """
     if invoice.status != "open":
@@ -1135,7 +1135,7 @@ async def allocate(
     # a payable by money going out, and the allocation records how much of
     # that movement this document accounts for either way. Defaulting to
     # the smaller of "what is left" and "what moved" is what makes the
-    # common case — one payment, one document — a single click.
+    # common case -- one payment, one document -- a single click.
     incoming = abs(transaction.amount)
     proposed = Decimal(amount) if amount is not None else min(available, incoming)
     if proposed <= ZERO:
@@ -1245,7 +1245,7 @@ async def create_share_token(session: AsyncSession, invoice: Invoice) -> str:
     read a number that is about to change.
 
     The token is the credential, so it is generated with
-    `secrets.token_urlsafe` and never derived from the invoice id — a
+    `secrets.token_urlsafe` and never derived from the invoice id -- a
     guessable link would expose every client's document to anyone who
     could count.
     """
@@ -1276,7 +1276,7 @@ async def revoke_share_token(session: AsyncSession, invoice: Invoice) -> None:
 
 
 async def get_invoice_by_share_token(session: AsyncSession, token: str) -> Optional[Invoice]:
-    """The public lookup. Scoped to nothing — the token *is* the scope."""
+    """The public lookup. Scoped to nothing -- the token *is* the scope."""
     if not token:
         return None
     result = await session.execute(

@@ -256,12 +256,12 @@ export default function InvoiceSchedulesPage() {
                     <td className="py-3 pr-6 text-right text-sm font-bold tabular-nums">
                       {schedule.status === 'active'
                         ? money(schedule.monthly_amount, schedule.currency)
-                        : <span className="text-muted-foreground font-medium">—</span>}
+                        : <span className="text-muted-foreground font-medium">--</span>}
                     </td>
                     <td className="py-3 hidden sm:table-cell text-xs text-muted-foreground tabular-nums">
                       {schedule.status === 'active' && schedule.next_period_start
                         ? showDate(schedule.next_period_start)
-                        : '—'}
+                        : '--'}
                     </td>
                     <td className="py-3 text-right hidden lg:table-cell text-xs text-muted-foreground tabular-nums">
                       {schedule.invoice_count}

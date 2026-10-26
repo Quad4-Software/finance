@@ -48,7 +48,7 @@ class FakeProvider(MarketPriceProvider):
 
 
 async def _second_workspace(session: AsyncSession, user_id: uuid.UUID) -> Workspace:
-    """A second workspace the same user belongs to — a shared household one,
+    """A second workspace the same user belongs to -- a shared household one,
     or one they were added to. Its wallets are off-limits from the first."""
     ws = Workspace(
         id=uuid.uuid4(), name="Shared", kind="personal",
@@ -178,7 +178,7 @@ async def test_import_preview_rejects_it_too(
     session: AsyncSession, test_user: User, test_workspace: Workspace
 ):
     """The preview runs the same function with `dry_run`, and is what the UI
-    calls first — it has to refuse there rather than promise an import that
+    calls first -- it has to refuse there rather than promise an import that
     the commit will reject."""
     other = await _second_workspace(session, test_user.id)
     theirs = await _wallet(session, test_user.id, other.id, "Their Wallet")

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { countryName } from './country-name'
 
 describe('countryName', () => {
-  it('answers in the reader’s language', () => {
+  it('answers in the reader\'s language', () => {
     expect(countryName('BR', 'pt-BR')).toBe('Brasil')
     expect(countryName('BR', 'en')).toBe('Brazil')
     expect(countryName('JP', 'pt-BR')).toBe('Japão')

@@ -1,4 +1,4 @@
-"""LLM connections — encryption, CRUD via HTTP, executor wiring."""
+"""LLM connections -- encryption, CRUD via HTTP, executor wiring."""
 import uuid
 from unittest.mock import patch, AsyncMock
 
@@ -82,7 +82,7 @@ async def test_only_one_default_per_user(session: AsyncSession, test_user: User)
     b = await connection_service.create_connection(
         session, test_user.id, name="B", kind="ollama", is_default=True,
     )
-    # Re-fetch a — should no longer be default.
+    # Re-fetch a -- should no longer be default.
     a_after = await connection_service.get_connection(session, a.id, test_user.id)
 
     assert a_after is not None
@@ -239,7 +239,7 @@ async def test_test_endpoint_404_for_unknown(client: AsyncClient, auth_headers: 
 async def test_executor_resolves_provider_from_connection(
     session: AsyncSession, test_user: User
 ):
-    """Agent with connection_id → executor builds provider via the connection,
+    """Agent with connection_id -> executor builds provider via the connection,
     inheriting its base_url and decrypted api_key. The connection's
     default_model is used when the agent doesn't override."""
     from app.agents.runtime.executor import _provider_and_model_for
@@ -273,7 +273,7 @@ async def test_executor_resolves_provider_from_connection(
 async def test_executor_falls_back_to_user_default_connection(
     session: AsyncSession, test_user: User
 ):
-    """No connection_id on agent, but user has a default connection — use it."""
+    """No connection_id on agent, but user has a default connection -- use it."""
     from app.agents.runtime.executor import _provider_and_model_for
     from app.agents.models.agent import Agent
 

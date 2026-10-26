@@ -74,7 +74,7 @@ x-backend-env: &backend-env
   AGENTS_BUILTIN_MCP_URL: ${AGENTS_BUILTIN_MCP_URL:-http://mcp-server:8765/mcp}
   AGENTS_EXTRA_MCP_SERVERS: ${AGENTS_EXTRA_MCP_SERVERS:-}
   AGENTS_MCP_JWT_SECRET: ${AGENTS_MCP_JWT_SECRET:-dev-mcp-secret-change-in-production}
-  # TTL for tokens minted from /agents/connections → "External MCP access".
+  # TTL for tokens minted from /agents/connections -> "External MCP access".
   # Used by Claude Desktop, n8n, custom clients plugging into Quad4 Finance.
   AGENTS_MCP_EXTERNAL_TTL_DAYS: ${AGENTS_MCP_EXTERNAL_TTL_DAYS:-90}
   # LLM provider config: only the provider you actually use needs setting.

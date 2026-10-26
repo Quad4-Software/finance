@@ -418,7 +418,7 @@ export function TransactionAttachments({
                   )}
                 </div>
 
-                {/* Hover action bar — floats over bottom of thumbnail */}
+                {/* Hover action bar -- floats over bottom of thumbnail */}
                 {!isUploading && (
                 <div className={`absolute left-0 right-0 bottom-[44px] flex items-center justify-center gap-1 px-2 py-1.5 transition-all duration-200 ${
                   isConfirming
@@ -488,7 +488,7 @@ export function TransactionAttachments({
                 </div>
                 )}
 
-                {/* Info bar — always visible, clean */}
+                {/* Info bar -- always visible, clean */}
                 <div className="px-3 py-2.5 bg-card">
                   {!isUploading && renamingId === att.id ? (
                     <div

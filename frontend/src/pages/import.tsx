@@ -512,7 +512,7 @@ function TransactionImportPanel() {
                 </div>
               )}
 
-              {/* Column mapping — map CSV headers to Quad4 Finance fields */}
+              {/* Column mapping -- map CSV headers to Quad4 Finance fields */}
               {csvHeaders.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-border">
                   <p className="text-xs font-medium text-muted-foreground">{t('import.columnMapping')}</p>

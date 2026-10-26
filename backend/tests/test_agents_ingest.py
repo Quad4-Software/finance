@@ -54,7 +54,7 @@ async def test_do_ingest_happy_path_writes_chunks_and_marks_ready(
     )
 
     async def fake_embed(chunks):
-        # 1536-dim vector full of zeros — matches embedding_dim, harmless on SQLite.
+        # 1536-dim vector full of zeros -- matches embedding_dim, harmless on SQLite.
         return [[0.0] * 1536 for _ in chunks], "fake-model"
 
     monkeypatch.setattr("app.agents.services.embedding.embed_texts", fake_embed)
@@ -65,7 +65,7 @@ async def test_do_ingest_happy_path_writes_chunks_and_marks_ready(
     refreshed = await knowledge_service.get_doc(session, doc.id, test_user.id)
 
     assert refreshed is not None
-    # The session_maker inside _do_ingest commits — we need a fresh read.
+    # The session_maker inside _do_ingest commits -- we need a fresh read.
     await session.refresh(refreshed)
     assert refreshed.status == "ready"
     assert refreshed.chunk_count == 2
@@ -91,7 +91,7 @@ async def test_do_ingest_marks_failed_when_storage_unreadable(
         mime="text/plain",
         payload=b"x",
     )
-    # Point storage_path at a non-existent file — Path.read_bytes raises.
+    # Point storage_path at a non-existent file -- Path.read_bytes raises.
     doc.storage_path = "/tmp/this-file-really-shouldnt-exist-12345.bin"
     await session.commit()
 

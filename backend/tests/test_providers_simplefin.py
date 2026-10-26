@@ -1,6 +1,6 @@
 """Unit tests for the SimpleFIN provider.
 
-The bridge is fully fakeable via ``httpx.MockTransport`` — no SimpleFIN
+The bridge is fully fakeable via ``httpx.MockTransport`` -- no SimpleFIN
 credentials needed, no network. Each test stands up the smallest payload
 required and asserts the parse / dispatch behavior we care about.
 """
@@ -92,7 +92,7 @@ def test_accounts_url_and_auth_strips_userinfo():
 
 @pytest.mark.asyncio
 async def test_handle_oauth_callback_claims_and_parses_accounts():
-    """Token paste → claim → first /accounts → ConnectionData."""
+    """Token paste -> claim -> first /accounts -> ConnectionData."""
 
     state = {"step": "claim"}
 
@@ -217,7 +217,7 @@ async def test_claim_auth_errlist_soft_warning_keeps_healthy_accounts(caplog):
 
 @pytest.mark.asyncio
 async def test_auth_errlist_raises_user_action_required():
-    """SimpleFIN ``con.auth`` / ``gen.auth`` → user must regenerate the token."""
+    """SimpleFIN ``con.auth`` / ``gen.auth`` -> user must regenerate the token."""
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -272,7 +272,7 @@ async def test_auth_errlist_with_usable_accounts_is_soft_warning(caplog):
 
 @pytest.mark.asyncio
 async def test_act_failed_is_soft_warning(caplog):
-    """``act.failed`` is transient — keep going, just log."""
+    """``act.failed`` is transient -- keep going, just log."""
     import logging as stdlogging
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -463,7 +463,7 @@ async def test_get_transactions_refusal_after_first_chunk_marks_fetch_incomplete
 
 @pytest.mark.asyncio
 async def test_get_transactions_filters_by_account_and_parses_signs():
-    """Negative amount → debit; positive → credit."""
+    """Negative amount -> debit; positive -> credit."""
 
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/simplefin/accounts"
@@ -497,7 +497,7 @@ async def test_get_transactions_filters_by_account_and_parses_signs():
                             },
                         ],
                     },
-                    {  # noise — a different account in the same response
+                    {  # noise -- a different account in the same response
                         "id": "acc-2",
                         "transactions": [
                             {"id": "tX", "amount": "5", "posted": 1672531200},
@@ -556,7 +556,7 @@ async def test_get_transactions_uses_transacted_at_when_posted_zero():
 
 @pytest.mark.asyncio
 async def test_get_transactions_chunks_long_windows():
-    """``since`` more than 90 days ago → multiple requests with shifting windows."""
+    """``since`` more than 90 days ago -> multiple requests with shifting windows."""
 
     calls: list[tuple[str, str]] = []
 
@@ -625,7 +625,7 @@ async def test_get_holdings_parses_investment_data():
                                 "purchase_price": "0.10",
                                 "cost_basis": "55.00",
                             },
-                            {  # no market value → dropped
+                            {  # no market value -> dropped
                                 "id": "h-2",
                                 "description": "Mystery",
                                 "shares": "1",
@@ -653,7 +653,7 @@ async def test_get_holdings_parses_investment_data():
 async def test_get_holdings_crypto_ticker_currency_falls_back_to_account_currency():
     """A connector-supplied ticker like ``DOGE`` isn't an ISO currency code.
 
-    ``HoldingData.currency`` maps to a ``VARCHAR(3)`` DB column — writing a
+    ``HoldingData.currency`` maps to a ``VARCHAR(3)`` DB column -- writing a
     4-letter ticker there overflows and used to crash the entire sync for
     the account (see issue #448). It should fall back to the account's
     currency instead.
@@ -688,7 +688,7 @@ async def test_get_holdings_crypto_ticker_currency_falls_back_to_account_currenc
     assert len(holdings) == 1
     assert holdings[0].currency == "USD"
     # The ticker itself belongs in the dedicated 32-char column, not in
-    # `currency` — that's the pairing issue #448 asks for.
+    # `currency` -- that's the pairing issue #448 asks for.
     assert holdings[0].ticker == "DOGE"
 
 
@@ -788,7 +788,7 @@ def test_parse_accounts_maps_each_account_to_its_own_institution():
     assert by_id["a2"].institution_name == "Second Brokerage"
     assert by_id["a2"].institution_external_id == "CON-2"
     assert "second.example" in (by_id["a2"].institution_logo_url or "")
-    # No conn_id → no per-account institution; serialize falls back to the connection.
+    # No conn_id -> no per-account institution; serialize falls back to the connection.
     assert by_id["a3"].institution_name is None
     assert by_id["a3"].institution_external_id is None
     assert by_id["a3"].institution_logo_url is None

@@ -7,7 +7,7 @@ rules it plays by are worth stating plainly:
     from the invoice id, and it is the entire scope of the request. There
     is no workspace header, no session, and nothing to enumerate.
   - **It serves the document and only the document.** The response is the
-    same resolved structure the owner sees on the invoice page — issuer,
+    same resolved structure the owner sees on the invoice page -- issuer,
     client, lines, totals. Internal notes, allocations, the payee record
     and every other workspace object stay behind the authenticated API.
   - **A revoked or voided invoice is indistinguishable from one that
@@ -40,8 +40,8 @@ async def _resolve(session: AsyncSession, token: str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     workspace = await session.get(Workspace, invoice.workspace_id)
     if workspace is None:
-        # Unreachable in practice — the invoice cascades with its
-        # workspace — but a document with no issuer is not a document.
+        # Unreachable in practice -- the invoice cascades with its
+        # workspace -- but a document with no issuer is not a document.
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     settings = await invoice_service.get_settings(session, invoice.workspace_id)
     return invoice, await invoice_document.build_document(
@@ -69,7 +69,7 @@ async def read_shared_logo(
     """The mark on the shared document.
 
     Scoped by the same token as everything else, and by the id frozen in
-    the invoice's snapshot rather than the workspace's current logo — a
+    the invoice's snapshot rather than the workspace's current logo -- a
     document a client is holding does not change its letterhead because
     the issuer rebranded.
     """

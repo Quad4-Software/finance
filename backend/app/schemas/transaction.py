@@ -120,7 +120,7 @@ class TransactionUpdate(BaseModel):
 
 
 class InstallmentSeriesCreate(BaseModel):
-    """Payload for POST /api/transactions/installments — repeats a purchase
+    """Payload for POST /api/transactions/installments -- repeats a purchase
     as ``installments`` equal payments."""
 
     base: TransactionCreate
@@ -143,7 +143,7 @@ class TransactionInvoiceLink(BaseModel):
     """The invoice this transaction settles, when it settles one.
 
     Present only for workspaces with the invoicing module, and only on
-    rows that carry an allocation — a personal workspace never sees this
+    rows that carry an allocation -- a personal workspace never sees this
     field at all, because the query that fills it is not run there.
     """
 
@@ -176,7 +176,7 @@ class TransactionRead(TransactionBase):
     category_id: Optional[uuid.UUID] = None
     category: Optional[CategoryRead] = None
     #: Every invoice this transaction settles. A list because one
-    #: payment can settle several — a payout net of fees is the
+    #: payment can settle several -- a payout net of fees is the
     #: ordinary case, not the exotic one.
     invoice_links: list[TransactionInvoiceLink] = []
     currency: str = "USD"
@@ -212,7 +212,7 @@ class TransactionRead(TransactionBase):
     is_shared: bool = False
     viewer_share: Optional[Decimal] = None
     group_id: Optional[uuid.UUID] = None
-    # Display name of the parent's owner — derived from the group's
+    # Display name of the parent's owner -- derived from the group's
     # is_self member at request time. Helps the UI show who paid
     # instead of a generic "shared" badge.
     parent_owner_name: Optional[str] = None
@@ -246,7 +246,7 @@ class TransactionBulkDeleteRequest(BaseModel):
 class BulkAddToGroupRequest(BaseModel):
     transaction_ids: list[uuid.UUID]
     group_id: uuid.UUID
-    # Bulk supports `equal` and `percent` only — `exact` amounts can't
+    # Bulk supports `equal` and `percent` only -- `exact` amounts can't
     # generalize across transactions of different totals.
     share_type: Literal["equal", "percent"] = "equal"
     # Subset of group members to include. Each entry's `share_pct` is

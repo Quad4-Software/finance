@@ -3,7 +3,7 @@
 Upload path:
   1. Save raw bytes to disk under AGENTS_KNOWLEDGE_STORAGE_PATH.
   2. Insert KnowledgeDoc with status="pending".
-  3. Dispatch Celery task to parse → chunk → embed asynchronously.
+  3. Dispatch Celery task to parse -> chunk -> embed asynchronously.
 
 Search path:
   1. Embed the query.
@@ -144,7 +144,7 @@ async def mark_status(
         return
     doc.status = status
     # On success, always clear any stale error from prior attempts. Without
-    # this the UI keeps showing "embed failed: …" alongside a green ready
+    # this the UI keeps showing "embed failed: ..." alongside a green ready
     # badge, which is confusing.
     if status == "ready":
         doc.error = None

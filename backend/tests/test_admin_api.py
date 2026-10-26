@@ -337,7 +337,7 @@ class TestAdminProtections:
         assert login_resp.status_code == 200
         admin2_headers = {"Authorization": f"Bearer {login_resp.json()['access_token']}"}
 
-        # admin2 deletes admin1 — should succeed because admin2 still exists
+        # admin2 deletes admin1 -- should succeed because admin2 still exists
         response = await client.delete(
             f"/api/admin/users/{test_superuser.id}", headers=admin2_headers
         )
@@ -352,7 +352,7 @@ class TestAdminProtections:
         assert create_resp2.status_code == 201
         assert create_resp2.json()["id"]
 
-        # admin2 is now the only superuser — trying to delete them from another session
+        # admin2 is now the only superuser -- trying to delete them from another session
         # would fail with self-protection. Instead, test that deleting regular user works
         # but the last-superuser logic is intact by checking the count.
         # We can't easily test deleting the last superuser without self-protection kicking in,

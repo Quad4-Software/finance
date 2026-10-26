@@ -219,17 +219,17 @@ async def test_connection(conn: LlmConnection) -> dict[str, Any]:
                 if r.status_code >= 400:
                     return {"ok": False, "detail": f"HTTP {r.status_code}: {r.text[:200]}"}
                 # Some servers (LM Studio with a bad path) return 200 with
-                # no JSON body — surface that as a useful warning instead
+                # no JSON body -- surface that as a useful warning instead
                 # of a misleading "ok".
                 try:
                     payload = r.json()
                 except Exception:
-                    return {"ok": False, "detail": f"reachable but {base}/models did not return JSON — wrong path?"}
+                    return {"ok": False, "detail": f"reachable but {base}/models did not return JSON -- wrong path?"}
                 models = [m.get("id") for m in (payload.get("data") or [])][:50]
                 if not models and conn.kind == "openai_compatible":
                     return {
                         "ok": False,
-                        "detail": f"reachable but {base}/models returned no models — check the base URL",
+                        "detail": f"reachable but {base}/models returned no models -- check the base URL",
                     }
             return {"ok": True, "detail": f"reachable at {base} ({len(models)} models)", "models": models}
 

@@ -70,7 +70,7 @@ from app.models.group import Group, GroupMember  # noqa: E402,F401
 from app.models.transaction_split import TransactionSplit  # noqa: E402,F401
 from app.models.group_settlement import GroupSettlement  # noqa: E402,F401
 from app.models.workspace import Workspace, WorkspaceMember  # noqa: E402,F401
-# Agent models — gated by AGENTS_ENABLED above so tests always cover them.
+# Agent models -- gated by AGENTS_ENABLED above so tests always cover them.
 from app.agents.models import (  # noqa: E402,F401
     Agent,
     AgentTool,
@@ -375,7 +375,7 @@ async def viewer_auth_headers(
 
     Read-only by role. Exists so the write gate can be exercised over HTTP:
     the enforcement is a dependency wrapper, so asserting it at the service
-    layer alone leaves the wiring between route and role untested — which is
+    layer alone leaves the wiring between route and role untested -- which is
     exactly the gap that let an audit conclude the gate was missing when it
     was not.
     """

@@ -31,7 +31,7 @@ export interface SendMessageOptions {
 export async function streamChat(opts: SendMessageOptions): Promise<void> {
   const token = localStorage.getItem('token') || ''
   // SSE uses raw fetch, so we have to set the workspace header here
-  // — the axios interceptor that adds it for the rest of the app
+  // -- the axios interceptor that adds it for the rest of the app
   // doesn't run on this code path.
   const workspaceId = localStorage.getItem(WORKSPACE_STORAGE_KEY) || ''
   const headers: Record<string, string> = {
@@ -82,7 +82,7 @@ export async function streamChat(opts: SendMessageOptions): Promise<void> {
       const ev = { kind: currentEvent, ...parsed } as AgentStreamEvent
       opts.onEvent(ev)
     } catch {
-      // Malformed payload — surface as error so the UI can recover.
+      // Malformed payload -- surface as error so the UI can recover.
       opts.onEvent({ kind: 'error', error_code: 'parse', error_message: currentData })
     }
     currentEvent = 'message'

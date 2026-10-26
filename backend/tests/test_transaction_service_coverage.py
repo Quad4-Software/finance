@@ -157,7 +157,7 @@ async def _mk_group(session: AsyncSession, test_user: User, test_workspace: Work
 
 
 # ---------------------------------------------------------------------------
-# get_transactions — filters, summary, sorting, multi-id (lines 144, 209, 365+)
+# get_transactions -- filters, summary, sorting, multi-id (lines 144, 209, 365+)
 # ---------------------------------------------------------------------------
 
 
@@ -325,7 +325,7 @@ async def test_get_transactions_summary_excludes_transfers_and_treat_as_transfer
     assert summary["income"] == Decimal("2000")
     assert summary["expense"] == Decimal("800")
     assert summary["net"] == Decimal("1200")
-    # 500 (out) + 500 (in) + 300 (investment) — absolute totals.
+    # 500 (out) + 500 (in) + 300 (investment) -- absolute totals.
     assert summary["excluded"] == Decimal("1300")
 
 
@@ -539,7 +539,7 @@ async def test_get_transfer_candidates_ranks_by_proximity(session, test_user, te
         session, test_user, acct2, description="Far", amount=Decimal("100"),
         type="credit", date=date(2025, 3, 25),
     )
-    # Same account → excluded
+    # Same account -> excluded
     await _mk_txn(
         session, test_user, acct, description="SameAcct", amount=Decimal("100"),
         type="credit", date=date(2025, 3, 16),
@@ -703,7 +703,7 @@ async def test_create_transfer_counterpart_dest_missing(session, test_user, test
 
 
 # ---------------------------------------------------------------------------
-# update_transaction — splits, FX cascade, effective_bill_date (1154+, 1166-1173)
+# update_transaction -- splits, FX cascade, effective_bill_date (1154+, 1166-1173)
 # ---------------------------------------------------------------------------
 
 
@@ -748,7 +748,7 @@ async def test_update_transfer_cascades_amount_cross_currency(session, test_user
     ))
     # No destination amount was given, so the credit side is a conversion of the
     # debit side: changing the debit amount re-converts it. (A pair created with
-    # an explicit destination amount keeps it — see test_transfer_api.py.)
+    # an explicit destination amount keeps it -- see test_transfer_api.py.)
     updated = await update_transaction(
         session, debit.id, test_workspace.id, test_user.id,
         TransactionUpdate(amount=Decimal("1000")),

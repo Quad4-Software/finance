@@ -1,6 +1,6 @@
 """Market-price data providers (stocks, ETFs, crypto, funds).
 
-Asset valuation from a live public quote — the user enters a ticker and
+Asset valuation from a live public quote -- the user enters a ticker and
 quantity, the provider returns the price, and Quad4 Finance tracks the value
 over time. This is deliberately separate from `BankProvider`: there's no
 per-user authentication and no accounts/transactions, just a symbol
@@ -14,12 +14,12 @@ yfinance usage notes (matches v1.3.x):
   * ``yfinance.Search(query, max_results=..., news_count=..., enable_fuzzy_query=...)``
     returns a ``.quotes`` list of dicts with keys like ``symbol``, ``shortname``,
     ``longname``, ``exchange``, ``exchDisp``, ``quoteType``.
-  * ``yfinance.Ticker(symbol).fast_info`` exposes camelCase keys —
+  * ``yfinance.Ticker(symbol).fast_info`` exposes camelCase keys --
     ``lastPrice``, ``previousClose``, ``currency``, ``exchange``, ``quoteType``.
     snake_case keys are silently accepted too, but camelCase is the public API.
   * ``yf.config.network.retries`` enables transient-error retries (exponential
     backoff). Set once at module import so both Search and Ticker benefit.
-  * ``YFRateLimitError`` is raised when Yahoo rate-limits us — we surface it
+  * ``YFRateLimitError`` is raised when Yahoo rate-limits us -- we surface it
     so the caller can decide (UI toast vs. scheduled-task skip).
 """
 
@@ -41,8 +41,8 @@ logger = logging.getLogger(__name__)
 # These are not valid ISO 4217 codes and, if kept raw, produce 100x-wrong
 # valuations. Same table Sure uses (see app/models/provider/yahoo_finance.rb).
 _MINOR_UNIT_CURRENCIES: dict[str, tuple[str, float]] = {
-    "GBp": ("GBP", 0.01),  # British pence → pounds (e.g. IITU.L)
-    "ZAc": ("ZAR", 0.01),  # South African cents → rand (e.g. JSE.JO)
+    "GBp": ("GBP", 0.01),  # British pence -> pounds (e.g. IITU.L)
+    "ZAc": ("ZAR", 0.01),  # South African cents -> rand (e.g. JSE.JO)
 }
 
 
@@ -55,7 +55,7 @@ def _normalize_currency_and_price(currency: str, price: float) -> tuple[str, flo
 
 
 class MarketPriceProviderError(Exception):
-    """Provider-level failure — propagated so callers can return a useful error."""
+    """Provider-level failure -- propagated so callers can return a useful error."""
 
 
 class MarketPriceRateLimitedError(MarketPriceProviderError):
@@ -76,7 +76,7 @@ class MarketPriceProvider(ABC):
         """Return the latest price for a single symbol, or None if unknown."""
 
     async def get_quotes(self, symbols: list[str]) -> dict[str, Optional[MarketSymbolQuote]]:
-        """Batch variant — default is a sequential get_quote loop.
+        """Batch variant -- default is a sequential get_quote loop.
 
         Subclasses may override with a true bulk endpoint. Stays sequential
         by default so we don't accidentally thunder-herd the upstream API.
@@ -90,7 +90,7 @@ class MarketPriceProvider(ABC):
         """Batch-fetch only the latest price for each symbol.
 
         Lighter than `get_quotes`: scheduled refresh doesn't need name,
-        exchange, or quote_type — just the number. Subclasses should
+        exchange, or quote_type -- just the number. Subclasses should
         implement this with a true bulk endpoint (one HTTP request)
         whenever possible; the default here is a safe sequential fallback
         so the interface stays compatible with simpler providers.
@@ -120,15 +120,15 @@ class YFinanceProvider(MarketPriceProvider):
 
     # How many transient-network retries yfinance should perform internally.
     # yfinance uses exponential backoff (1s, 2s, 4s...) so 2 retries adds at
-    # most ~3s to any call — cheap enough to keep defaults sane.
+    # most ~3s to any call -- cheap enough to keep defaults sane.
     _RETRIES = 2
 
     def __init__(self) -> None:
         # Imported lazily so a broken or missing yfinance install only hits
-        # the market-price code paths — the rest of Quad4 Finance keeps booting.
+        # the market-price code paths -- the rest of Quad4 Finance keeps booting.
         import yfinance as yf
 
-        # Global config singleton — the canonical knob in yfinance 1.x.
+        # Global config singleton -- the canonical knob in yfinance 1.x.
         # Wrap in try/except because older versions use a different shape.
         try:
             yf.config.network.retries = self._RETRIES
@@ -158,14 +158,14 @@ class YFinanceProvider(MarketPriceProvider):
         return matches
 
     # Practical cap per `yf.download` request. Yahoo accepts more but starts
-    # silently dropping symbols beyond ~100 in community reports — we chunk
+    # silently dropping symbols beyond ~100 in community reports -- we chunk
     # above this to keep the success rate high.
     _BATCH_CHUNK_SIZE = 100
 
     async def get_latest_prices(self, symbols: list[str]) -> dict[str, Optional[Decimal]]:
         """One HTTP request per ~100 tickers via ``yfinance.download``.
 
-        Much cheaper than looping ``get_quote`` for a scheduled refresh — a
+        Much cheaper than looping ``get_quote`` for a scheduled refresh -- a
         portfolio of 50 market-priced assets goes from 50 calls to 1. The
         tradeoff: ``download`` returns prices only (no currency/name/etc.).
         That's fine here because ``Asset.currency`` is already cached from
@@ -195,7 +195,7 @@ class YFinanceProvider(MarketPriceProvider):
                     "Yahoo Finance rate-limited the batch price download"
                 )
 
-            # Normalize minor-unit prices (GBp → GBP, ZAc → ZAR, both ×0.01).
+            # Normalize minor-unit prices (GBp -> GBP, ZAc -> ZAR, both ×0.01).
             # yf.download returns raw pence/cents for LSE/JSE tickers without
             # a currency tag; we fetch fast_info.currency only for the tickers
             # that actually need it (*.L and *.JO suffixes) to keep the extra
@@ -338,8 +338,8 @@ class YFinanceProvider(MarketPriceProvider):
         if df is None or df.empty:
             return out
 
-        # Single-ticker downloads come back with flat columns — no MultiIndex.
-        # Multi-ticker downloads use group_by="ticker" → MultiIndex (sym, field).
+        # Single-ticker downloads come back with flat columns -- no MultiIndex.
+        # Multi-ticker downloads use group_by="ticker" -> MultiIndex (sym, field).
         if len(symbols) == 1:
             close_series = df.get("Close") if "Close" in df.columns else None
             out[symbols[0]] = _last_decimal_close(close_series)
@@ -379,7 +379,7 @@ class YFinanceProvider(MarketPriceProvider):
             quote_type = _fast_info_value(fast, "quoteType")
 
             # `info` is the slow path (full quoteSummary fetch) and the only
-            # place the display name lives. Swallow any failure — the caller
+            # place the display name lives. Swallow any failure -- the caller
             # only truly needs price + currency.
             try:
                 info = ticker.info or {}
@@ -400,7 +400,7 @@ class YFinanceProvider(MarketPriceProvider):
                 "quote_type": quote_type,
                 # Yahoo's `info["website"]` is the source of truth for the
                 # company domain, from which we build the logo URL. Missing
-                # for most crypto/indices — caller will just skip the logo.
+                # for most crypto/indices -- caller will just skip the logo.
                 "website": info.get("website") or None,
             }
         except _rate_limit_exception_types():
@@ -464,7 +464,7 @@ def _rate_limit_exception_types() -> tuple[type[BaseException], ...]:
     """Return the yfinance exception classes that signal upstream throttling.
 
     Resolved at call time because yfinance's exception module moved around
-    between minor versions — we don't want an import error at boot if the
+    between minor versions -- we don't want an import error at boot if the
     user has a slightly older release.
     """
     types: list[type[BaseException]] = []
@@ -506,7 +506,7 @@ class CompositeMarketPriceProvider(MarketPriceProvider):
         return await self.default_provider.get_latest_prices(symbols)
 
 
-# Module-level singleton — cheap to construct, stateless beyond the yfinance
+# Module-level singleton -- cheap to construct, stateless beyond the yfinance
 # import, and consumers need a stable instance for dependency overrides.
 _default_provider: Optional[MarketPriceProvider] = None
 
@@ -520,6 +520,6 @@ def get_market_price_provider() -> MarketPriceProvider:
 
 
 def set_market_price_provider(provider: Optional[MarketPriceProvider]) -> None:
-    """Test helper — swap the singleton for a fake."""
+    """Test helper -- swap the singleton for a fake."""
     global _default_provider
     _default_provider = provider

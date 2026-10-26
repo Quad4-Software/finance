@@ -1,7 +1,7 @@
 """`enabled_modules` reaches the client on every workspace read path.
 
 The frontend hides any module missing from this list, so a response that
-omits it is not a cosmetic bug — it blanks the navigation.
+omits it is not a cosmetic bug -- it blanks the navigation.
 """
 import pytest
 from httpx import AsyncClient

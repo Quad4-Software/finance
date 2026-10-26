@@ -32,7 +32,7 @@ const SELECT_CLASS =
  *
  * Deliberately built from the same pieces as the transaction importer: one
  * dashed drop zone that also carries the template link, then a result card
- * whose first strip picks the destination — the wallet here, the account
+ * whose first strip picks the destination -- the wallet here, the account
  * there. Two importers that look different teach the same person two habits.
  */
 export function AssetImportPanel() {
@@ -317,7 +317,7 @@ export function AssetImportPanel() {
               <ul className="space-y-1 text-xs text-blue-600 dark:text-blue-300/80">
                 {walletWarnings.map((w) => (
                   <li key={`${w.ticker}-${w.reason}`}>
-                    {t(`assetImport.warning.${w.reason}`, { ticker: w.ticker, wallet: w.wallet ?? '—' })}
+                    {t(`assetImport.warning.${w.reason}`, { ticker: w.ticker, wallet: w.wallet ?? '--' })}
                   </li>
                 ))}
               </ul>
@@ -348,7 +348,7 @@ export function AssetImportPanel() {
                   <li key={`${err.row}-${err.reason}`}>
                     {t('assetImport.rowError', {
                       row: err.row,
-                      ticker: err.ticker ?? '—',
+                      ticker: err.ticker ?? '--',
                       reason: t(`assetImport.reason.${err.reason}`, err.reason),
                     })}
                     {err.detail ? ` (${err.detail})` : ''}

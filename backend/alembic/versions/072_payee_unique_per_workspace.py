@@ -13,7 +13,7 @@ across every workspace they touch.
 The visible symptom is a bank connection failing with a duplicate key
 error. Sync resolves a counterparty with a workspace-scoped lookup, finds
 nothing in *this* workspace, inserts, and collides with a row the same
-person created in a different one — commonly a counterparty they already
+person created in a different one -- commonly a counterparty they already
 have in their personal workspace and now meet again in a shared one, or a
 leftover from a connection that was removed earlier.
 

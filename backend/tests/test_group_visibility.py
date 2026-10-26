@@ -162,7 +162,7 @@ async def test_visible_get_works_for_linked_member(
     assert via_visible.is_owner is False
 
     # Owner-only get returns None when scoped to the linked member's
-    # workspace — edit paths reject non-owners cleanly.
+    # workspace -- edit paths reject non-owners cleanly.
     via_owned = await group_service.get_group(session, group.id, other_ws.id)
     assert via_owned is None
 

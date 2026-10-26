@@ -21,11 +21,17 @@ import zipfile
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 import pyzipper
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.services.backup_config import BackupConfig
+
+if TYPE_CHECKING:
+    from app.providers.s3_storage import S3StorageProvider
 
 #: The zip encrypts entry *contents*, never the central directory, so the file
 #: names and their sizes stay readable without the password. Nothing sensitive
@@ -181,21 +187,20 @@ async def collect_workspace_export(session: AsyncSession, workspace) -> dict[str
 _BACKUP_KEY_SALT = b"quad4-scheduled-backups-v1"
 
 
-def scheduled_backup_password() -> str:
+def scheduled_backup_password(config: BackupConfig) -> str:
     """The AES-256 passphrase used for scheduled backup archives.
 
-    An explicit BACKUP_ENCRYPTION_KEY wins; otherwise a passphrase is
-    derived from SECRET_KEY so the feature works zero-config while staying
-    encrypted at rest. Rotating SECRET_KEY changes the derived password,
-    which only affects archives written afterwards.
+    An explicit encryption key (admin-saved or BACKUP_ENCRYPTION_KEY) wins;
+    otherwise a passphrase is derived from SECRET_KEY so the feature works
+    zero-config while staying encrypted at rest. Rotating SECRET_KEY
+    changes the derived password, which only affects archives written
+    afterwards.
     """
     from app.core.config import get_settings
 
-    settings = get_settings()
-    explicit = settings.backup_encryption_key.get_secret_value()
-    if explicit:
-        return explicit
-    secret = settings.secret_key.get_secret_value().encode("utf-8")
+    if config.backup_encryption_key:
+        return config.backup_encryption_key
+    secret = get_settings().secret_key.get_secret_value().encode("utf-8")
     raw = hashlib.pbkdf2_hmac("sha256", secret, _BACKUP_KEY_SALT, iterations=100_000, dklen=32)
     return base64.urlsafe_b64encode(raw).decode("ascii")
 
@@ -204,56 +209,51 @@ def _backup_key(workspace_id: UUID, filename: str) -> str:
     return f"backups/{workspace_id}/{filename}"
 
 
-def _local_backup_dir(workspace_id: UUID) -> Path:
-    from app.core.config import get_settings
-
-    return Path(get_settings().backup_local_path) / str(workspace_id)
+def _local_backup_dir(config: BackupConfig, workspace_id: UUID) -> Path:
+    return Path(config.backup_local_path) / str(workspace_id)
 
 
-async def store_backup(workspace_id: UUID, filename: str, data: bytes) -> str:
+def _s3_provider(config: BackupConfig) -> "S3StorageProvider":
+    """An S3 provider carrying the effective backup credentials."""
+    from app.providers.s3_storage import S3StorageProvider
+
+    return S3StorageProvider(
+        bucket=config.storage_s3_bucket,
+        region=config.storage_s3_region,
+        access_key=config.storage_s3_access_key,
+        secret_key=config.storage_s3_secret_key,
+        endpoint_url=config.storage_s3_endpoint_url,
+    )
+
+
+async def store_backup(config: BackupConfig, workspace_id: UUID, filename: str, data: bytes) -> str:
     """Persist one archive under the configured backend. Returns the key/path."""
-    from app.core.config import get_settings
-
-    settings = get_settings()
-    if settings.storage_provider == "s3":
-        from app.providers import get_storage_provider
-
+    if config.storage_provider == "s3":
         key = _backup_key(workspace_id, filename)
-        await get_storage_provider().upload(key, data, "application/zip")
+        await _s3_provider(config).upload(key, data, "application/zip")
         return key
-    path = _local_backup_dir(workspace_id) / filename
+    path = _local_backup_dir(config, workspace_id) / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     await asyncio.to_thread(path.write_bytes, data)
     return str(path)
 
 
-async def list_backup_names(workspace_id: UUID) -> list[str]:
+async def list_backup_names(config: BackupConfig, workspace_id: UUID) -> list[str]:
     """Existing backup filenames for one workspace, oldest first."""
-    from app.core.config import get_settings
-
-    settings = get_settings()
-    if settings.storage_provider == "s3":
-        from app.providers import get_storage_provider
-
-        provider = get_storage_provider()
+    if config.storage_provider == "s3":
         prefix = f"backups/{workspace_id}/"
-        keys = await provider.list_keys(prefix)
+        keys = await _s3_provider(config).list_keys(prefix)
         return sorted(k[len(prefix) :] for k in keys if k.startswith(prefix))
-    directory = _local_backup_dir(workspace_id)
+    directory = _local_backup_dir(config, workspace_id)
     if not directory.exists():
         return []
     return sorted(p.name for p in directory.glob("*.zip"))
 
 
-async def delete_backup(workspace_id: UUID, filename: str) -> None:
-    from app.core.config import get_settings
-
-    settings = get_settings()
-    if settings.storage_provider == "s3":
-        from app.providers import get_storage_provider
-
-        await get_storage_provider().delete(_backup_key(workspace_id, filename))
+async def delete_backup(config: BackupConfig, workspace_id: UUID, filename: str) -> None:
+    if config.storage_provider == "s3":
+        await _s3_provider(config).delete(_backup_key(workspace_id, filename))
         return
-    path = _local_backup_dir(workspace_id) / filename
+    path = _local_backup_dir(config, workspace_id) / filename
     if path.exists():
         path.unlink()

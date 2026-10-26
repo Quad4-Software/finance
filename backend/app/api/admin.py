@@ -1,5 +1,6 @@
-import uuid
+import logging
 import re
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,9 +24,16 @@ from app.schemas.admin import (
     AdminUserUpdate,
     AppSettingRead,
     AppSettingUpdate,
+    BackupRunResult,
+    BackupS3TestRequest,
+    BackupS3TestResult,
+    BackupSettingsRead,
+    BackupSettingsUpdate,
     TimezoneSettingRead,
 )
-from app.services import admin_service
+from app.services import admin_service, backup_config
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -124,6 +132,11 @@ async def get_setting(
     session: AsyncSession = Depends(get_async_session),
     _user: User = Depends(current_superuser),
 ):
+    if key in backup_config.SECRET_SETTING_KEYS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Setting '{key}' is not readable",
+        )
     setting = await admin_service.get_app_setting(session, key)
     if not setting:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Setting not found")
@@ -199,6 +212,76 @@ async def timezone_setting(
         fallback=str(environment_timezone()),
         available=sorted(timezone_names()),
     )
+
+
+def _backup_settings_read(config: backup_config.BackupConfig) -> BackupSettingsRead:
+    return BackupSettingsRead(
+        storage_provider=config.storage_provider,
+        backup_schedule_hour=config.backup_schedule_hour,
+        backup_retention_count=config.backup_retention_count,
+        backup_local_path=config.backup_local_path,
+        backup_encryption_key_set=bool(config.backup_encryption_key),
+        storage_s3_bucket=config.storage_s3_bucket,
+        storage_s3_region=config.storage_s3_region,
+        storage_s3_endpoint_url=config.storage_s3_endpoint_url,
+        storage_s3_access_key_set=bool(config.storage_s3_access_key),
+        storage_s3_secret_key_set=bool(config.storage_s3_secret_key),
+    )
+
+
+@router.get("/backup-settings", response_model=BackupSettingsRead)
+async def get_backup_settings(
+    session: AsyncSession = Depends(get_async_session),
+    _user: User = Depends(current_superuser),
+):
+    """The effective backup configuration: saved overrides over env values.
+
+    Secrets come back as *_set flags only.
+    """
+    config = await backup_config.get_backup_config(session)
+    return _backup_settings_read(config)
+
+
+@router.put("/backup-settings", response_model=BackupSettingsRead)
+async def update_backup_settings(
+    data: BackupSettingsUpdate,
+    session: AsyncSession = Depends(get_async_session),
+    _user: User = Depends(current_superuser),
+):
+    await backup_config.save_backup_settings(session, data)
+    config = await backup_config.get_backup_config(session)
+    return _backup_settings_read(config)
+
+
+@router.post("/backup-settings/test-s3", response_model=BackupS3TestResult)
+async def test_backup_s3(
+    session: AsyncSession = Depends(get_async_session),
+    _user: User = Depends(current_superuser),
+    data: BackupS3TestRequest | None = None,
+):
+    """Probe the S3 bucket with the saved or just-submitted credentials."""
+    success, error = await backup_config.test_s3_connection(session, data)
+    return BackupS3TestResult(success=success, error=error)
+
+
+@router.post("/backup/run", response_model=BackupRunResult)
+async def run_backup_now(
+    _user: User = Depends(current_superuser),
+):
+    """Enqueue the scheduled backup task immediately."""
+    from app.worker import celery_app
+
+    try:
+        result = celery_app.send_task(
+            "app.tasks.backup_tasks.scheduled_backup", kwargs={"force": True}
+        )
+    except Exception as exc:
+        logger.warning("Backup dispatch failed: %s", type(exc).__name__)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Task queue unavailable",
+        ) from exc
+    return BackupRunResult(task_id=result.id)
 
 
 @router.get("/registration-status")

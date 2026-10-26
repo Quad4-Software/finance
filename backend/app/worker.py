@@ -82,9 +82,10 @@ celery_app.conf.beat_schedule = {
     },
     "scheduled-backup-daily": {
         "task": "app.tasks.backup_tasks.scheduled_backup",
-        # Daily at BACKUP_SCHEDULE_HOUR (UTC). Archives every workspace to
-        # the configured storage and prunes past BACKUP_RETENTION_COUNT.
-        "schedule": crontab(hour=settings.backup_schedule_hour, minute=0),
+        # Hourly: the task itself compares the current hour to the effective
+        # BACKUP_SCHEDULE_HOUR, which admins can override at runtime without
+        # restarting beat.
+        "schedule": crontab(minute=0),
     },
 }
 

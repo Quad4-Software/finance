@@ -16,11 +16,59 @@ from app.providers.storage import StorageProvider, StoredFile
 logger = logging.getLogger(__name__)
 
 
-class S3StorageProvider(StorageProvider):
-    """Store files in an S3 bucket."""
+def build_s3_client(
+    *,
+    region: str | None = None,
+    access_key: str | None = None,
+    secret_key: str | None = None,
+    endpoint_url: str | None = None,
+):
+    """Create a boto3 S3 client.
 
-    def __init__(self) -> None:
+    Each argument falls back to the matching STORAGE_S3_* setting, so
+    callers pass admin-saved overrides or nothing at all.
+    """
+    import boto3
+
+    settings = get_settings()
+    region = region or settings.storage_s3_region
+    access_key = access_key or settings.storage_s3_access_key.get_secret_value()
+    secret_key = secret_key or settings.storage_s3_secret_key.get_secret_value()
+    endpoint_url = endpoint_url or settings.storage_s3_endpoint_url
+    kwargs: dict = {}
+    if region:
+        kwargs["region_name"] = region
+    if access_key:
+        kwargs["aws_access_key_id"] = access_key
+        kwargs["aws_secret_access_key"] = secret_key
+    if endpoint_url:
+        kwargs["endpoint_url"] = endpoint_url
+    return boto3.client("s3", **kwargs)
+
+
+class S3StorageProvider(StorageProvider):
+    """Store files in an S3 bucket.
+
+    The keyword arguments override the STORAGE_S3_* env settings; the admin
+    backup configuration uses them while the process-wide provider keeps
+    the defaults.
+    """
+
+    def __init__(
+        self,
+        *,
+        bucket: str | None = None,
+        region: str | None = None,
+        access_key: str | None = None,
+        secret_key: str | None = None,
+        endpoint_url: str | None = None,
+    ) -> None:
         self._client = None
+        self._bucket_name = bucket
+        self._region = region
+        self._access_key = access_key
+        self._secret_key = secret_key
+        self._endpoint_url = endpoint_url
 
     @property
     def name(self) -> str:
@@ -28,25 +76,19 @@ class S3StorageProvider(StorageProvider):
 
     def _client_or_raise(self):
         if self._client is None:
-            import boto3
-
-            settings = get_settings()
-            if not settings.storage_s3_bucket:
+            if not self._bucket:
                 raise RuntimeError("STORAGE_PROVIDER=s3 requires STORAGE_S3_BUCKET to be set")
-            kwargs: dict = {}
-            if settings.storage_s3_region:
-                kwargs["region_name"] = settings.storage_s3_region
-            if settings.storage_s3_access_key.get_secret_value():
-                kwargs["aws_access_key_id"] = settings.storage_s3_access_key.get_secret_value()
-                kwargs["aws_secret_access_key"] = settings.storage_s3_secret_key.get_secret_value()
-            if settings.storage_s3_endpoint_url:
-                kwargs["endpoint_url"] = settings.storage_s3_endpoint_url
-            self._client = boto3.client("s3", **kwargs)
+            self._client = build_s3_client(
+                region=self._region,
+                access_key=self._access_key,
+                secret_key=self._secret_key,
+                endpoint_url=self._endpoint_url,
+            )
         return self._client
 
     @property
     def _bucket(self) -> str:
-        bucket = get_settings().storage_s3_bucket
+        bucket = self._bucket_name or get_settings().storage_s3_bucket
         if not bucket:
             raise RuntimeError("STORAGE_PROVIDER=s3 requires STORAGE_S3_BUCKET to be set")
         return bucket

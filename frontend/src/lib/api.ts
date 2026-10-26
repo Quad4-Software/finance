@@ -1662,6 +1662,52 @@ export const timezones = {
   },
 }
 
+// Scheduled backup configuration. Secrets are write-only: the read shape
+// carries *_set flags instead of values.
+export interface BackupSettings {
+  storage_provider: 'local' | 's3'
+  backup_schedule_hour: number
+  backup_retention_count: number
+  backup_local_path: string
+  backup_encryption_key_set: boolean
+  storage_s3_bucket: string
+  storage_s3_region: string
+  storage_s3_endpoint_url: string
+  storage_s3_access_key_set: boolean
+  storage_s3_secret_key_set: boolean
+}
+
+export interface BackupSettingsUpdate {
+  storage_provider?: 'local' | 's3'
+  backup_schedule_hour?: number
+  backup_retention_count?: number
+  backup_local_path?: string
+  backup_encryption_key?: string
+  storage_s3_bucket?: string
+  storage_s3_region?: string
+  storage_s3_endpoint_url?: string
+  storage_s3_access_key?: string
+  storage_s3_secret_key?: string
+}
+
+export interface BackupS3TestRequest {
+  storage_s3_bucket?: string
+  storage_s3_region?: string
+  storage_s3_endpoint_url?: string
+  storage_s3_access_key?: string
+  storage_s3_secret_key?: string
+}
+
+export interface BackupS3TestResult {
+  success: boolean
+  error: string | null
+}
+
+export interface BackupRunResult {
+  task_id: string
+  status: string
+}
+
 export const admin = {
   listUsers: async (params?: { search?: string; page?: number; limit?: number }): Promise<AdminUserList> => {
     const { data } = await api.get('/admin/users', { params })
@@ -1715,6 +1761,22 @@ export const admin = {
   },
   defaultColors: async (): Promise<{ light: string | null; dark: string | null }> => {
     const { data } = await api.get('/admin/default-colors')
+    return data
+  },
+  backupSettings: async (): Promise<BackupSettings> => {
+    const { data } = await api.get('/admin/backup-settings')
+    return data
+  },
+  updateBackupSettings: async (payload: BackupSettingsUpdate): Promise<BackupSettings> => {
+    const { data } = await api.put('/admin/backup-settings', payload)
+    return data
+  },
+  testBackupS3: async (payload: BackupS3TestRequest): Promise<BackupS3TestResult> => {
+    const { data } = await api.post('/admin/backup-settings/test-s3', payload)
+    return data
+  },
+  runBackupNow: async (): Promise<BackupRunResult> => {
+    const { data } = await api.post('/admin/backup/run')
     return data
   },
 }

@@ -16,10 +16,8 @@ WORKDIR /app
 # checking, so the image only ever contains the exact audited versions.
 # This layer is cached until pyproject.toml or uv.lock change.
 COPY pyproject.toml uv.lock ./
-# venv lives outside /app so a dev-mode source bind mount over /app does not
-# shadow the installed dependencies.
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+RUN python -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
 RUN uv export --frozen --no-emit-project -o /tmp/requirements.txt \
     && pip install --no-cache-dir --require-hashes -r /tmp/requirements.txt \
     && rm /tmp/requirements.txt
@@ -35,7 +33,7 @@ FROM cgr.dev/chainguard/python:latest
 
 WORKDIR /app
 
-COPY --from=build /opt/venv /opt/venv
+COPY --from=build /app/venv /app/venv
 # Runtime needs the package source (migrations, MCP server, CLI entry), not
 # the whole build context - and never the venv twice.
 COPY --from=build /app/app /app/app
@@ -46,7 +44,7 @@ COPY --from=build /app/mcp_server /app/mcp_server
 # the nonroot ownership, so the runtime user can write without any chown.
 COPY --from=build --chown=65532:65532 /app/data-skel /app/data
 
-ENV PATH="/opt/venv/bin:$PATH" \
+ENV PATH="/app/venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     STORAGE_LOCAL_PATH=/app/data/attachments \
     BACKUP_LOCAL_PATH=/app/data/backups \

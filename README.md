@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="favicons/quad4-lockup-on-dark.png" width="360" alt="Quad4 Finance" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="favicons/quad4-mark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="favicons/quad4-mark-black.svg" />
+    <img src="favicons/quad4-mark.svg" width="160" alt="Quad4" />
+  </picture>
 </p>
 
 <h3 align="center">Finance apps want your data. This one doesn't.</h3>
@@ -13,7 +17,7 @@ Quad4 Finance is a security-hardened fork of <a href="https://github.com/securo-
 **Linux & macOS** (uses Docker or Podman; installs Docker if neither is present):
 
 ```bash
-git clone https://github.com/Quad4-Software/quad4-finance.git && cd quad4-finance
+git clone https://github.com/Quad4-Software/finance.git && cd finance
 ./install.sh
 ```
 

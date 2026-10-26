@@ -3,6 +3,11 @@ name: Build and Push Docker Images
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build (e.g. v1.0.0)
+        required: true
 
 env:
   REGISTRY: ghcr.io
@@ -136,7 +141,7 @@ jobs:
           provenance: mode=max
           sbom: true
           build-args: |
-            VITE_APP_VERSION=${{ github.event.release.tag_name }}
+            VITE_APP_VERSION=${{ inputs.tag || github.event.release.tag_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -185,7 +190,7 @@ jobs:
         run: |
           # Strip the 'v' prefix from the release tag if it exists, as helm
           # chart version needs to be semver without v.
-          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${{ inputs.tag || github.event.release.tag_name }}"
           VERSION="${VERSION#v}"
 
           echo "Injecting version $VERSION into values.yaml"

@@ -108,7 +108,13 @@ x-backend-base: &backend-base
     db: { condition: service_healthy }
     redis: { condition: service_healthy }
   volumes:
-    - ./backend:/app
+    # Bind-mount only the source dirs so the image's /app/venv stays
+    # reachable; uvicorn --reload watches the mounted tree.
+    - ./backend/app:/app/app
+    - ./backend/alembic:/app/alembic
+    - ./backend/alembic.ini:/app/alembic.ini
+    - ./backend/mcp_server:/app/mcp_server
+    - ./backend/pyproject.toml:/app/pyproject.toml
     - ./secrets:/app/secrets:ro
     - attachments:/app/data/attachments
     - backups:/app/data/backups

@@ -1,6 +1,6 @@
 # Quad4 Finance Helm Chart
 
-[Quad4 Finance](https://github.com/Quad4-Software/quad4-finance) is an advanced, self-hosted personal finance manager with built-in AI agents. This Helm chart provides a complete, production-ready deployment of Quad4 Finance to any Kubernetes cluster.
+[Quad4 Finance](https://github.com/Quad4-Software/finance) is an advanced, self-hosted personal finance manager with built-in AI agents. This Helm chart provides a complete, production-ready deployment of Quad4 Finance to any Kubernetes cluster.
 
 ## Features
 
@@ -41,7 +41,7 @@ helm install quad4 ./charts/quad4
 All application-level features (such as AI Services, OIDC authentication, and Open Banking integrations) can be configured directly through Helm.
 The keys in the `config:` and `secret:` blocks of the `values.yaml` map directly to the `UPPER_SNAKE_CASE` environment variables used in the standard Docker setup (converted to `camelCase`).
 
-For a full list of available environment variables and API keys, please refer to the **[Quad4 Finance Application Configuration Guide](https://github.com/Quad4-Software/quad4-finance)**.
+For a full list of available environment variables and API keys, please refer to the **[Quad4 Finance Application Configuration Guide](https://github.com/Quad4-Software/finance)**.
 
 ### Secrets Management (Production)
 

@@ -1,7 +1,7 @@
 import { execSync, execFileSync } from 'node:child_process'
-const officialReleaseRepo = 'https://github.com/Quad4-Software/quad4-finance.git'
+const officialReleaseRepo = 'https://github.com/Quad4-Software/finance.git'
 const officialLatestReleaseApi =
-  'https://api.github.com/repos/Quad4-Software/quad4-finance/releases/latest'
+  'https://api.github.com/repos/Quad4-Software/finance/releases/latest'
 const semverPattern =
   /^v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 

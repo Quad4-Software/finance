@@ -30,7 +30,7 @@ _PGVECTOR_MISSING_MSG = (
     "  pgvector, then re-run the upgrade:\n\n"
     "      image: pgvector/pgvector:pg16   # was: postgres:16-alpine\n\n"
     "  Your data volume is preserved (same on-disk format).\n"
-    "  See https://github.com/Quad4-Software/quad4-finance/releases/tag/v0.11.0\n"
+    "  See https://github.com/Quad4-Software/finance/releases/tag/v0.11.0\n"
 )
 
 

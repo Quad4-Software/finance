@@ -42,7 +42,7 @@ Quad4 Finance includes advanced features like AI Agents, OIDC authentication, an
 These can be configured by providing the necessary API keys in your `values.yaml` or an existing Kubernetes `Secret`.
 
 For detailed configuration instructions, please refer to the official documentation:
-  https://github.com/Quad4-Software/quad4-finance
+  https://github.com/Quad4-Software/finance
 
 ================================================================================
 3. Check Deployment Status

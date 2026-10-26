@@ -13,7 +13,7 @@ Thanks for your interest in contributing to Quad4 Finance! This guide will help 
 
 New here? The smoothest first contribution is a small, self-contained one:
 
-- Browse the [open issues](https://github.com/Quad4-Software/quad4-finance/issues), especially those labeled `good first issue` or `help wanted`, and pick something that already has a clear scope.
+- Browse the [open issues](https://github.com/Quad4-Software/finance/issues), especially those labeled `good first issue` or `help wanted`, and pick something that already has a clear scope.
 - Small bug fixes, docs improvements, and translation updates are always welcome and don't need any prior discussion, just open the PR.
 - Comment on an issue to let others know you're picking it up, so two people don't work on the same thing.
 

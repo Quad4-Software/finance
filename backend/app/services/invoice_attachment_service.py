@@ -1,7 +1,7 @@
 """Gathering paper under an invoice.
 
-Mirrors `attachment_service` -- same validation, same storage provider,
-same sanitised filenames -- and adds the two things an invoice needs that
+Mirrors `attachment_service` - same validation, same storage provider,
+same sanitised filenames - and adds the two things an invoice needs that
 a transaction does not: the role a file plays, and which file *is* the
 document.
 """
@@ -120,7 +120,7 @@ async def upload(
 
     # Checked before the bytes are written. `source` + `external_id` is
     # unique per workspace, so a second sync of the same file is rejected
-    # by the index -- and if that happened after the upload, the blob it
+    # by the index - and if that happened after the upload, the blob it
     # had just written would stay in storage with no row pointing at it
     # and nothing to find it by.
     if source and external_id:
@@ -269,7 +269,7 @@ async def cleanup_files(session: AsyncSession, invoice_id: uuid.UUID) -> None:
     """Remove the stored files for an invoice about to be deleted.
 
     The rows go with the invoice through the cascade; the files have to be
-    asked for, and are best-effort -- one already gone must not block a
+    asked for, and are best-effort - one already gone must not block a
     delete the user asked for.
     """
     result = await session.execute(

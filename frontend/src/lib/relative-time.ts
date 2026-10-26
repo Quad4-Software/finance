@@ -1,5 +1,5 @@
 /** Compact relative-time formatter shared by chat lists and similar
- *  surfaces -- "2m ago / 3h ago / yesterday / 4d ago / Mar 14".
+ *  surfaces - "2m ago / 3h ago / yesterday / 4d ago / Mar 14".
  *  Plain Date math, no date library. */
 export function formatRelative(iso: string): string {
   const d = new Date(iso)

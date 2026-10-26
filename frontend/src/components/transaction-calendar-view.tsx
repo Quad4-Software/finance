@@ -192,7 +192,7 @@ export function TransactionCalendarView({
               onSelect={() => onSelectedDateChange(day.date)}
               // The container clips the grid with rounded-xl + overflow-hidden, so the
               // two bottom corner cells carry a matching radius (12px outer − 1px
-              // border) -- otherwise their selection/focus ring loses its corner.
+              // border) - otherwise their selection/focus ring loses its corner.
               className={cn(
                 index === calendar.days.length - 7 && 'rounded-bl-[11px]',
                 index === calendar.days.length - 1 && 'rounded-br-[11px]',

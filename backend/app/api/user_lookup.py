@@ -1,9 +1,9 @@
 """User lookup for group invites.
 
 Two modes:
-- ``/lookup`` -- exact-match by email, used to validate a typed address
+- ``/lookup`` - exact-match by email, used to validate a typed address
   before creating a member.
-- ``/directory`` -- flat list of all users on the instance, used to power
+- ``/directory`` - flat list of all users on the instance, used to power
   the "pick an existing user" dropdown when adding a member.
 
 The directory endpoint exposes every user's email to any authenticated
@@ -54,7 +54,7 @@ async def list_users_directory(
     session: AsyncSession = Depends(get_async_session),
     _: User = Depends(current_active_user),
 ):
-    """List every user on the instance -- for the member-picker dropdown.
+    """List every user on the instance - for the member-picker dropdown.
 
     Single-tenant assumption: scope to org once multi-tenancy lands.
     """

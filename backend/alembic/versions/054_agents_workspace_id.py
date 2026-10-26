@@ -6,7 +6,7 @@ Create Date: 2026-05-26
 
 Agents are tenant-scoped: a workspace's own assistants don't show up
 in another workspace. Conversations inherit the workspace from the
-agent they were started against -- switching workspaces during a chat
+agent they were started against - switching workspaces during a chat
 isn't supported (the agent itself doesn't follow).
 
 Backfill: every existing agent + conversation reparents to its owning

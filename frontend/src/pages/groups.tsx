@@ -163,7 +163,7 @@ export default function GroupsPage() {
         }
       />
 
-      {/* Status filter -- pill buttons matching goals.tsx */}
+      {/* Status filter - pill buttons matching goals.tsx */}
       <div className="flex items-center gap-2 mb-4">
         {(['active', 'archived', 'all'] as StatusFilter[]).map((s) => (
           <button
@@ -224,7 +224,7 @@ export default function GroupsPage() {
                 className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted cursor-pointer transition-colors"
                 onClick={() => navigate(`/groups/${group.id}`)}
               >
-                {/* Avatar circle -- colored using the group's `color` field */}
+                {/* Avatar circle - colored using the group's `color` field */}
                 <div
                   className="h-10 w-10 rounded-full flex items-center justify-center shrink-0"
                   style={{ backgroundColor: `${group.color}22`, color: group.color }}

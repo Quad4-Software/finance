@@ -540,7 +540,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                     </Command.Empty>
                   )}
 
-                  {/* Entity results -- highest priority when searching */}
+                  {/* Entity results - highest priority when searching */}
                   {(['transaction', 'account', 'payee', 'category', 'goal', 'asset'] as SearchHitType[]).map((type) => {
                     const items = grouped.get(type) ?? []
                     if (items.length === 0) return null
@@ -608,7 +608,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                     )
                   })}
 
-                  {/* Quick actions -- lower priority fallback while searching */}
+                  {/* Quick actions - lower priority fallback while searching */}
                   {filteredQuickActions.length > 0 && (
                     <Group icon={<Zap size={11} />} labelKey="cmdk.groups.quickActions">
                       {filteredQuickActions.map((a) => {
@@ -638,7 +638,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                     </Group>
                   )}
 
-                  {/* Navigation -- lowest priority fallback while searching */}
+                  {/* Navigation - lowest priority fallback while searching */}
                   {filteredNavItems.length > 0 && (
                     <Group icon={<Compass size={11} />} labelKey="cmdk.groups.navigation">
                       {filteredNavItems.map((n) => {

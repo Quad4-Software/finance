@@ -15,12 +15,12 @@ interface Props {
  * Tailwind-styled GFM markdown for chat messages.
  *
  * Deliberately conservative: no raw HTML, no images, links open in a new
- * tab with rel=noopener. Sized to feel right inside the chat bubble -- not
+ * tab with rel=noopener. Sized to feel right inside the chat bubble - not
  * a documentation page.
  *
  * Wrapped in React.memo at the bottom so static assistant messages
  * (including embedded `quad4-chart` blocks) don't re-render on every
- * keystroke in the chat input -- they were causing Recharts to fully
+ * keystroke in the chat input - they were causing Recharts to fully
  * reanimate per character typed.
  */
 function _Markdown({ children, className }: Props) {
@@ -128,7 +128,7 @@ function _Markdown({ children, className }: Props) {
   )
 }
 
-/** Memoized export -- keystrokes in the chat input force the parent to
+/** Memoized export - keystrokes in the chat input force the parent to
  *  re-render, but assistant messages don't change, so we skip rendering
  *  them entirely when `children`/`className` are referentially the
  *  same. Critical for chats that contain a recharts figure (Recharts
@@ -149,7 +149,7 @@ interface ChartBoundaryState {
 
 /** Recharts can throw inside its layout effects (e.g. legend dispatcher
  *  hitting "Maximum update depth exceeded" in tight panel widths). A
- *  thrown error in a chart should NOT take the whole chat down -- degrade
+ *  thrown error in a chart should NOT take the whole chat down - degrade
  *  to a code block so the user still sees the JSON the model produced. */
 class ChartErrorBoundary extends Component<ChartBoundaryProps, ChartBoundaryState> {
   state: ChartBoundaryState = { hasError: false }

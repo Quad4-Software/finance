@@ -111,7 +111,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Auth routes -- custom login/logout with 2FA support (mounted first to take precedence)
+# Auth routes - custom login/logout with 2FA support (mounted first to take precedence)
 app.include_router(
     custom_auth_router,
     prefix="/api/auth",
@@ -194,7 +194,7 @@ app.include_router(admin_router)
 app.include_router(info_router)
 
 
-# Optional agents/MCP/LLM module -- fully gated by AGENTS_ENABLED so users
+# Optional agents/MCP/LLM module - fully gated by AGENTS_ENABLED so users
 # who don't want this feature pay zero cost (no imports, no routes, no
 # background tasks). The module itself is self-contained in app/agents/.
 if os.getenv("AGENTS_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on"):
@@ -217,7 +217,7 @@ if os.getenv("AGENTS_ENABLED", "false").strip().lower() in ("1", "true", "yes", 
         app.include_router(agents_router)
         app.include_router(agents_chat_router)
         app.include_router(agents_knowledge_router)
-        logger.info("Agents feature enabled -- mounted /api/agents routes")
+        logger.info("Agents feature enabled - mounted /api/agents routes")
     except Exception:
         logger.exception("Agents feature flag is on but import failed; routes not mounted")
 

@@ -11,7 +11,7 @@ The protocol is intentionally simple: there's no OAuth dance, no widget, no
 on-demand refresh, no MFA. Every read goes to the bridge, which pulls from
 the bank on its own schedule. Rate limits (24 req/day per access token for
 the all-accounts endpoint, plus per-account quotas) are documented at
-https://beta-bridge.simplefin.org/info/developers -- we don't try to enforce
+https://beta-bridge.simplefin.org/info/developers - we don't try to enforce
 them client-side; the bridge surfaces warnings in the ``errlist`` response.
 
 All SimpleFIN-specific shapes (Setup Token base64, ``errlist`` codes, 90-day
@@ -127,8 +127,8 @@ def _iso_currency(value: Any, fallback: Optional[str]) -> Optional[str]:
     SimpleFIN's ``currency`` fields are populated by the bank connector, and
     for crypto/brokerage positions some connectors put the asset's ticker
     there instead (e.g. ``"DOGE"``) rather than an ISO 4217 code. Every
-    column these land in -- ``accounts.currency``, ``transactions.currency``,
-    ``assets.currency`` -- is ``VARCHAR(3)``, so anything longer overflows the
+    column these land in - ``accounts.currency``, ``transactions.currency``,
+    ``assets.currency`` - is ``VARCHAR(3)``, so anything longer overflows the
     write and takes down the whole connection's sync (issue #448).
 
     This is a shape check, not a validity check: a 3-letter ticker like
@@ -268,7 +268,7 @@ class SimpleFinProvider(BankProvider):
         """Claim a SimpleFIN Access URL from a Setup Token.
 
         The endpoint name is a leftover from the OAuth flow but the contract
-        -- "given an opaque code, produce a ConnectionData" -- applies cleanly
+        - "given an opaque code, produce a ConnectionData" - applies cleanly
         to token-paste providers. The Setup Token is a single-use base64
         string from a SimpleFIN server; claiming it yields an Access URL that
         embeds Basic Auth credentials for subsequent reads.
@@ -325,7 +325,7 @@ class SimpleFinProvider(BankProvider):
             credentials=credentials,
             accounts=accounts,
             # SimpleFIN has no logo image, but its org metadata carries the
-            # bank's website -- derive a favicon from it (same approach as
+            # bank's website - derive a favicon from it (same approach as
             # asset logos).
             logo_url=favicon_url_for(self._org_website(payload)),
         )
@@ -403,7 +403,7 @@ class SimpleFinProvider(BankProvider):
 
         The Bridge puts institutions in a top-level connections[] matched by
         conn_id; spec-style servers attach an ``org`` object to each account
-        instead -- same fallback _org_website already does. All-None when the
+        instead - same fallback _org_website already does. All-None when the
         payload carries neither.
         """
         conn_id = raw_acc.get("conn_id")

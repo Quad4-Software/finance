@@ -12,7 +12,7 @@
  *      country's document. This covers forty of the forty-two kinds. The map
  *      comes from the server with the kinds themselves, so it cannot disagree
  *      with what the picker offers.
- *   2. **The value.** For `vat`, the country is *inside the number* -- that is
+ *   2. **The value.** For `vat`, the country is *inside the number* - that is
  *      precisely why one kind can serve nineteen countries. `NL802225395B01`
  *      is Dutch because it says so.
  *

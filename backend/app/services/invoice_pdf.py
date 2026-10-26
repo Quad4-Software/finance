@@ -2,7 +2,7 @@
 
 This module decides nothing about content. Everything it prints came
 from `invoice_document.build_document`, which is the same structure the
-web preview renders -- so the two cannot drift into disagreeing about
+web preview renders - so the two cannot drift into disagreeing about
 what the invoice says.
 
 ReportLab rather than an HTML-to-PDF engine: WeasyPrint and its peers
@@ -30,7 +30,7 @@ Letting it follow the totals put "how to pay me" halfway up an otherwise
 empty page, which is the layout this replaces.
 
 The body splits when it does not fit. A long invoice is genuinely more
-than one page, and the alternative -- what this module did before -- is
+than one page, and the alternative - what this module did before - is
 drawing line items off the bottom edge where nobody ever sees them.
 """
 import io
@@ -102,7 +102,7 @@ def _para(
         alignment=align,
     )
     # Escaped, because everything reaching this function is somebody's
-    # data -- a client called "Alpha & Beta <Ltda>", a line reading
+    # data - a client called "Alpha & Beta <Ltda>", a line reading
     # "R&D <phase 1>". ReportLab reads its argument as markup, so
     # unescaped text is not merely a crash risk: `<Ltda>` is silently
     # swallowed as an unknown tag and the client's name goes out on the
@@ -122,7 +122,7 @@ def _title(document: InvoiceDocument) -> str:
 
 
 def _label(text: str) -> Paragraph:
-    """A section label. Small, spaced, quiet -- the same treatment the web
+    """A section label. Small, spaced, quiet - the same treatment the web
     preview gives it, so the two read as one design."""
     return _para(text.upper(), size=7, color=MUTED, bold=True, leading=9)
 
@@ -353,7 +353,7 @@ def _lines_table(document: InvoiceDocument) -> Optional[Table]:
     # `splitInRow` lets a single row break across pages. Without it a
     # description taller than one page cannot be split at all, and the
     # paginating loop below asks for a fresh page, fails again on the
-    # empty page, and asks again -- forever.
+    # empty page, and asks again - forever.
     table = Table(rows, colWidths=widths, repeatRows=1, splitInRow=1)
     table.setStyle(TableStyle([
         ("VALIGN", (0, 0), (-1, -1), "TOP"),

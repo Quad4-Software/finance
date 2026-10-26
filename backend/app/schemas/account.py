@@ -92,7 +92,7 @@ class AccountRead(AccountBase):
 
 
 class CreditCardBillRead(BaseModel):
-    """Provider-agnostic credit-card bill (fatura) -- issue #92.
+    """Provider-agnostic credit-card bill (fatura) - issue #92.
 
     Provider-specific extras live in `raw_data` on the model but are not
     exposed here so that consumers don't form provider-shaped dependencies.

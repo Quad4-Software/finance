@@ -1,4 +1,4 @@
-"""Pure rule evaluation engine -- no DB access."""
+"""Pure rule evaluation engine - no DB access."""
 import re
 import unicodedata
 import uuid
@@ -64,7 +64,7 @@ def _match_condition(condition: dict, tx: "Transaction") -> bool:
     # A blank value matches everything: "" is a substring of any string, every
     # string starts/ends with it, an empty regex always matches, and numeric
     # comparisons fall back to 0. Creation now rejects these, but rules saved
-    # before that validation existed are still in users' databases -- refuse to
+    # before that validation existed are still in users' databases - refuse to
     # match rather than recategorizing their whole ledger. Explicit 0/False
     # are real values and pass through.
     if value is None or (isinstance(value, str) and not value.strip()):
@@ -167,7 +167,7 @@ def evaluate_conditions(conditions_op: str, conditions: list[dict], tx: "Transac
     """Return True if the transaction matches the rule's conditions.
 
     Each entry is either a leaf condition (`field`/`op`/`value`) or a group that
-    joins its own leaves with its own operator, letting a rule mix AND and OR --
+    joins its own leaves with its own operator, letting a rule mix AND and OR -
     e.g. `type is debit AND (description contains UBER OR contains 99POP)`.
     """
     if not conditions:

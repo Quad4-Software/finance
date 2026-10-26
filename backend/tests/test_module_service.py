@@ -19,7 +19,7 @@ from app.services.module_service import (
 )
 
 # What a personal workspace shows. This is the app exactly as it was
-# before modules existed -- spelled out rather than derived, so removing
+# before modules existed - spelled out rather than derived, so removing
 # something from an existing user has to be a deliberate edit here.
 PERSONAL_MODULES = [
     "accounts",
@@ -113,7 +113,7 @@ def test_deployment_layer_keeps_the_module_when_its_flag_is_on():
 
 def test_deployment_layer_cannot_grant():
     """A flag being on must not introduce a module the kind policy
-    withheld -- otherwise an operator could enable a module the policy
+    withheld - otherwise an operator could enable a module the policy
     says doesn't belong, and the invariants stop holding."""
     resolver = ModuleResolver(
         deployment_flags={ModuleId.INVOICES: "SOME_CAPABILITY_ENABLED"},

@@ -62,7 +62,7 @@ class GroupRead(GroupBase):
     user_id: uuid.UUID
     is_archived: bool
     # Derived per-request: True if the requester is the group owner.
-    # Linked members get False -- the frontend uses this to hide edit UI.
+    # Linked members get False - the frontend uses this to hide edit UI.
     is_owner: bool = True
     created_at: datetime
     members: list[GroupMemberRead] = []

@@ -25,7 +25,7 @@ later is too late: `payees.source`, and the retirement of the `merchant`
 value from `payees.type`.
 
 `type` now holds a legal nature (`person` or `company`) or null. It used to
-also hold `merchant`, which is a *role* -- something a counterparty does,
+also hold `merchant`, which is a *role* - something a counterparty does,
 not what it legally is. That value was the only thing distinguishing the
 hundreds of rows sync creates from card descriptors, so it is harvested
 into `source` before being dropped rather than discarded.
@@ -33,7 +33,7 @@ into `source` before being dropped rather than discarded.
 `source` has to be added now: provenance is only knowable at the moment of
 insert, so any payee created before the column exists could never be
 classified afterwards. The seeding below is the one and only chance to
-recover it for existing rows, and it is an inference, not a record -- a
+recover it for existing rows, and it is an inference, not a record - a
 payee somebody typed in by hand and left at the old `merchant` default is
 indistinguishable from one sync created, and lands in `sync`.
 """
@@ -111,8 +111,8 @@ def upgrade() -> None:
     # a bank descriptor, so those rows become unknown rather than being
     # guessed into `company`.
     #
-    # The server default has to go with it. An insert that omits `type` --
-    # which is what the bulk sync path emits, since it never sets one --
+    # The server default has to go with it. An insert that omits `type` -
+    # which is what the bulk sync path emits, since it never sets one -
     # would otherwise be handed `merchant` by the database and quietly
     # resurrect the value this migration exists to retire. Nothing in the
     # test suite would notice: tests build their schema from the model,

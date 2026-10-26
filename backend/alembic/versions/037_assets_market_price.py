@@ -9,7 +9,7 @@ market price instead of manual entry or a growth rule. Used by the new
 ``market_price`` valuation method: the user picks a ticker (AAPL, BTC-USD,
 PETR4.SA...), enters quantity, and a scheduled task keeps the price fresh.
 
-Nothing is backfilled -- existing assets stay on their current method.
+Nothing is backfilled - existing assets stay on their current method.
 """
 from typing import Sequence, Union
 

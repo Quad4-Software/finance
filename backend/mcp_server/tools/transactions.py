@@ -21,14 +21,14 @@ from mcp_server.tools._helpers import num, parse_date, parse_uuid, parse_uuid_li
         "with limit=1 and read `total` instead of paginating through "
         "everything. By default sorts by purchase date (most recent "
         "first) so 'what's my last transaction?' returns the actual "
-        "newest one -- change sort_by to 'date' for the credit-card-bill-"
+        "newest one - change sort_by to 'date' for the credit-card-bill-"
         "aware ordering used by the dashboard. Each row carries its "
         "native currency in `currency` and the user's primary-currency "
         "view in `amount_primary`. To answer 'do I have any EUR/USD/etc "
-        "transactions?' use the `currency` filter -- don't text-search "
+        "transactions?' use the `currency` filter - don't text-search "
         "the description. Each row also carries a `splits` field: when "
         "non-null, the transaction is shared via a Splitwise-style "
-        "group -- `splits.group_id` ties it back to a row from "
+        "group - `splits.group_id` ties it back to a row from "
         "`list_groups`, and `splits.members[]` shows each "
         "{member_id, member_name, is_self, share_amount, share_type, "
         "share_pct}. So 'is this transaction split?' is just `splits != "
@@ -41,17 +41,17 @@ from mcp_server.tools._helpers import num, parse_date, parse_uuid, parse_uuid_li
             "account_types": {
                 "type": "array",
                 "items": {"type": "string", "enum": ["checking", "savings", "credit_card", "wallet", "investment", "loan", "other"]},
-                "description": "Filter by account type -- e.g. ['credit_card'] for 'all my credit-card transactions'",
+                "description": "Filter by account type - e.g. ['credit_card'] for 'all my credit-card transactions'",
             },
             "category_ids": {"type": "array", "items": {"type": "string", "format": "uuid"}, "description": "Filter to specific categories"},
             "payee_id": {"type": "string", "format": "uuid", "description": "Filter to a single payee"},
-            "group_id": {"type": "string", "format": "uuid", "description": "Filter to transactions split with this expense-sharing group (Splitwise-style). The id comes from `list_groups`. Use this -- NOT a `search:'group_id:...'` hack -- to ask 'show all transactions in group X'."},
+            "group_id": {"type": "string", "format": "uuid", "description": "Filter to transactions split with this expense-sharing group (Splitwise-style). The id comes from `list_groups`. Use this - NOT a `search:'group_id:...'` hack - to ask 'show all transactions in group X'."},
             "from_date": {"type": "string", "format": "date", "description": "Inclusive lower bound (YYYY-MM-DD)"},
             "to_date": {"type": "string", "format": "date", "description": "Inclusive upper bound (YYYY-MM-DD)"},
             "search": {"type": "string", "description": "Substring match against description or payee"},
             "currency": {
                 "type": "string",
-                "description": "ISO currency code (BRL, USD, EUR, GBP, ...). Matches each transaction's native currency exactly. Use this -- not search -- for currency questions.",
+                "description": "ISO currency code (BRL, USD, EUR, GBP, ...). Matches each transaction's native currency exactly. Use this - not search - for currency questions.",
             },
             "min_amount": {
                 "type": "number",
@@ -86,7 +86,7 @@ from mcp_server.tools._helpers import num, parse_date, parse_uuid, parse_uuid_li
                 "enum": ["cash", "accrual"],
                 "description": "Override the global accounting mode for this query. Affects how credit-card transactions are bucketed by date.",
             },
-            "limit": {"type": "integer", "minimum": 1, "maximum": 50, "default": 25, "description": "Max rows per page. Capped at 50 -- bigger pages blow up token budgets on small models. Use `total` for counts and pagination via `page` to walk longer lists."},
+            "limit": {"type": "integer", "minimum": 1, "maximum": 50, "default": 25, "description": "Max rows per page. Capped at 50 - bigger pages blow up token budgets on small models. Use `total` for counts and pagination via `page` to walk longer lists."},
             "page": {"type": "integer", "minimum": 1, "default": 1},
         },
         "additionalProperties": False,
@@ -119,7 +119,7 @@ async def list_transactions(
     limit: int = 25,
     page: int = 1,
 ) -> dict[str, Any]:
-    # Hard cap regardless of what the LLM asks -- the schema says 50 but
+    # Hard cap regardless of what the LLM asks - the schema says 50 but
     # not every provider enforces additionalProperties / maximum.
     limit = max(1, min(int(limit), 50))
     ws_id = await resolve_workspace_id(session, ctx)
@@ -150,7 +150,7 @@ async def list_transactions(
         page=int(page),
     )
     # Resolve group + member metadata for any transaction with splits, in
-    # one batched query -- without this the agent has no way to tell that
+    # one batched query - without this the agent has no way to tell that
     # a transaction is split among a group's members ("is this Jantar a
     # solo expense?" -> "no, split with Marcelo + Tereza in Amigos").
     member_ids: set[Any] = set()
@@ -168,7 +168,7 @@ async def list_transactions(
         splits = getattr(t, "splits", None) or []
         if not splits:
             return None
-        # Splits all belong to the same group by invariant -- surface the
+        # Splits all belong to the same group by invariant - surface the
         # group id from any one of them so the model can correlate with
         # `list_groups` without a second tool call.
         group_id = None

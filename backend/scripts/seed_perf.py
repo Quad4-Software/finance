@@ -64,7 +64,7 @@ ACCOUNT_TEMPLATES = [
     {"name": "Euro Visa", "type": "credit_card", "currency": "EUR", "balance": Decimal("0.00"), "credit_limit": Decimal("8000.00")},
 ]
 
-# (name, color, icon)  -- first 22 are debit, last 8 are credit
+# (name, color, icon)  - first 22 are debit, last 8 are credit
 CATEGORY_TEMPLATES = [
     ("Groceries", "#22c55e", "shopping-cart"),
     ("Rent", "#ef4444", "home"),

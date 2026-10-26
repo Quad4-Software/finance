@@ -1,7 +1,7 @@
 """Workspace lifecycle + membership helpers.
 
 The Workspace entity sits between User and every financial entity. A
-user always belongs to at least one workspace -- their auto-created
+user always belongs to at least one workspace - their auto-created
 Personal workspace from registration. Additional workspaces (Freelancer,
 Small Business, etc.) can be created later via templates.
 """
@@ -90,7 +90,7 @@ async def create_personal_workspace_for_user(
 async def get_user_workspaces(session: AsyncSession, user_id: uuid.UUID) -> list[Workspace]:
     """Return every workspace the user is a member of, oldest first.
 
-    Does NOT include workspaces the user only manages externally -- those
+    Does NOT include workspaces the user only manages externally - those
     are listed separately by `get_managed_workspaces`. The listing
     endpoint unions the two so the frontend sees a single sorted set.
     """
@@ -135,7 +135,7 @@ async def is_workspace_manager(
 
 
 async def get_default_workspace(session: AsyncSession, user_id: uuid.UUID) -> Optional[Workspace]:
-    """The user's first (oldest) workspace -- used when no X-Workspace-Id header is set.
+    """The user's first (oldest) workspace - used when no X-Workspace-Id header is set.
 
     Falls back to a managed workspace if the user has no memberships
     (e.g. a manager who hasn't been invited to any of the workspaces
@@ -165,7 +165,7 @@ async def get_membership(
 
 def _virtual_manager_member(workspace_id: uuid.UUID, user_id: uuid.UUID) -> WorkspaceMember:
     """Construct an in-memory WorkspaceMember row representing manager
-    access. NOT persisted -- used only to flow through code paths that
+    access. NOT persisted - used only to flow through code paths that
     expect a `WorkspaceMember` value object."""
     virtual = WorkspaceMember(
         workspace_id=workspace_id,
@@ -225,7 +225,7 @@ async def create_workspace(
 
     By default the creator becomes the external manager (no
     `workspace_members` row). Pass `self_membership=True` to ALSO add
-    them as an owner -- useful when the creator is the human who'll
+    them as an owner - useful when the creator is the human who'll
     actually use the workspace day-to-day.
 
     `seed_defaults=True` (the default) seeds the same starter
@@ -258,7 +258,7 @@ async def create_workspace(
         )
         await session.flush()
     if seed_defaults:
-        # Local imports to dodge circular dependencies -- category_service
+        # Local imports to dodge circular dependencies - category_service
         # transitively pulls workspace_service through the autostamp
         # listener registration.
         from app.services.category_service import create_default_categories
@@ -276,7 +276,7 @@ async def create_workspace(
 async def list_members(session: AsyncSession, workspace_id: uuid.UUID) -> list[tuple[WorkspaceMember, User]]:
     """Return (membership, user) tuples for everyone in the workspace.
 
-    Implemented as two queries instead of a JOIN -- the User table comes
+    Implemented as two queries instead of a JOIN - the User table comes
     from fastapi-users with a portable `GUID` UUID type, while our own
     tables use Postgres-native `UUID`. Postgres handles the comparison
     transparently but SQLite stores them differently and the JOIN finds
@@ -331,7 +331,7 @@ async def update_member_role(
     member = await get_membership(session, workspace_id, user_id)
     if member is None:
         raise HTTPException(status_code=404, detail="Member not found")
-    # Block demoting the sole owner -- leaves the workspace ownerless.
+    # Block demoting the sole owner - leaves the workspace ownerless.
     if member.role == "owner" and new_role != "owner":
         owners = await session.execute(
             select(WorkspaceMember).where(

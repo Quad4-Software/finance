@@ -31,7 +31,7 @@ async def login(
     if user.is_2fa_enabled and user.totp_secret:
         available_methods.append("totp")
         # A passkey doubles as a second factor only when the user explicitly
-        # enabled 2FA. On its own it is a passwordless login alternative --
+        # enabled 2FA. On its own it is a passwordless login alternative -
         # requiring it on top of the password would permanently lock the
         # account if the passkey is lost (there are no recovery codes).
         passkey_count = await session.scalar(
@@ -51,7 +51,7 @@ async def login(
         )
         return {"requires_2fa": True, "temp_token": temp_token, "available_methods": available_methods}
 
-    # Normal login -- generate JWT
+    # Normal login - generate JWT
     strategy = get_jwt_strategy()
     token = await strategy.write_token(user)
     return {"access_token": token, "token_type": "bearer"}

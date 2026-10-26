@@ -52,7 +52,7 @@ async def test_spending_by_category(client, auth_headers, test_transactions):
         assert "category_name" in item
         assert "total" in item
         assert "percentage" in item
-        # total MUST be a number (float/int), not a string -- Recharts requires this
+        # total MUST be a number (float/int), not a string - Recharts requires this
         assert isinstance(item["total"], (int, float)), (
             f"total should be numeric, got {type(item['total']).__name__}: {item['total']}"
         )
@@ -63,7 +63,7 @@ async def test_spending_by_category(client, auth_headers, test_transactions):
 @pytest.mark.asyncio
 async def test_spending_by_category_with_month(client, auth_headers, test_transactions):
     """Spending by category filters by month correctly."""
-    # Current month -- when test transactions exist
+    # Current month - when test transactions exist
     response = await client.get(
         "/api/dashboard/spending-by-category",
         params={"month": _current_month_str()},
@@ -73,7 +73,7 @@ async def test_spending_by_category_with_month(client, auth_headers, test_transa
     data = response.json()
     assert len(data) > 0
 
-    # Previous month -- no test transactions
+    # Previous month - no test transactions
     response = await client.get(
         "/api/dashboard/spending-by-category",
         params={"month": _prev_month_str()},
@@ -103,7 +103,7 @@ async def test_summary_numeric_fields(client, auth_headers, test_transactions):
 async def test_dashboard_virtual_recurring_projection(
     client, auth_headers, test_categories, test_account
 ):
-    """Dashboard includes recurring projections via virtual computation -- no DB writes."""
+    """Dashboard includes recurring projections via virtual computation - no DB writes."""
     # Use a future month so projections always apply regardless of today's date.
     next_month = _next_month_str()
     next_month_date = date.fromisoformat(next_month)
@@ -207,7 +207,7 @@ async def test_dashboard_no_duplicates_on_concurrent_calls(
     assert summary_resp.status_code == 200
     assert spending_resp.status_code == 200
 
-    # Call them again -- results should be identical (no duplicate accumulation)
+    # Call them again - results should be identical (no duplicate accumulation)
     summary2 = await client.get(
         "/api/dashboard/summary", params={"month": next_month}, headers=auth_headers
     )
@@ -218,7 +218,7 @@ async def test_dashboard_no_duplicates_on_concurrent_calls(
     assert summary_resp.json()["monthly_expenses"] == summary2.json()["monthly_expenses"]
     assert spending_resp.json() == spending2.json()
 
-    # No transaction records should exist -- projections are virtual
+    # No transaction records should exist - projections are virtual
     if next_month_date.month == 12:
         month_end = next_month_date.replace(year=next_month_date.year + 1, month=1)
     else:
@@ -326,7 +326,7 @@ async def test_total_balance_computed_from_transactions(client, auth_headers):
     assert acc_resp.status_code == 201
     acc_id = acc_resp.json()["id"]
 
-    # Add a 200 debit -- balance should drop to 800
+    # Add a 200 debit - balance should drop to 800
     await client.post(
         "/api/transactions",
         json={
@@ -479,7 +479,7 @@ async def test_past_month_balance_filtered_by_end_of_month(client, auth_headers)
     past_last = past_first.replace(day=past_last_day)
     past_month_param = past_first.isoformat()
 
-    # Create an account with 1000 opening balance (today -- after the past month)
+    # Create an account with 1000 opening balance (today - after the past month)
     acc_resp = await client.post(
         "/api/accounts",
         json={"name": "TimeTest", "type": "checking", "balance": 1000.00, "currency": "BRL"},
@@ -502,7 +502,7 @@ async def test_past_month_balance_filtered_by_end_of_month(client, auth_headers)
         headers=auth_headers,
     )
 
-    # Query summary for past month -- balance should NOT include the opening_balance
+    # Query summary for past month - balance should NOT include the opening_balance
     # transaction (dated today) but SHOULD include the past month transaction.
     resp = await client.get(
         "/api/dashboard/summary",
@@ -600,7 +600,7 @@ async def test_balance_date_parameter_overrides_default_cutoff(client, auth_head
     assert total == 1000.0, f"Expected 1000.0 with cutoff 10 days ago, got {total}"
     assert data["balance_date"] == ten_days_ago
 
-    # Now query without balance_date (default cutoff = today) -- should include both
+    # Now query without balance_date (default cutoff = today) - should include both
     resp2 = await client.get(
         "/api/dashboard/summary",
         params={"month": today.replace(day=1).isoformat()},

@@ -75,7 +75,7 @@ async def create_user(
 
     # Seed default wallet, categories, and rules. The on_after_register
     # hook (auth.py) short-circuits when called programmatically with
-    # request=None -- which is exactly this path -- so admin-created users
+    # request=None - which is exactly this path - so admin-created users
     # would otherwise land with no defaults and a broken UX.
     lang = (user.preferences or {}).get("language", "en")
     # Every new user gets a Personal workspace + owner membership so the
@@ -257,7 +257,7 @@ async def is_registration_enabled(session: AsyncSession) -> bool:
 async def get_credit_card_accounting_mode(session: AsyncSession) -> str:
     """Return the global CC accounting mode: 'cash' or 'accrual'.
 
-    Global app setting -- affects how dashboard/reports/budgets bucket credit
+    Global app setting - affects how dashboard/reports/budgets bucket credit
     card transactions. Defaults to 'cash' (current behavior) when unset."""
     setting = await get_app_setting(session, "credit_card_accounting_mode")
     if setting and setting.value in ("cash", "accrual"):

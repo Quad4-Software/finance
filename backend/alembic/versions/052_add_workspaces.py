@@ -20,7 +20,7 @@ Strategy
 for entities where authorship is meaningful (transactions, groups). For
 purely workspace-shared catalog entities (categories, payees, rules,
 budgets, goals), `user_id` becomes audit-only and stops being used for
-visibility filtering -- the query layer pivots to `workspace_id`.
+visibility filtering - the query layer pivots to `workspace_id`.
 """
 
 from alembic import op
@@ -36,7 +36,7 @@ depends_on = None
 
 # Tables that get a direct workspace_id column backfilled from their own
 # user_id. Order doesn't matter for the schema change but matters for the
-# backfill -- none of these depend on each other.
+# backfill - none of these depend on each other.
 TABLES_WITH_USER_ID = [
     "accounts",
     "asset_groups",
@@ -172,7 +172,7 @@ def upgrade() -> None:
         op.alter_column(tbl, "workspace_id", nullable=False)
         op.create_index(f"ix_{tbl}_workspace_id", tbl, ["workspace_id"])
 
-    # 7. Tables without user_id but with a parent FK -- fill workspace_id
+    # 7. Tables without user_id but with a parent FK - fill workspace_id
     # transitively. Useful so per-row visibility checks don't have to
     # join through the parent every time.
     # asset_values -> assets.workspace_id

@@ -8,7 +8,7 @@ branches, and the net-worth credit-card / asset composition branches.
 ``to_char`` (and ``extract`` for weekly). Tests run on SQLite, so we register
 a ``to_char`` user-defined function on the shared test engine for the
 daily / monthly / yearly intervals (weekly relies on ``extract('isoyear')``
-which SQLite cannot compile and is therefore not exercised here -- its label
+which SQLite cannot compile and is therefore not exercised here - its label
 helper is covered by the existing pure-function tests).
 """
 import uuid
@@ -173,7 +173,7 @@ async def test_to_char_udf_registered(session: AsyncSession):
 
 
 # ---------------------------------------------------------------------------
-# get_income_expenses_report -- the big uncovered function (328-865)
+# get_income_expenses_report - the big uncovered function (328-865)
 # ---------------------------------------------------------------------------
 
 
@@ -377,14 +377,14 @@ async def test_income_expenses_change_percent_computed(session, test_user, test_
     report = await get_income_expenses_report(
         session, test_workspace.id, test_user.id, months=4, interval="monthly"
     )
-    # change_percent may be None only if the first trend net is 0 -- assert the
+    # change_percent may be None only if the first trend net is 0 - assert the
     # field is the right type either way and totals are correct.
     bd = {b.key: b.value for b in report.summary.breakdowns}
     assert bd["income"] == pytest.approx(4000.0)
 
 
 # ---------------------------------------------------------------------------
-# get_net_worth_report -- credit-card composition + asset-value branches
+# get_net_worth_report - credit-card composition + asset-value branches
 # ---------------------------------------------------------------------------
 
 
@@ -459,7 +459,7 @@ async def test_net_worth_at_credit_card_branch(session, test_user, test_workspac
 
 
 # ---------------------------------------------------------------------------
-# get_cash_flow_report -- non-daily interval aggregation (1261-1294)
+# get_cash_flow_report - non-daily interval aggregation (1261-1294)
 # ---------------------------------------------------------------------------
 
 
@@ -501,7 +501,7 @@ async def test_cash_flow_weekly_interval_aggregation(session, test_user, test_wo
 
 
 # ---------------------------------------------------------------------------
-# get_cash_flow_report -- baseline projection branch (_get_baseline_projection)
+# get_cash_flow_report - baseline projection branch (_get_baseline_projection)
 # ---------------------------------------------------------------------------
 
 
@@ -564,7 +564,7 @@ async def test_baseline_projection_with_history(session, test_user, test_workspa
 
 
 # ---------------------------------------------------------------------------
-# get_cash_flow_report -- accrual mode (pending CC purchases branch 1122-1152)
+# get_cash_flow_report - accrual mode (pending CC purchases branch 1122-1152)
 # ---------------------------------------------------------------------------
 
 

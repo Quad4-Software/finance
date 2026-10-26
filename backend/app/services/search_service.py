@@ -2,8 +2,8 @@
 
 Implements lightweight case-insensitive ILIKE matching across transactions,
 accounts, payees, categories, goals and assets. Designed to power the
-command palette (Cmd/Ctrl+K) on the frontend. Kept intentionally simple --
-no full-text indexes required -- but fast enough for tens of thousands of
+command palette (Cmd/Ctrl+K) on the frontend. Kept intentionally simple -
+no full-text indexes required - but fast enough for tens of thousands of
 rows thanks to per-entity LIMITs and trigger-word scoping.
 """
 
@@ -84,7 +84,7 @@ async def search_all(
 
     Transaction search additionally pulls in cross-workspace rows the
     caller participates in via group splits (the Splitwise projection
-    -- "concert" finds the parent that someone else paid for but is on
+    - "concert" finds the parent that someone else paid for but is on
     the caller's settlement ledger).
     """
     term = (query or "").strip()
@@ -94,7 +94,7 @@ async def search_all(
     pattern = _like(term)
     hits: list[SearchHit] = []
 
-    # -- Transactions -------------------------------------------------------
+    # - Transactions -------------------------------------------------------
     from app.models.group import GroupMember
     from app.models.transaction_split import TransactionSplit
 
@@ -142,7 +142,7 @@ async def search_all(
             )
         )
 
-    # -- Accounts -----------------------------------------------------------
+    # - Accounts -----------------------------------------------------------
     acc_result = await session.execute(
         select(Account)
         .where(
@@ -165,7 +165,7 @@ async def search_all(
             )
         )
 
-    # -- Payees -------------------------------------------------------------
+    # - Payees -------------------------------------------------------------
     payee_result = await session.execute(
         select(Payee)
         .where(
@@ -189,7 +189,7 @@ async def search_all(
             )
         )
 
-    # -- Categories ---------------------------------------------------------
+    # - Categories ---------------------------------------------------------
     cat_result = await session.execute(
         select(Category)
         .where(
@@ -210,7 +210,7 @@ async def search_all(
             )
         )
 
-    # -- Goals --------------------------------------------------------------
+    # - Goals --------------------------------------------------------------
     goal_result = await session.execute(
         select(Goal)
         .where(
@@ -234,7 +234,7 @@ async def search_all(
             )
         )
 
-    # -- Assets -------------------------------------------------------------
+    # - Assets -------------------------------------------------------------
     asset_result = await session.execute(
         select(Asset)
         .where(

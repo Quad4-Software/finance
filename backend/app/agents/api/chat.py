@@ -36,14 +36,14 @@ async def chat(
     body: SendMessageRequest,
     # Write-gated for what the agent can do on the caller's behalf, not for
     # the conversation row it persists. The tool set reachable from here
-    # includes `propose_create_transaction` and its siblings, which write --
+    # includes `propose_create_transaction` and its siblings, which write -
     # so a read-only member chatting could create financial data the HTTP
     # API would have refused them.
     #
     # This deliberately also blocks a viewer from *asking* questions, which
     # is a real use case (a read-only accountant reading the books). The way
     # to restore it is to make the tools role-aware so a viewer's session
-    # only exposes the reading ones -- not to drop this gate, which would
+    # only exposes the reading ones - not to drop this gate, which would
     # bring the write path back with it.
     ctx: WorkspaceContext = Depends(current_writable_workspace),
     session: AsyncSession = Depends(get_async_session),

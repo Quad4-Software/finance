@@ -18,7 +18,7 @@ export function CollectionFilterProvider({ children }: { children: ReactNode }) 
 
   const [activeCollectionId, setActiveId] = useState<string | null>(null)
 
-  // The active selection is persisted per workspace -- switching workspaces
+  // The active selection is persisted per workspace - switching workspaces
   // restores that workspace's last-used collection (or "all").
   const [loadedWsId, setLoadedWsId] = useState<string | null>(null)
   if (wsId && wsId !== loadedWsId) {

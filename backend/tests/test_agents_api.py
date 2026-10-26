@@ -112,7 +112,7 @@ async def test_agents_info_returns_configured_external_mcp_url(
 # --- External MCP tokens ---------------------------------------------------
 
 async def test_mcp_tokens_requires_auth(client: AsyncClient):
-    """The mint endpoint must reject unauthenticated calls -- otherwise any
+    """The mint endpoint must reject unauthenticated calls - otherwise any
     anonymous visitor could mint a long-lived token for an arbitrary user."""
     r = await client.post("/api/agents/mcp-tokens")
     assert r.status_code == 401
@@ -210,7 +210,7 @@ async def test_multi_tenant_scoping(client: AsyncClient, auth_headers: dict, oth
     assert r.status_code == 201
     aid = r.json()["id"]
 
-    # Other user lists their own agents -- empty.
+    # Other user lists their own agents - empty.
     r = await client.get("/api/agents", headers=other_auth_headers)
     assert r.status_code == 200
     assert r.json() == []
@@ -309,7 +309,7 @@ async def test_rename_conversation_404_other_user(
     client: AsyncClient, auth_headers: dict, other_auth_headers: dict, session: AsyncSession, test_user: User
 ):
     """auth_headers must come BEFORE other_auth_headers so test_user's
-    clean_db setup runs first -- otherwise it wipes the other user that
+    clean_db setup runs first - otherwise it wipes the other user that
     other_auth_headers already created."""
     from app.agents.models.agent import Agent
     from app.agents.models.conversation import Conversation
@@ -442,7 +442,7 @@ async def test_generate_title_strips_reasoning_tags(
             headers=auth_headers,
         )
     assert r.status_code == 200
-    # Just the title -- the <think> block is gone.
+    # Just the title - the <think> block is gone.
     assert r.json()["title"] == "Quick Math Question"
 
 

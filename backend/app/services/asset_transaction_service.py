@@ -124,7 +124,7 @@ def _raise_if_oversell(transactions: list[AssetTransaction]) -> None:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=(
-                f"Cannot sell {fmt(attempted)} units -- only {fmt(available)} held at that date. "
+                f"Cannot sell {fmt(attempted)} units - only {fmt(available)} held at that date. "
                 "Short positions aren't supported."
             ),
         )
@@ -157,7 +157,7 @@ async def recompute_and_cache(session: AsyncSession, asset: Asset) -> None:
         asset.sell_date = None
         asset.sell_price = None
     elif txs and pos["last_sell"] is not None:
-        # Fully exited -- mark sold so it drops out of the active portfolio.
+        # Fully exited - mark sold so it drops out of the active portfolio.
         asset.sell_date = pos["last_sell"]
 
     # Keep today's chart point in step with the new quantity.
@@ -214,7 +214,7 @@ async def list_workspace_transactions(
     kind: Optional[str] = None,
     limit: int = 500,
 ) -> list[AssetTransactionRead]:
-    """All ledger transactions in a workspace -- powers the Transactions tab."""
+    """All ledger transactions in a workspace - powers the Transactions tab."""
     query = (
         select(AssetTransaction, Asset)
         .join(Asset, AssetTransaction.asset_id == Asset.id)
@@ -295,7 +295,7 @@ async def update_transaction(
     if tx is None:
         return None
     fields = data.model_dump(exclude_unset=True)
-    # Validate the prospective ledger before mutating the row -- editing a buy
+    # Validate the prospective ledger before mutating the row - editing a buy
     # down or a sell up could drive the position negative.
     others = [t for t in await _load_txs(session, tx.asset_id) if t.id != tx.id]
     edited = AssetTransaction(

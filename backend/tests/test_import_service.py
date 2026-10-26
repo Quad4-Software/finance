@@ -294,7 +294,7 @@ class TestParseCsvColumnMapping:
         assert transactions[1].type == "credit"
 
     def test_column_mapping_without_mapping_raises(self):
-        """The same unrecognized CSV fails without a mapping -- proving the mapping is what fixes it."""
+        """The same unrecognized CSV fails without a mapping - proving the mapping is what fixes it."""
         csv_content = "Posted On,Memo Line,Movement\n2026-01-10,COFFEE SHOP,-12.50\n"
         with pytest.raises(ValueError):
             parse_csv(csv_content.encode("utf-8"))
@@ -395,7 +395,7 @@ class TestParseCsvColumnMapping:
 
     def test_column_mapping_type_column_drives_credit_debit(self):
         """A mapped type column overrides the amount sign for credit/debit."""
-        # All amounts are positive -- only the Direction column distinguishes them.
+        # All amounts are positive - only the Direction column distinguishes them.
         csv_content = (
             "Booking Date,Counterparty,Net,Direction\n"
             "2026-04-01,Whole Foods,55.00,debit\n"
@@ -480,7 +480,7 @@ class TestParseCsvColumnMapping:
 
 
 class TestDetectCsvColumns:
-    """Tests for detect_csv_columns -- used to drive the import-UI mapping dropdowns."""
+    """Tests for detect_csv_columns - used to drive the import-UI mapping dropdowns."""
 
     def test_detect_basic(self):
         csv_content = b"Posted On,Memo Line,Movement\n2026-01-10,COFFEE,-12.50\n"
@@ -830,8 +830,8 @@ class TestParseCamt:
 
     def test_parse_camt052_bktocstmracctrpt(self):
         """CAMT.052 (intraday report) uses BkToCstmrAcctRpt/Rpt instead of
-        BkToCstmrStmt/Stmt. Several European banks -- including German
-        Volksbanken/Raiffeisenbanken -- only offer CAMT.052 exports, not .053.
+        BkToCstmrStmt/Stmt. Several European banks - including German
+        Volksbanken/Raiffeisenbanken - only offer CAMT.052 exports, not .053.
         """
         xml = (
             '<?xml version="1.0" encoding="UTF-8"?>'
@@ -1195,7 +1195,7 @@ class TestParseOfx:
         """WINDOWS-1252/CP1252 must normalise to CHARSET:1252, not 8859-1.
 
         Byte 0x96 is an en dash (U+2013) in Windows-1252 but an undefined
-        C1 control code in ISO-8859-1 -- declaring the wrong CHARSET would
+        C1 control code in ISO-8859-1 - declaring the wrong CHARSET would
         have ofxparse decode this byte as the control code instead of the
         dash the source bank actually meant.
         """
@@ -1414,7 +1414,7 @@ class TestCamtCurrencyParsing:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# IMPORT TRANSACTIONS WITH FX -- INTEGRATION TESTS (mocked FX provider)
+# IMPORT TRANSACTIONS WITH FX - INTEGRATION TESTS (mocked FX provider)
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -1606,7 +1606,7 @@ class TestImportTransactionsFx:
                 amount=Decimal("200.00"),
                 date=date(2026, 2, 10),
                 type="debit",
-                # No currency set -- should inherit from account
+                # No currency set - should inherit from account
             ),
         ]
 
@@ -1639,7 +1639,7 @@ class TestImportTransactionsFx:
                 amount=Decimal("150.00"),
                 date=date(2026, 3, 1),
                 type="debit",
-                # No currency -- account is BRL, user primary is BRL
+                # No currency - account is BRL, user primary is BRL
             ),
         ]
 
@@ -1712,7 +1712,7 @@ class TestParseCsvTypeColumn:
 
     Before this fix, parse_csv always derived type from the amount sign.
     Now, when a 'type' column is present with 'credit' or 'debit', it is
-    used directly -- enabling all-positive-amount CSVs (like Quad4 Finance exports).
+    used directly - enabling all-positive-amount CSVs (like Quad4 Finance exports).
     """
 
     def test_explicit_type_column_overrides_amount_sign(self):
@@ -2179,7 +2179,7 @@ class TestOfxInstallmentDedup:
     async def test_same_external_id_same_date_dedups(
         self, session: AsyncSession, test_user: User, test_workspace, test_account: Account,
     ):
-        """Re-importing the same OFX file must still dedup -- same FITID + same
+        """Re-importing the same OFX file must still dedup - same FITID + same
         date is the strict duplicate case."""
         from app.schemas.transaction import TransactionImport
 

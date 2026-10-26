@@ -573,7 +573,7 @@ async def test_apply_all_resets_before_reapply(
     # Apply once
     await client.post("/api/rules/apply-all", headers=auth_headers)
 
-    # Apply again -- should produce same results
+    # Apply again - should produce same results
     await client.post("/api/rules/apply-all", headers=auth_headers)
 
     response = await client.get("/api/transactions", headers=auth_headers)
@@ -1050,7 +1050,7 @@ async def test_grouped_rule_applies_to_existing_transactions(
 async def test_create_rule_rejects_nested_group(
     client: AsyncClient, auth_headers, test_categories
 ):
-    """Groups hold leaves only -- rule depth is capped at two levels."""
+    """Groups hold leaves only - rule depth is capped at two levels."""
     payload = {
         "name": "Too deep",
         "conditions_op": "and",
@@ -1262,7 +1262,7 @@ async def test_preview_rule_pages_through_the_matches(
     assert len(seen) == len(set(seen)) == len(test_transactions)
     assert set(seen) == {str(tx.id) for tx in test_transactions}
 
-    # Past the end is empty, not an error -- the counts still come back.
+    # Past the end is empty, not an error - the counts still come back.
     past_end = (
         await client.post(
             "/api/rules/preview",
@@ -1334,8 +1334,8 @@ async def test_preview_rule_reports_no_change_when_the_draft_would_not_be_applie
 ):
     """The preview forecasts saving, and these flags mean saving changes nothing.
 
-    The matches still come back -- they are what the conditions select, and that
-    is worth seeing while writing the rule -- but nothing is reported as
+    The matches still come back - they are what the conditions select, and that
+    is worth seeing while writing the rule - but nothing is reported as
     changing, because `apply_single_rule` would not run at all.
     """
     target = test_categories[0]

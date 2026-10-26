@@ -32,7 +32,7 @@ class AgentSettings(BaseSettings):
 
     # TTL for long-lived tokens minted via the UI for external agents
     # (Claude Desktop, n8n, custom clients). The feature itself follows
-    # `enabled` -- if agents are on, the mint endpoint is mounted and the
+    # `enabled` - if agents are on, the mint endpoint is mounted and the
     # mcp-server container publishes port 8765.
     mcp_external_ttl_days: int = 90
 
@@ -50,7 +50,7 @@ class AgentSettings(BaseSettings):
     # embeddings are tied to the model that produced them).
     #
     # Default `native` uses fastembed with a small multilingual model
-    # bundled in-process -- works zero-config (no Ollama/OpenAI/etc).
+    # bundled in-process - works zero-config (no Ollama/OpenAI/etc).
     # Users can switch to ollama/openai/openai_compatible for higher
     # quality or faster inference.
     embedding_provider: str = "native"

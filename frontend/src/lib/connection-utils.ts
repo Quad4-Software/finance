@@ -1,4 +1,4 @@
-// Provider proper names -- product names, not translated.
+// Provider proper names - product names, not translated.
 const PROVIDER_LABELS: Record<string, string> = {
   simplefin: 'SimpleFIN',
   enable_banking: 'Enable Banking',
@@ -15,7 +15,7 @@ export function getConnectionName(
 ): string {
   if (connection.display_name) return connection.display_name
   const insts = connection.institutions ?? []
-  // A link spanning several institutions (SimpleFIN -- issue #345) is labeled
+  // A link spanning several institutions (SimpleFIN - issue #345) is labeled
   // by the provider it runs through, not by one arbitrary bank out of many.
   if (insts.length > 1) {
     const provider = PROVIDER_LABELS[connection.provider ?? ''] ?? connection.provider ?? ''

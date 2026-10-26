@@ -191,7 +191,7 @@ async def test_generate_pending_creates_transactions(client, auth_headers, test_
     assert create_resp.status_code == 201
     rec_id = create_resp.json()["id"]
 
-    # Generate pending -- should create multiple transactions up to today
+    # Generate pending - should create multiple transactions up to today
     gen_resp = await client.post(
         "/api/recurring-transactions/generate",
         headers=auth_headers,
@@ -261,7 +261,7 @@ async def test_generate_no_duplicate_with_skip_first(client, auth_headers, test_
     # next_occurrence should be one month after start_date (in the future)
     assert rec_resp.json()["next_occurrence"] > today.isoformat()
 
-    # Generate pending -- should NOT create anything (next_occurrence is in the future)
+    # Generate pending - should NOT create anything (next_occurrence is in the future)
     gen_resp = await client.post(
         "/api/recurring-transactions/generate",
         headers=auth_headers,
@@ -330,7 +330,7 @@ async def test_delete_recurring_transaction(client, auth_headers, test_account):
 
 
 # ---------------------------------------------------------------------------
-# Regression tests for #64 -- account_id is required
+# Regression tests for #64 - account_id is required
 # ---------------------------------------------------------------------------
 
 
@@ -356,7 +356,7 @@ async def test_generate_pending_skips_legacy_null_account(
     session, test_user, test_account
 ):
     """Legacy rows with account_id=None (predating the schema fix) must not crash
-    generate_pending -- they are skipped instead."""
+    generate_pending - they are skipped instead."""
     import uuid as _uuid
     from datetime import date as _date
     from decimal import Decimal as _Decimal

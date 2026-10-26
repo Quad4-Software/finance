@@ -32,7 +32,7 @@ class BankConnectionRead(BankConnectionBase):
     last_sync_at: Optional[datetime] = None
     created_at: datetime
     # Institutions this link spans. Empty for providers that are one
-    # institution per connection -- institution_name above covers those.
+    # institution per connection - institution_name above covers those.
     institutions: list[ConnectionInstitutionRead] = []
 
     model_config = ConfigDict(from_attributes=True)

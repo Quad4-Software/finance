@@ -8,7 +8,7 @@
  *  - Dates keep the user's app language for month/day *words* but take their
  *    field *order* (day-first vs month-first) from the setting
  *    (`resolveDateLocale`). So an English UI on the European format shows
- *    "4 Jun 2026" / "04/06/2026" -- never the German "4. Juni".
+ *    "4 Jun 2026" / "04/06/2026" - never the German "4. Juni".
  */
 
 export type NumberFormat = 'auto' | 'comma_dot' | 'dot_comma' | 'space_comma'
@@ -87,7 +87,7 @@ const CURRENCY_LOCALE: Record<string, string> = {
  * Resolve the locale used for number/date display.
  *
  * @param numberFormat  Admin setting ('auto' or an explicit format).
- * @param currency      The user's display currency -- drives "auto".
+ * @param currency      The user's display currency - drives "auto".
  * @param fallback      Locale to use when nothing else matches (UI language).
  */
 export function resolveDisplayLocale(
@@ -142,8 +142,8 @@ const ORDER_EN_LOCALE: Record<DateOrder, string> = {
  * honored (a rare combination).
  *
  * @param dateFormat    Admin date-format setting ('auto' or explicit order).
- * @param numberFormat  Number-format setting -- feeds the 'auto' date order.
- * @param currency      Display currency -- feeds 'auto' when number is 'auto'.
+ * @param numberFormat  Number-format setting - feeds the 'auto' date order.
+ * @param currency      Display currency - feeds 'auto' when number is 'auto'.
  * @param language      The resolved UI language ('en', 'pt-BR', 'es', ...).
  */
 export function resolveDateLocale(
@@ -220,12 +220,12 @@ function localeSeparators(locale: string): { group: string; decimal: string } {
  *
  * Group separators are stripped, the locale's decimal separator becomes the
  * decimal point, and anything left that isn't a plain number is rejected.
- * Returns null for empty or unparseable input -- never NaN, so callers can't
+ * Returns null for empty or unparseable input - never NaN, so callers can't
  * accidentally persist one.
  */
 export function parseAmountInput(value: string, locale = 'en-US'): number | null {
   const { group, decimal } = localeSeparators(locale)
-  // Spaces only ever appear as grouping -- drop them up front. JS \s covers
+  // Spaces only ever appear as grouping - drop them up front. JS \s covers
   // the NBSP and narrow-NBSP that Intl emits for space_comma locales.
   let text = value.trim().replace(/\s/g, '')
   if (!text) return null

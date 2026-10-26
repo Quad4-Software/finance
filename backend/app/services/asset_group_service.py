@@ -73,8 +73,8 @@ async def _rollup(
     Mirrors the filters used by dashboard net worth so wallet headers
     agree with the top-level total: excludes archived assets AND sold
     assets (sell_date is not null). Primary-currency totals use the
-    same `fx_rate_service.convert` the dashboard does -- no crude
-    ratio tricks -- so BRL/USD/EUR wallets all sum consistently.
+    same `fx_rate_service.convert` the dashboard does - no crude
+    ratio tricks - so BRL/USD/EUR wallets all sum consistently.
 
     Aggregates in Decimal end-to-end to avoid float drift on portfolios
     with many small-value holdings (e.g. crypto) or when the provider
@@ -96,7 +96,7 @@ async def _rollup(
     for asset in asset_list:
         latest = await _latest_value_amount(session, asset.id)
         if latest is None:
-            # Fall back to purchase_price if no value history yet -- same
+            # Fall back to purchase_price if no value history yet - same
             # logic _compute_current_value uses on the asset read path.
             latest = asset.purchase_price
         if latest is None:
@@ -122,7 +122,7 @@ async def _institution_name_for(
 
     Prefers the wallet's own institution (issue #345), falling back to the
     connection's label. Returns None for manual wallets (no connection) or
-    if the connection was deleted -- callers render the subtitle
+    if the connection was deleted - callers render the subtitle
     conditionally on this.
     """
     if group.institution is not None:
@@ -187,7 +187,7 @@ async def get_group(
 
 
 async def _next_position(session: AsyncSession, user_id: uuid.UUID) -> int:
-    # Position is per-user for sync compatibility -- the connection sync path
+    # Position is per-user for sync compatibility - the connection sync path
     # also calls this, and isn't yet workspace-scoped.
     row = await session.execute(
         select(func.coalesce(func.max(AssetGroup.position), -1) + 1).where(
@@ -274,13 +274,13 @@ async def ensure_group_for_connection(
     Assets can attach to the group in the same transaction. Matching
     prefers (user_id, source, external_id) when external_id is set;
     otherwise (user_id, source, connection_id). The name is only applied
-    on creation -- users are free to rename synced groups later.
+    on creation - users are free to rename synced groups later.
     """
 
     def _align(g: AssetGroup) -> AssetGroup:
         # Re-link if the connection was recreated. Name is preserved. The
         # wallet key is unique per (user, source) across workspaces, so a
-        # match from another workspace means the bank moved there -- the
+        # match from another workspace means the bank moved there - the
         # wallet follows its connection.
         if g.connection_id != connection_id:
             g.connection_id = connection_id
@@ -330,7 +330,7 @@ async def ensure_group_for_connection(
         group.workspace_id = workspace_id
     # A concurrent sync (scheduled + manual) can mint the same key; the
     # savepoint keeps the loser's IntegrityError from poisoning the
-    # session -- re-select and use the winner's row.
+    # session - re-select and use the winner's row.
     try:
         async with session.begin_nested():
             session.add(group)
@@ -359,7 +359,7 @@ async def _unique_default_name(
     taken = {row[0] for row in existing_rows.all()}
     if base not in taken:
         return base
-    # Start at 2 -- "Nubank" and "Nubank 2" read naturally; "Nubank 1" looks wrong.
+    # Start at 2 - "Nubank" and "Nubank 2" read naturally; "Nubank 1" looks wrong.
     i = 2
     while f"{base} {i}" in taken:
         i += 1

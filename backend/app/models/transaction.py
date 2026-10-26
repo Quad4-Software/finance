@@ -41,7 +41,7 @@ class Transaction(Base):
     date: Mapped[_date] = mapped_column(Date)
     # Effective date for cash-flow reporting. For regular accounts this equals
     # `date`. For credit card transactions it's the due date of the bill that
-    # the transaction belongs to -- so accrual-mode aggregations count the
+    # the transaction belongs to - so accrual-mode aggregations count the
     # purchase when it hits the user's cash, not when it was made.
     effective_date: Mapped[_date] = mapped_column(Date, index=True)
     type: Mapped[str] = mapped_column(String(10))  # debit, credit
@@ -84,7 +84,7 @@ class Transaction(Base):
     # LucasFidelis cycle_override request).
     effective_bill_date: Mapped[Optional[_date]] = mapped_column(Date, nullable=True)
     # FK to the bill this transaction belongs to (issue #92). Set during sync
-    # for providers that expose a bills feed; null otherwise -- in which case
+    # for providers that expose a bills feed; null otherwise - in which case
     # the read path falls back to locally-computed cycle math via
     # apply_effective_date. ON DELETE SET NULL: if a bill row is removed
     # (re-sync, deletion), the transaction stays put and just unlinks.

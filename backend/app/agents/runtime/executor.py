@@ -96,9 +96,9 @@ def _model_for(agent: Agent) -> str:
 
 async def _provider_and_model_for(session, agent: Agent):
     """Resolve (provider, model) using this priority:
-        1. agent.connection_id        -- explicit user-managed connection
-        2. user's default connection  -- is_default=True
-        3. _provider_for(agent)       -- env-var fallback (testable seam)
+        1. agent.connection_id        - explicit user-managed connection
+        2. user's default connection  - is_default=True
+        3. _provider_for(agent)       - env-var fallback (testable seam)
 
     Returns (LLMProvider, model_id_str).
     """
@@ -124,7 +124,7 @@ _RUNTIME_GUARDRAIL = (
     "1. Tools whose name starts with `propose_` are PREVIEWS, not actions. "
     "Calling them does NOT change the user's data. They return a structured "
     "proposal and the UI renders an Apply button. After calling one, "
-    "describe it as a proposal -- say 'I prepared a proposal...' or 'Here's a "
+    "describe it as a proposal - say 'I prepared a proposal...' or 'Here's a "
     "preview...'. NEVER say 'I created', 'I added', 'Done', 'Ready', or "
     "anything that implies the action has been executed.\n"
     "\n"
@@ -135,15 +135,15 @@ _RUNTIME_GUARDRAIL = (
     "only 'Amigos' exists -> STOP, ask, do not build a proposal against "
     "'Amigos'). For categories specifically: if the user-named category "
     "doesn't exist, prefer leaving `category_id` null in the transaction "
-    "proposal and mention it in your reply -- don't chain a "
+    "proposal and mention it in your reply - don't chain a "
     "propose_create_category step unless the user explicitly asked to "
     "create the category.\n"
     "\n"
-    "3. The auto-context primer (when present) is orientation only -- never "
+    "3. The auto-context primer (when present) is orientation only - never "
     "quote balances or counts from it; query the tools for live numbers.\n"
     "\n"
     "4. When responding in Portuguese (or any non-English language), keep "
-    "your phrasing language-consistent -- don't mix English snippets like "
+    "your phrasing language-consistent - don't mix English snippets like "
     "'I prepared a proposal' into a Portuguese reply. Use 'Preparei uma "
     "proposta...' / 'Aqui está uma prévia...'.\n"
     "\n"
@@ -174,13 +174,13 @@ _RUNTIME_GUARDRAIL = (
     '`{\"type\":\"pie\",\"data\":[{\"name\":\"Food\",\"value\":500},...]}`.\n'
     "\n"
     "Add a one-sentence summary above the chart; do NOT also list every "
-    "data point in prose -- let the chart speak. Only render charts when "
+    "data point in prose - let the chart speak. Only render charts when "
     "you have at least 2 data points to show.\n"
     "\n"
     "6. Knowledge base: if `search_knowledge_base` is available, the user "
     "has uploaded reference documents to this agent. Treat the KB as the "
     "authoritative source for anything that is NOT plainly transactional "
-    "data in the user's accounts -- including laws, regulations, tax rules, "
+    "data in the user's accounts - including laws, regulations, tax rules, "
     "accounting standards, contracts, internal policies, project briefs, "
     "team/people names, internal codes, identifiers, dates, addresses, "
     "definitions, jargon, or any domain-specific knowledge.\n"
@@ -203,7 +203,7 @@ _RUNTIME_GUARDRAIL = (
     "a doc or rephrase. It's better to say 'I don't know' than to guess.\n"
     "\n"
     "7. Trust the tools' arithmetic. When `aggregate` or any other server-"
-    "side total returns a value, that IS the answer -- quote it directly. "
+    "side total returns a value, that IS the answer - quote it directly. "
     "NEVER list the individual transactions and re-sum them by hand: model "
     "arithmetic over long lists is unreliable and will drift from the SQL "
     "result. If you need a keyword filter (merchant name, payee), pass "
@@ -216,7 +216,7 @@ _RUNTIME_GUARDRAIL = (
 def _format_page_context(page_context: Optional[dict[str, Any]]) -> Optional[str]:
     """Render the frontend's page-context blob as a short system message.
 
-    The frontend builds a free-form dict -- typically:
+    The frontend builds a free-form dict - typically:
       {"path": "/transactions", "label": "Transactions",
        "filters": {...}, "selection": {...}, "summary": "..."}
     We render it as a compact bullet list so the model can parse it but
@@ -227,7 +227,7 @@ def _format_page_context(page_context: Optional[dict[str, Any]]) -> Optional[str
     path = page_context.get("path") or page_context.get("route")
     label = page_context.get("label") or path
     lines = ["## Current page context",
-             "The user is sending this message from the page below -- when they refer "
+             "The user is sending this message from the page below - when they refer "
              "to 'this', 'these', 'aqui', etc., it most likely refers to what's on "
              "this page right now."]
     if label or path:
@@ -265,8 +265,8 @@ def _build_agent_identity_primer(agent: Agent) -> str:
     """Baseline persona injected BEFORE the user's system_prompt.
 
     Tells the model two things it had no way to know before:
-      1. It's running inside Quad4 Finance -- an open-source, self-hosted
-         personal-finance app -- and what kind of help that implies.
+      1. It's running inside Quad4 Finance - an open-source, self-hosted
+         personal-finance app - and what kind of help that implies.
       2. Its own name and stated role, taken from the agent row itself
          (the user picked them in the UI).
 
@@ -277,7 +277,7 @@ def _build_agent_identity_primer(agent: Agent) -> str:
     description = (agent.description or "").strip()
     lines = [
         "## Who you are",
-        f"You are **{name}**, an AI assistant running inside **Quad4 Finance** -- an "
+        f"You are **{name}**, an AI assistant running inside **Quad4 Finance** - an "
         "open-source, self-hosted personal-finance app the user owns and "
         "runs on their own infrastructure. The user is the owner of the "
         "data you operate on; everything you read/write belongs to them.",
@@ -288,7 +288,7 @@ def _build_agent_identity_primer(agent: Agent) -> str:
         "\nGround rules:\n"
         "- Answer in the user's language (Portuguese, English, Spanish, etc.).\n"
         "- You have tools that read the user's data and `propose_*` tools "
-        "that draft changes for the user to approve -- those never apply "
+        "that draft changes for the user to approve - those never apply "
         "by themselves.\n"
         "- Be concise, direct, and willing to make calls. Don't pad with "
         "warnings or boilerplate."
@@ -297,7 +297,7 @@ def _build_agent_identity_primer(agent: Agent) -> str:
 
 
 def _classify_error(exc: Exception) -> tuple[str, str]:
-    # Always include the underlying exception message -- without it the
+    # Always include the underlying exception message - without it the
     # UI just shows "unreachable" / "auth" with no clue about the actual
     # cause (wrong model id, expired key, missing endpoint, etc.).
     detail = str(exc).strip() or exc.__class__.__name__
@@ -338,7 +338,7 @@ class AgentExecutor:
         await conversation_service.update_title_if_empty(session, conversation_id, user_message)
 
         # 2. Build the message list. Order, top to bottom:
-        #      1. Runtime guardrail (app-level invariants -- always)
+        #      1. Runtime guardrail (app-level invariants - always)
         #      2. Agent identity primer (who you are + Quad4 Finance framing)
         #      3. User-defined system_prompt (extends or overrides #2)
         #      4. Auto-context primer (user data: name, currency, accounts)
@@ -358,7 +358,7 @@ class AgentExecutor:
         # in the propose-vs-action framing and the no-silent-substitution
         # rule. Agents can build on top of these but can't undo them.
         messages.append(ChatMessage(role="system", content=_RUNTIME_GUARDRAIL))
-        # Agent identity -- name + description + Quad4 Finance framing. Ensures
+        # Agent identity - name + description + Quad4 Finance framing. Ensures
         # the model knows what product it lives in and what role it was
         # configured for, even when the user leaves system_prompt blank.
         messages.append(ChatMessage(role="system", content=_build_agent_identity_primer(agent)))
@@ -367,7 +367,7 @@ class AgentExecutor:
         # not just the per-turn answer.
         if agent.system_prompt and agent.system_prompt.strip():
             messages.append(ChatMessage(role="system", content=agent.system_prompt))
-        # Optional context primer -- user name, currency, accounts, etc.
+        # Optional context primer - user name, currency, accounts, etc.
         # Cheap orientation so the agent doesn't need to call list_accounts
         # on every "what's my balance?" question.
         if getattr(agent, "auto_context", True):
@@ -382,7 +382,7 @@ class AgentExecutor:
                         messages.append(ChatMessage(role="system", content=primer))
             except Exception:  # noqa: BLE001
                 logger.exception("context primer failed; continuing without it")
-        # Page-context primer -- orientation about where the user is when
+        # Page-context primer - orientation about where the user is when
         # they sent THIS message. Goes after the agent's prompt so the
         # base persona always wins, but before history so prior turns
         # don't overshadow the current page.
@@ -467,7 +467,7 @@ class AgentExecutor:
                         usage_input = chunk.usage.input_tokens
                         usage_output = chunk.usage.output_tokens
             except LLMError as exc:
-                # Log the full chain -- the user-facing string is short by
+                # Log the full chain - the user-facing string is short by
                 # design, but we want the traceback (and any wrapped
                 # httpx error) in the backend logs for debugging.
                 logger.exception("LLM provider call failed (kind=%s)", type(exc).__name__)
@@ -532,7 +532,7 @@ class AgentExecutor:
             if not assembled_calls:
                 # If the model returned nothing at all (no text, no tool
                 # call, no usage), the endpoint probably isn't actually
-                # an LLM -- surface that as a friendly error instead of a
+                # an LLM - surface that as a friendly error instead of a
                 # silent close that leaves the UI hanging. Most common
                 # cause: openai_compatible base_url missing the /v1 path.
                 if not assistant_text and not usage_input and not usage_output:
@@ -593,7 +593,7 @@ class AgentExecutor:
         # readable transcript. The friendliest message reuses any text we
         # accumulated mid-loop if there is some.
         fallback = (
-            "Não consegui completar essa consulta -- pedi muitas ferramentas em sequência "
+            "Não consegui completar essa consulta - pedi muitas ferramentas em sequência "
             "e o limite foi atingido. Reformule a pergunta de forma mais específica e eu tento "
             "de novo (por exemplo, restrinja a um período ou a uma categoria)."
         )
@@ -647,7 +647,7 @@ async def _safe_call_tool(
 
 
 def _summarize_result(res: dict[str, Any]) -> dict[str, Any]:
-    """Compact summary used by the UI tool-call chip -- just a one-line
+    """Compact summary used by the UI tool-call chip - just a one-line
     hint plus the structured `data` (which the chip's expand view shows
     in full). Never feed this `text` back to the LLM directly; the LLM
     needs the complete payload, see executor.run().
@@ -671,7 +671,7 @@ def _summarize_result(res: dict[str, Any]) -> dict[str, Any]:
 
 
 def _safe_json(obj: Any) -> str:
-    """Serialize tool data for the LLM to read. No length cap -- the
+    """Serialize tool data for the LLM to read. No length cap - the
     model needs the full payload or it'll hallucinate truncation."""
     import json
     try:

@@ -275,7 +275,7 @@ class TestPdf:
         self, client: AsyncClient, biz_headers
     ):
         """A workspace that has filled nothing in still gets a usable
-        page -- every field on the document is optional by design."""
+        page - every field on the document is optional by design."""
         invoice = await make_invoice(client, biz_headers, lines=[])
         resp = await client.get(f"/api/invoices/{invoice['id']}/pdf", headers=biz_headers)
         assert resp.status_code == 200
@@ -318,7 +318,7 @@ class TestPdf:
 
 
 # ---------------------------------------------------------------------------
-# Sharing -- the only unauthenticated surface
+# Sharing - the only unauthenticated surface
 # ---------------------------------------------------------------------------
 @pytest.mark.asyncio
 class TestSharing:
@@ -508,7 +508,7 @@ class TestIssuerProfile:
 
 
 # ---------------------------------------------------------------------------
-# Page structure -- the band layout and its pagination
+# Page structure - the band layout and its pagination
 # ---------------------------------------------------------------------------
 def _doc(
     n_lines: int,
@@ -1148,7 +1148,7 @@ def test_an_oversized_raster_is_refused_before_it_is_decoded():
 def test_a_line_taller_than_a_page_still_finishes():
     """It used to hang, not fail. `split` returned nothing for a row
     taller than the space, the loop asked for a fresh page, failed again
-    on the empty page and asked again -- holding the worker until
+    on the empty page and asked again - holding the worker until
     something killed it, which is worse than an error the caller can see.
 
     Guarded twice: the table may now break inside a row, and a failure to

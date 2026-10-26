@@ -73,7 +73,7 @@ class AccountData:
     card_level: Optional[str] = None
     # Last 4 chars of the bank's own identifier for the account, when the
     # provider exposes one. Disambiguates accounts a bank reports under an
-    # identical name (issue #408). Never the full identifier -- see mask_last4.
+    # identical name (issue #408). Never the full identifier - see mask_last4.
     masked_number: Optional[str] = None
     shared_balance_group: Optional[str] = None
     # The provider's session-independent identifier for this account, when it
@@ -82,7 +82,7 @@ class AccountData:
     # survives (EB's `identification_hash`), and the sync uses it to rebind the
     # existing row to the new uid instead of duplicating the account.
     stable_external_id: Optional[str] = None
-    # Per-account institution override (SimpleFIN -- issue #345). None = same
+    # Per-account institution override (SimpleFIN - issue #345). None = same
     # as connection. The external id is the provider's stable org id
     # (SimpleFIN conn_id) so a renamed bank updates its row instead of
     # minting a new one; name-only hints fall back to name identity.
@@ -162,7 +162,7 @@ class HoldingData:
     Providers that don't expose holdings-style data return an empty list
     from `get_holdings`. Provider-specific fields that don't fit the common
     shape (rate, profit, issuer, status, type/subtype labels, etc.) go in
-    `metadata` as-is -- the sync layer stores it on Asset.external_metadata
+    `metadata` as-is - the sync layer stores it on Asset.external_metadata
     without trying to normalize it.
     """
 
@@ -183,7 +183,7 @@ class HoldingData:
     maturity_date: Optional[date] = None
     is_withdrawn: bool = False  # provider signaled the position was sold/transferred
     metadata: Optional[dict] = None
-    # Owning-account hint (SimpleFIN -- issue #345): holdings are reported per
+    # Owning-account hint (SimpleFIN - issue #345): holdings are reported per
     # account, so each investment account gets its own wallet ("401(k)" apart
     # from "Rollover IRA"). None = the connection-default wallet, for
     # providers whose holdings aren't attributable to an account.
@@ -233,7 +233,7 @@ class ProviderUserActionRequired(Exception):
 class ProviderRateLimited(Exception):
     """Raised when the upstream bank/aggregator is throttling data requests.
 
-    Transient and outside the user's control -- PSD2 caps unattended account
+    Transient and outside the user's control - PSD2 caps unattended account
     access (commonly ~4/day per resource), so a burst of syncs returns HTTP
     429. The connection is healthy; callers should skip this run and retry
     later rather than flag it as errored.
@@ -243,7 +243,7 @@ class ProviderRateLimited(Exception):
 class ProviderNotConfiguredError(Exception):
     """Raised when a connection references a provider missing from the registry.
 
-    This is a server configuration problem, not a bank problem -- typically one
+    This is a server configuration problem, not a bank problem - typically one
     process (e.g. the Celery worker) is not loading the environment that
     enables the provider while the API process is. The credentials are fine,
     so callers must not flip the connection to "error": the reconnect banner
@@ -335,7 +335,7 @@ class BankProvider(ABC):
         state: str,
     ) -> str:
         """Build a re-authorization URL for an existing connection whose
-        session/consent expired. Default raises -- only providers with
+        session/consent expired. Default raises - only providers with
         renewable consent (OAuth-redirect) need to override.
         """
         raise NotImplementedError(f"{self.name} does not support reauth_url")
@@ -375,7 +375,7 @@ class BankProvider(ABC):
         for fresh data, providers that expose an on-demand refresh should
         override this method to trigger it and poll until it completes.
 
-        The default is a no-op (returns ``"skipped"``) -- providers whose APIs
+        The default is a no-op (returns ``"skipped"``) - providers whose APIs
         already serve live data on every read don't need to override.
         """
         return "skipped"

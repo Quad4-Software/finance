@@ -101,7 +101,7 @@ class Asset(Base):
     realized_gain: Mapped[Optional[Decimal]] = mapped_column(
         Numeric(precision=18, scale=2), nullable=True
     )
-    # Fully-formed logo URL -- populated at create time for market-priced
+    # Fully-formed logo URL - populated at create time for market-priced
     # assets when a logo provider is configured. Null means "no logo, use
     # the type icon". Frontend swaps to the type icon on <img> load error.
     logo_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)

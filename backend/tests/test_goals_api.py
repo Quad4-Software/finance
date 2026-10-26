@@ -735,7 +735,7 @@ async def test_goal_account_tracking_same_currency(
     assert response.status_code == 201
     data = response.json()
     assert data["currency"] == "BRL"
-    # No conversion needed -- should be exact account balance
+    # No conversion needed - should be exact account balance
     assert float(data["current_amount"]) == 1500.00
     assert data["percentage"] == 15.0
 

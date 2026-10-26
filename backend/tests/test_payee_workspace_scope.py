@@ -37,7 +37,7 @@ COUNTERPARTY = "12345678901"
 
 
 async def _second_workspace(session: AsyncSession, user_id: uuid.UUID) -> Workspace:
-    """A second workspace the same user belongs to -- a shared household
+    """A second workspace the same user belongs to - a shared household
     workspace, or one they were added to. The single-workspace assumption
     is exactly what the old constraint encoded."""
     ws = Workspace(

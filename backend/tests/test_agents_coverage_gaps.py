@@ -186,7 +186,7 @@ async def test_generate_title_returns_unchanged_when_no_messages(
     client, auth_headers, test_user, session
 ):
     """generate-title shortcuts to the existing row when transcript is
-    empty -- covers the early-return branch."""
+    empty - covers the early-return branch."""
     from app.agents.models.agent import Agent
     from app.agents.models.conversation import Conversation
 

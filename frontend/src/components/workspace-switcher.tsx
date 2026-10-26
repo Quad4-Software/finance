@@ -100,7 +100,7 @@ interface AccountMenuProps {
  * standalone workspace switcher + separate user dropdown.
  *
  * Dialogs (change password, 2FA, update available) stay owned by the
- * parent layout -- they're shared with other surfaces and the menu
+ * parent layout - they're shared with other surfaces and the menu
  * only needs to trigger them.
  */
 export function WorkspaceSwitcher({
@@ -186,7 +186,7 @@ export function WorkspaceSwitcher({
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64" side="top">
-          {/* Workspaces -- only show the switcher list when there's more than one. */}
+          {/* Workspaces - only show the switcher list when there's more than one. */}
           {hasMultipleWorkspaces && (
             <>
               <DropdownMenuLabel className="px-2 py-1 text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">

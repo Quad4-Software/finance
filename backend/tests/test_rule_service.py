@@ -1171,7 +1171,7 @@ async def test_apply_all_rules_preserves_manual_categories(
         source="manual",
         created_at=datetime.now(timezone.utc),
     )
-    # txn_uncategorized: no category, no rule match -- should stay uncategorized
+    # txn_uncategorized: no category, no rule match - should stay uncategorized
     txn_uncategorized = Transaction(
         id=uuid.uuid4(),
         user_id=test_user.id,
@@ -1257,7 +1257,7 @@ async def test_install_rule_pack_skips_duplicates(session: AsyncSession, test_us
     second = await install_rule_pack(session, test_workspace.id, test_user.id, "BR", lang="pt-BR")
 
     assert len(first.rules) > 0
-    # All rules already installed -- distinct from "couldn't install" because
+    # All rules already installed - distinct from "couldn't install" because
     # nothing was unresolvable.
     assert len(second.rules) == 0
     assert second.unresolved == 0
@@ -1267,7 +1267,7 @@ async def test_install_rule_pack_skips_duplicates(session: AsyncSession, test_us
 async def test_install_rule_pack_works_across_languages(session: AsyncSession, test_user, test_workspace):
     # Regression for #154: user registers in English, switches UI to pt-BR,
     # then installs the BR pack. Categories ("Transport") and template
-    # language ("pt-BR" -> "Transporte") would mismatch -- install should
+    # language ("pt-BR" -> "Transporte") would mismatch - install should
     # still resolve the category by internal key.
     await create_default_categories(session, test_user.id, lang="en")
 
@@ -1283,7 +1283,7 @@ async def test_install_rule_pack_works_across_languages(session: AsyncSession, t
 async def test_install_rule_pack_reports_unresolved_when_categories_missing(
     session: AsyncSession, test_user, test_workspace
 ):
-    # User in a degenerate state with no default categories -- every pack
+    # User in a degenerate state with no default categories - every pack
     # rule's set_category target is missing, so the install can't actually
     # write any rules. The result must surface this so the frontend can
     # tell the user "missing categories" instead of the misleading

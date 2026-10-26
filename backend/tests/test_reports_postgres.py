@@ -12,7 +12,7 @@ from app.core.database import get_async_session
 from app.main import app
 from app.models.transaction import Transaction
 from app.services import admin_service, report_service
-import mcp_server.tools  # noqa: F401 -- registers the real MCP handlers
+import mcp_server.tools  # noqa: F401 - registers the real MCP handlers
 from mcp_server.auth import CallContext
 from mcp_server.registry import REGISTRY
 

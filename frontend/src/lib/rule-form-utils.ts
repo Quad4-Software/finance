@@ -10,8 +10,8 @@ export function isInvalidDescriptionAction(action: RuleAction): boolean {
  *
  * The editor holds an action row from the moment it is added, so a draft in
  * progress routinely carries `set_category` with nothing picked yet. That is a
- * rule still being written, not a broken one -- the engine already treats it as
- * a no-op -- and the preview should keep answering the question about the
+ * rule still being written, not a broken one - the engine already treats it as
+ * a no-op - and the preview should keep answering the question about the
  * conditions instead of failing the backend's action validation. Actions the
  * form itself flags are dropped for the same reason: the inline error already
  * says what is wrong. `ignore` carries no value at all.

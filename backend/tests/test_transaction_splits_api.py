@@ -139,7 +139,7 @@ async def test_split_validation_bubbles_400(client, auth_headers, test_user):
     )
     # ValueError from split_service -> 400 via FastAPI handler
     # (depends on the API layer's existing exception mapping; if it
-    # surfaces as 500 that means the handler is missing -- flag it).
+    # surfaces as 500 that means the handler is missing - flag it).
     assert resp.status_code in (400, 422), resp.text
 
 

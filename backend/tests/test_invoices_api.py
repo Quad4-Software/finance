@@ -57,7 +57,7 @@ async def personal_ws(session: AsyncSession, test_user):
 
 @pytest_asyncio.fixture
 async def business_ws(client: AsyncClient, auth_headers) -> dict:
-    """A business workspace -- the only kind that has this module."""
+    """A business workspace - the only kind that has this module."""
     resp = await client.post(
         "/api/workspaces",
         headers=auth_headers,
@@ -128,7 +128,7 @@ async def _create(client, headers, **overrides):
 
 
 # ---------------------------------------------------------------------------
-# Module isolation -- the promise that personal users are untouched
+# Module isolation - the promise that personal users are untouched
 # ---------------------------------------------------------------------------
 @pytest.mark.asyncio
 async def test_personal_workspace_cannot_reach_any_invoice_route(
@@ -227,7 +227,7 @@ async def test_document_preset_starts_as_draft_and_requires_lines(
         lines=[{"description": "Consultoria", "quantity": "10", "unit_price": "150.00"}],
     )
     assert withlines["status"] == "draft"
-    # A draft carries no number -- the DB constraint says so too.
+    # A draft carries no number - the DB constraint says so too.
     assert withlines["number"] is None
     assert withlines["total"] == "1500.00"
 
@@ -533,7 +533,7 @@ async def _upload_logo(client, headers):
 async def test_settings_carry_presentation_and_survive_issuance(
     client: AsyncClient, biz_headers
 ):
-    """Logo and labels are frozen at issuance -- changing them later must
+    """Logo and labels are frozen at issuance - changing them later must
     not rewrite a document the client already received."""
     await client.patch(
         "/api/invoices/settings",
@@ -625,7 +625,7 @@ async def test_state_filter_uses_derived_values(client: AsyncClient, biz_headers
 
 
 # ---------------------------------------------------------------------------
-# Role enforcement -- the module gate and the role gate are separate questions
+# Role enforcement - the module gate and the role gate are separate questions
 # ---------------------------------------------------------------------------
 @pytest.mark.asyncio
 async def test_viewer_reads_but_never_writes(
@@ -684,7 +684,7 @@ async def test_viewer_reads_but_never_writes(
         await client.get(f"/api/invoices/{invoice['id']}", headers=viewer_headers)
     ).status_code == 200
 
-    # Every write is refused -- 403 this time, not 404: the workspace does
+    # Every write is refused - 403 this time, not 404: the workspace does
     # have the module, so hiding its existence would be the wrong lie.
     writes = [
         ("post", "/api/invoices", {"total": "10.00"}),
@@ -819,8 +819,8 @@ async def test_facets_are_gated_like_every_other_route(
 async def test_deleting_a_client_with_invoices_is_refused_in_words(
     client: AsyncClient, biz_headers, client_payee
 ):
-    """The RESTRICT foreign key is deliberate -- deleting a client must
-    never silently delete the record of money they owed -- but it used to
+    """The RESTRICT foreign key is deliberate - deleting a client must
+    never silently delete the record of money they owed - but it used to
     surface as a 500, which tells the user nothing."""
     await _create(client, biz_headers, payee_id=str(client_payee.id))
 
@@ -953,7 +953,7 @@ async def test_a_personal_workspace_never_pays_for_the_badge(
     module pays nothing for a feature it does not have.
 
     Asserted by watching the call rather than by reading the response.
-    The field comes back as `[]` either way -- that is its default -- so an
+    The field comes back as `[]` either way - that is its default - so an
     assertion on the value cannot tell a skipped query from one that ran
     and found nothing, which is the only thing this test is about."""
     account = Account(
@@ -1094,7 +1094,7 @@ async def test_a_receivable_document_still_names_us_as_the_issuer(
 @pytest.mark.asyncio
 async def test_a_payable_cannot_be_shared(client: AsyncClient, biz_headers):
     """Sharing sends your invoice to your client. A bill you received
-    belongs to your supplier and has nobody to be sent to -- publishing it
+    belongs to your supplier and has nobody to be sent to - publishing it
     is a leak with no upside."""
     bill = await _create(client, biz_headers, direction="payable")
     resp = await client.post(f"/api/invoices/{bill['id']}/share", headers=biz_headers)
@@ -1103,7 +1103,7 @@ async def test_a_payable_cannot_be_shared(client: AsyncClient, biz_headers):
 
 
 # ---------------------------------------------------------------------------
-# Provenance -- the seam every future intake writes through
+# Provenance - the seam every future intake writes through
 # ---------------------------------------------------------------------------
 @pytest.mark.asyncio
 async def test_an_imported_document_keeps_where_it_came_from(
@@ -1385,7 +1385,7 @@ async def test_an_issued_invoice_keeps_the_tax_id_it_was_issued_under(
     client: AsyncClient, biz_headers
 ):
     """The snapshot froze the issuer's name, address and logo, and read
-    the tax ids live -- so correcting a CNPJ rewrote a document a client
+    the tax ids live - so correcting a CNPJ rewrote a document a client
     was already holding."""
     await client.patch(
         "/api/invoices/issuer",
@@ -1420,7 +1420,7 @@ async def test_one_payment_advertises_every_invoice_it_settled(
 ):
     """The N:N read back. A gateway payout settles a dozen invoices net of
     fees, and keying one link per transaction let the second overwrite the
-    first -- so the row advertised one and the ledger disagreed with the
+    first - so the row advertised one and the ledger disagreed with the
     list about what had been paid."""
     first = await _create(client, biz_headers, total="300.00")
     second = await _create(client, biz_headers, total="700.00")

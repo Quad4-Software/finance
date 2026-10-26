@@ -276,9 +276,9 @@ def _institution(
     acc: Account, connection: Optional[BankConnection]
 ) -> tuple[Optional[str], Optional[str]]:
     # (name, logo) resolved as a pair so both always describe the same
-    # institution. The account's own institution (SimpleFIN -- issue #345)
+    # institution. The account's own institution (SimpleFIN - issue #345)
     # only outranks a connection rename when the link actually spans several
-    # institutions -- on a single-bank link the rename keeps working. The logo
+    # institutions - on a single-bank link the rename keeps working. The logo
     # falls back to the connection's only on single-institution links, where
     # it belongs to the same bank; on multi links a missing favicon beats
     # another bank's.
@@ -374,7 +374,7 @@ async def get_credit_card_bills(
 
     Returns None when the account doesn't exist or isn't owned by the user
     (the caller maps that to a 404). Returns [] for non-CC accounts and CC
-    accounts with no synced bills -- the read path then keeps using the
+    accounts with no synced bills - the read path then keeps using the
     cycle-math fallback.
     """
     account = await get_account(session, account_id, workspace_id)
@@ -501,7 +501,7 @@ async def update_account(
 
     # Bank-connected accounts are managed by the sync pipeline. Beyond display
     # name and credit card metadata (limit + cycle days, which providers often
-    # don't expose), users may also override the account `type` -- providers
+    # don't expose), users may also override the account `type` - providers
     # sometimes misreport it (e.g. Enable Banking labels an mBank savings
     # account as "checking"; issue #271). Sync only writes `type` on initial
     # account creation and never overwrites it afterwards, so the override
@@ -532,7 +532,7 @@ async def update_account(
         # for debt) under type="checking". When the user flips the type across
         # the credit_card boundary, the downstream display sites start (or stop)
         # applying the positive-for-debt negation, so the stored value must flip
-        # too -- otherwise the card double-counts. Mirror the ingestion-time
+        # too - otherwise the card double-counts. Mirror the ingestion-time
         # normalization (_simplefin_to_internal_balance) here so the correction
         # is immediate, not deferred to the next sync. Load the provider via
         # session.get (identity-map hit, never a lazy-load that throws).
@@ -800,7 +800,7 @@ async def delete_account(session: AsyncSession, account_id: uuid.UUID, workspace
     await cleanup_attachment_files(session, tx_ids)
 
     # Break FK references before deleting the account. In production these are
-    # also enforced at the DB level (see migration 039) -- this code path makes
+    # also enforced at the DB level (see migration 039) - this code path makes
     # the behavior explicit and keeps the FK bug from #110 from regressing for
     # any of the dependent tables.
     #
@@ -1000,7 +1000,7 @@ async def get_account_summary(
     # Bill-driven filter (issue #92): when the caller passes bill_id, include
     #   (a) txs linked to this bill via the provider's bill id mapping, AND
     #   (b) txs with NO bill_id (manual entries, OFX/CSV imports, recurring
-    #       fills) whose bucketing date is in the cycle window -- without (b)
+    #       fills) whose bucketing date is in the cycle window - without (b)
     #       we'd drop user-added compensations for missing provider txs.
     # Without bill_id (cycle-math or non-CC), apply the date window straight.
     from sqlalchemy import and_ as _and, not_ as _not  # local: only for scope
@@ -1017,13 +1017,13 @@ async def get_account_summary(
             unlinked_in_window = _and(
                 Transaction.bill_id.is_(None),
                 # Defer sync-pending txs only when their effective_date does
-                # NOT match this bill -- i.e., cycle math placed them in a
+                # NOT match this bill - i.e., cycle math placed them in a
                 # different bill. If effective_date matches, the tx is
                 # pre-classified to this bill and we include it (the
                 # in-progress case abdalanervoso reported empty).
                 #
                 # Manual override (effective_bill_date) bypasses the
-                # exclusion entirely -- the user explicitly hand-corrected
+                # exclusion entirely - the user explicitly hand-corrected
                 # the bucketing, so the totals must reflect that even if
                 # the override doesn't snap to a real bill due_date and
                 # bill_id stays null (issue #162). Mirrors the same
@@ -1045,7 +1045,7 @@ async def get_account_summary(
             # Forward-pointing override catch (issue #162): mirror
             # get_transactions so the in-progress cycle's totals include
             # txs whose manual override points past the cycle window.
-            # Without this the tx list and totals diverge -- the tx shows
+            # Without this the tx list and totals diverge - the tx shows
             # in the list (after the catch in get_transactions) but its
             # amount drops out of the strip pill / summary card.
             future_override = _and(
@@ -1066,7 +1066,7 @@ async def get_account_summary(
         return query.where(_membership())
 
     # Which exclusions these totals answer to. A credit card's four summary
-    # numbers are all bill-side -- they describe what the bank put on the
+    # numbers are all bill-side - they describe what the bank put on the
     # statement, so they keep purchases in `treat_as_transfer` categories
     # that the reporting filter drops. Every other account type keeps the
     # reporting view. See `counts_on_bill` for why the bill cannot simply

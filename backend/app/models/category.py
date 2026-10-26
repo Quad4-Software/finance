@@ -29,7 +29,7 @@ class Category(Base):
 
     # Flag for "money that moves rather than money earned or spent".
     # Transactions in these categories are excluded from income/expense
-    # aggregations in dashboards and reports -- same treatment as paired
+    # aggregations in dashboards and reports - same treatment as paired
     # transfers (transfer_pair_id IS NOT NULL), but category-based so we
     # can catch one-sided movements like an investment application where
     # the counterpart lives in Assets, not Accounts.

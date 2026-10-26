@@ -72,7 +72,7 @@ export default function AccountsPage() {
   const { activeAccountIds } = useCollectionFilter()
   const { canWrite } = useWorkspace()
   // The "Viewing" bar sits directly above this page, so its scope has to reach
-  // the lists too -- the sidebar was already filtered, this page was not.
+  // the lists too - the sidebar was already filtered, this page was not.
   // null = no active collection = every account.
   const inActiveCollection = (a: Account) => !activeAccountIds || activeAccountIds.includes(a.id)
   const userCurrency = user?.preferences?.currency_display ?? 'USD'
@@ -125,7 +125,7 @@ export default function AccountsPage() {
       setTokenReconnectConnection(conn)
       return
     }
-    // Unknown flow type -- nothing client-side can re-auth it.
+    // Unknown flow type - nothing client-side can re-auth it.
     toast.error(t('accounts.connectError'))
   }
 
@@ -350,7 +350,7 @@ export default function AccountsPage() {
                     <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
                       <div className="flex items-center gap-3">
                         {/* One bank's favicon would misrepresent a multi-
-                            institution link -- fall back to the generic icon. */}
+                            institution link - fall back to the generic icon. */}
                         <ConnectionLogo
                           logoUrl={(conn.institutions?.length ?? 0) > 1 ? null : conn.logo_url}
                         />
@@ -628,7 +628,7 @@ export default function AccountsPage() {
         onSelect={(provider) => setSelectedProvider(provider)}
       />
 
-      {/* OAuth Connect Dialog -- institution-pickers (Enable Banking) */}
+      {/* OAuth Connect Dialog - institution-pickers (Enable Banking) */}
       <OAuthConnectDialog
         open={!!selectedProvider && selectedProvider.flow_type === 'oauth'}
         onClose={() => setSelectedProvider(null)}
@@ -636,7 +636,7 @@ export default function AccountsPage() {
         supportsAssetSync={selectedProvider?.supports_asset_sync ?? false}
       />
 
-      {/* Token Connect Dialog -- paste-a-token flow (SimpleFIN) */}
+      {/* Token Connect Dialog - paste-a-token flow (SimpleFIN) */}
       <TokenConnectDialog
         open={!!selectedProvider && selectedProvider.flow_type === 'token'}
         onClose={() => setSelectedProvider(null)}
@@ -644,7 +644,7 @@ export default function AccountsPage() {
         supportsAssetSync={selectedProvider?.supports_asset_sync ?? false}
       />
 
-      {/* Reconnect Dialog -- paste-a-token flow (SimpleFIN) */}
+      {/* Reconnect Dialog - paste-a-token flow (SimpleFIN) */}
       <TokenConnectDialog
         open={!!tokenReconnectConnection}
         onClose={() => setTokenReconnectConnection(null)}

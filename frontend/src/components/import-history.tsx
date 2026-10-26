@@ -30,7 +30,7 @@ interface ImportHistoryProps {
  *
  * Deleting an entry is the undo: the server takes the rows back out, and for
  * orders it also recomputes the affected positions. The two entities share
- * this table but not its columns -- an order import has no account and no
+ * this table but not its columns - an order import has no account and no
  * credit/debit totals, so those columns only appear for statements.
  */
 export function ImportHistory({ entity }: ImportHistoryProps) {

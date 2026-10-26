@@ -367,7 +367,7 @@ async def test_buy_into_holding_consolidates_by_ticker(session, test_workspace, 
         AssetBuyCreate(ticker="VALE3.SA", quantity=Decimal("10"), price=Decimal("70"), date=date(2026, 2, 1)),
         market_provider=provider,
     )
-    # Same logical holding -- not two assets.
+    # Same logical holding - not two assets.
     assert first.id == second.id
     assert second is not None
     assert second.units == 20

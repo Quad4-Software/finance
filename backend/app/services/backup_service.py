@@ -29,7 +29,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 #: The zip encrypts entry *contents*, never the central directory, so the file
 #: names and their sizes stay readable without the password. Nothing sensitive
-#: goes in a name -- they are the fixed entity names below plus `metadata.json`.
+#: goes in a name - they are the fixed entity names below plus `metadata.json`.
 _COMPRESSION = zipfile.ZIP_DEFLATED
 
 

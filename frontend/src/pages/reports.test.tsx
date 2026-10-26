@@ -60,7 +60,7 @@ beforeEach(() => {
 
 afterEach(() => vi.useRealTimers())
 
-describe('Reports page -- Custom range segment', () => {
+describe('Reports page - Custom range segment', () => {
   it('loads the Net Worth tab with the 1Y preset by default', async () => {
     renderWithProviders(<ReportsPage />)
 
@@ -87,7 +87,7 @@ describe('Reports page -- Custom range segment', () => {
     })
 
     // The segment itself now displays the picked range instead of "Custom
-    // range" -- in the same compact, year-less form as the transactions
+    // range" - in the same compact, year-less form as the transactions
     // filter bar's applied-range chip.
     const fmt = (iso: string) =>
       new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', {
@@ -198,7 +198,7 @@ it('preserves saved custom dates across supported tabs and preset dismissal', as
     .toEqual(['2026-01-01', '2026-09-12']))
 })
 
-describe('Reports page -- query failure', () => {
+describe('Reports page - query failure', () => {
   it('surfaces a rejected custom range instead of showing stale numbers', async () => {
     const { user } = renderWithProviders(<ReportsPage />)
     await waitFor(() => expect(api.reports.netWorth).toHaveBeenCalledTimes(1))

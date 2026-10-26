@@ -44,7 +44,7 @@ def _get_native_embedder(model_name: str, cache_dir: str) -> Any:
     `cache_dir` (~120 MB for the default multilingual MiniLM); subsequent
     calls hit the in-memory instance.
 
-    Importing fastembed is intentionally inside this function -- modules
+    Importing fastembed is intentionally inside this function - modules
     using `app.agents.services.embedding` don't drag fastembed in unless
     they actually trigger embedding (i.e. only the agents feature does).
     """

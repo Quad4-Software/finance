@@ -10,7 +10,7 @@ Why they did not exist before: the gate ships as a dependency wrapper
 `require_write` appears in exactly one file. An audit that grepped for it
 concluded no route was gated, when 85 of them were. Service-level tests of
 `require_membership` existed, but nothing exercised the wiring between a
-route, the requester's role, and the 403 -- which is the part that was
+route, the requester's role, and the 403 - which is the part that was
 doubted.
 """
 import uuid
@@ -68,7 +68,7 @@ async def test_the_refusal_says_why(client: AsyncClient, viewer_auth_headers):
 
 
 async def test_a_viewer_can_still_read(client: AsyncClient, viewer_auth_headers):
-    """The gate must refuse writes without turning into a lockout -- otherwise
+    """The gate must refuse writes without turning into a lockout - otherwise
     a 403 on everything would pass the tests above for the wrong reason."""
     for path in ("/api/transactions", "/api/accounts", "/api/categories", "/api/budgets"):
         resp = await client.get(path, headers=viewer_auth_headers)

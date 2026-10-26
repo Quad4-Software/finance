@@ -169,7 +169,7 @@ def refresh_market_prices() -> dict:
     """Celery task: re-quote every market-priced asset via the configured provider.
 
     Scheduled frequently enough that the cached price stays fresh for users,
-    but respectful of Yahoo's unofficial rate limits -- the service halts
+    but respectful of Yahoo's unofficial rate limits - the service halts
     itself on ``MarketPriceRateLimitedError`` so we don't hammer the API.
     """
     try:

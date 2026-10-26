@@ -1,4 +1,4 @@
-"""Collections feature (issue #105) -- API + service coverage.
+"""Collections feature (issue #105) - API + service coverage.
 
 Collections are user-defined, workspace-scoped, many-to-many groups of
 accounts used to filter the app. These tests exercise CRUD, membership
@@ -126,7 +126,7 @@ async def test_delete_collection(client: AsyncClient, auth_headers, test_user: U
 async def test_membership_scoped_to_workspace(
     client: AsyncClient, auth_headers, test_user: User, session: AsyncSession
 ):
-    """An account from another workspace can't be added -- it's silently dropped
+    """An account from another workspace can't be added - it's silently dropped
     so a collection can never reference cross-workspace accounts."""
     # Account in the user's workspace.
     mine = await _make_account(session, test_user, "Mine")

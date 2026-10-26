@@ -24,7 +24,7 @@ def upgrade() -> None:
             server_default=sa.text("false"),
         ),
     )
-    # Partial unique index -- at most one default per user, but multiple
+    # Partial unique index - at most one default per user, but multiple
     # non-defaults are fine.
     op.create_index(
         "uq_agents_one_default_per_user",

@@ -442,7 +442,7 @@ export default function TransactionsPage() {
   // Publish the active filters + result count to the global chat panel.
   // The agent uses this so "what about THIS list?" / "soma essas" /
   // "categorize these" resolve against the filtered view, not the user's
-  // entire history. Free-form blob -- backend turns it into a primer.
+  // entire history. Free-form blob - backend turns it into a primer.
   const ctxFilters = {
     search: searchQuery || undefined,
     account_ids: effectiveAccountIds.length ? effectiveAccountIds : undefined,
@@ -783,7 +783,7 @@ export default function TransactionsPage() {
   }
 
   // Tag filtering is now applied server-side, so the visible list and the
-  // page count both reflect the same filtered total -- issue #88.
+  // page count both reflect the same filtered total - issue #88.
   const filteredItems = useMemo(() => data?.items ?? [], [data?.items])
   const selectableItems = filteredItems.filter(tx => !tx.is_shared)
 
@@ -1008,7 +1008,7 @@ export default function TransactionsPage() {
 
   // Resize: track which column is being dragged so we can clear listeners
   // when the gesture ends. The width is committed to grid state on every
-  // pointermove for live feedback (cheap -- single React state update).
+  // pointermove for live feedback (cheap - single React state update).
   const resizingRef = useRef<{ id: ColumnId; startX: number; startWidth: number } | null>(null)
   const startResize = (e: React.PointerEvent<HTMLSpanElement>, col: ColumnDef) => {
     e.preventDefault()
@@ -1137,7 +1137,7 @@ export default function TransactionsPage() {
             )}
             {/* The invoice this settles. Same badge shape as the split
                 and transfer markers beside it, and absent entirely in a
-                workspace without the invoicing module -- the server does
+                workspace without the invoicing module - the server does
                 not send the field there. */}
             {/* One badge per invoice this row settles: a payout net of
                 fees settles several, and showing only the last one read
@@ -1655,7 +1655,7 @@ export default function TransactionsPage() {
                       } ${tx.is_shared || !canWrite ? 'cursor-default' : 'cursor-pointer'}`}
                       onClick={() => {
                         if (tx.is_shared) {
-                          // Owned by another user -- view in the group context instead.
+                          // Owned by another user - view in the group context instead.
                           if (tx.group_id) navigate(`/groups/${tx.group_id}`)
                           return
                         }
@@ -1666,7 +1666,7 @@ export default function TransactionsPage() {
                     >
                       <TableCell style={{ width: 40, minWidth: 40 }} className="py-2.5 pl-4 pr-0">
                         {/* Bulk operations are scoped to user.id so they
-                            silently skip shared rows -- hide the checkbox
+                            silently skip shared rows - hide the checkbox
                             on those to avoid the dead-end UX. */}
                         {canWrite && !tx.is_shared && (
                           <input
@@ -1766,7 +1766,7 @@ export default function TransactionsPage() {
           </div>
         )}
         {/* Filtered summary (issue #185): income / expenses / net across
-            ALL rows matching the active filters -- not just this page. */}
+            ALL rows matching the active filters - not just this page. */}
         {!isLoading && data?.summary && filteredItems.length > 0 && (
           <div className="flex flex-col sm:flex-row flex-wrap sm:items-center gap-x-5 gap-y-1 border-t border-border bg-muted/30 px-4 py-2.5">
             {/* Mobile: count + saldo on first line */}
@@ -1906,7 +1906,7 @@ export default function TransactionsPage() {
           </div>
         </div>
       )}
-      {/* Bulk Action Bar -- aligned with the main content area: clears the
+      {/* Bulk Action Bar - aligned with the main content area: clears the
           fixed sidebar on lg+ and matches the page's max-w-7xl + p-6 wrapper
           so the bar visually sits over the transactions list, not the
           full viewport. The left offset follows the sidebar's real
@@ -1949,7 +1949,7 @@ export default function TransactionsPage() {
             />
 
             <div className="hidden w-full items-center gap-1.5 sm:flex">
-            {/* Selection count + net total -- stacked vertically so the
+            {/* Selection count + net total - stacked vertically so the
                 sum (issue #185) adds no horizontal width to an already
                 crowded bar. The sum is hidden below sm where only the
                 count pill shows. */}
@@ -1979,7 +1979,7 @@ export default function TransactionsPage() {
 
             <div className="w-px bg-border/60 self-stretch" />
 
-            {/* Categorize -- fires on selection, no separate Apply button */}
+            {/* Categorize - fires on selection, no separate Apply button */}
             <CategorySelect
               key={bulkCategory}
               value={bulkCategory}
@@ -1999,7 +1999,7 @@ export default function TransactionsPage() {
 
             <div className="w-px bg-border/60 self-stretch" />
 
-            {/* Add to group -- opens a dialog to configure share type and
+            {/* Add to group - opens a dialog to configure share type and
                 members. Mirrors the per-tx splits options (issue #156). */}
             <Button
               size="sm"
@@ -2082,7 +2082,7 @@ export default function TransactionsPage() {
 
             <div className="w-px bg-border/60 self-stretch" />
 
-            {/* Create Rule -- only when exactly one non-shared transaction is selected */}
+            {/* Create Rule - only when exactly one non-shared transaction is selected */}
             {selectedIds.size === 1 && (() => {
               const selectedTx = filteredItems.find(tx => selectedIds.has(tx.id))
               if (!selectedTx || selectedTx.is_shared) return null
@@ -2192,7 +2192,7 @@ export default function TransactionsPage() {
         onSave={handleTransactionSave}
         onDelete={editingTx ? () => {
           if (isManualInstallmentSeriesRow(editingTx)) {
-            // Deleting one row of a manual series -- ask the user
+            // Deleting one row of a manual series - ask the user
             // whether to drop this, this+future, or all installments.
             setPendingSeriesDeleteId(editingTx.id)
           } else {

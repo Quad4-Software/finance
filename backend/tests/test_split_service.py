@@ -177,7 +177,7 @@ async def test_exact_amounts_must_sum_to_total(
 async def test_exact_amounts_credit_transaction_uses_absolute_total(
     session: AsyncSession, test_user, test_workspace
 ):
-    """Income splits work the same as expense splits -- sign-agnostic."""
+    """Income splits work the same as expense splits - sign-agnostic."""
     account = await _make_account(session, test_user.id)
     tx = await _make_tx(session, test_user.id, account.id, Decimal("200.00"))
     tx.type = "credit"

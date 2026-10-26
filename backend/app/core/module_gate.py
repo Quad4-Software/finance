@@ -1,13 +1,13 @@
 """Refuse requests for a module this workspace does not have.
 
-Module resolution started as a visibility rule -- the nav hid what a
+Module resolution started as a visibility rule - the nav hid what a
 workspace did not need, and there was nothing behind the entries to
 enforce. The invoicing ledger is the first module with its own data, so
 hiding the link is no longer the whole answer: a personal workspace must
 not be able to create an invoice by calling the API directly.
 
 This is deliberately *not* a permission system. It answers "does this
-workspace have this module", never "may this user write" -- that stays
+workspace have this module", never "may this user write" - that stays
 with `require_write` and the role on the membership. Both have to pass,
 and they are asked separately because they are different questions.
 """

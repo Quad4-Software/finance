@@ -23,7 +23,7 @@ def _storage_in_tmpdir(monkeypatch):
     tmp = tempfile.mkdtemp(prefix="kb-test-")
     from app.agents.config import get_agent_settings
 
-    # Settings is @lru_cache'd -- monkeypatch the attribute on the
+    # Settings is @lru_cache'd - monkeypatch the attribute on the
     # cached instance.
     s = get_agent_settings()
     monkeypatch.setattr(s, "knowledge_storage_path", tmp)
@@ -213,7 +213,7 @@ async def test_mark_status_failed_preserves_prior_status_metadata(session, test_
 
 @pytest.mark.asyncio
 async def test_mark_status_unknown_doc_is_silent_noop(session):
-    # No exception even when the doc doesn't exist -- used by the
+    # No exception even when the doc doesn't exist - used by the
     # Celery task to avoid crashing on a missing row.
     await knowledge_service.mark_status(session, uuid.uuid4(), status="failed", error="x")
 

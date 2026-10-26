@@ -68,7 +68,7 @@ def test_build_market_value_series_backdated_trades_predating_prices():
     """The reported bug: trades years before price tracking each get a point.
 
     A market-priced holding records prices only from when it was added (recent
-    dates), so every backdated buy must still produce a dated point -- otherwise
+    dates), so every backdated buy must still produce a dated point - otherwise
     the chart collapses them onto one anchor and draws a single interpolation.
     """
     rows: list[ValueRecord] = [(date(2026, 6, 15), Decimal("5335.56"), Decimal("296.42"))]
@@ -86,7 +86,7 @@ def test_build_market_value_series_backdated_trades_predating_prices():
 
 
 def test_build_market_value_series_no_ledger_keeps_amounts():
-    """A holding with no transactions must not be zeroed -- keep stored amounts."""
+    """A holding with no transactions must not be zeroed - keep stored amounts."""
     rows: list[ValueRecord] = [
         (date(2026, 1, 1), Decimal("500"), Decimal("5")),
         (date(2026, 2, 1), Decimal("600"), Decimal("6")),
@@ -936,11 +936,11 @@ async def test_portfolio_trend_total_consistent_with_get_asset_values_at(
     Uses a USD asset whose value entry pre-dates the display date, so
     it is fill-forwarded. Two different BRL/USD rates are inserted so the
     old behavior (convert at value-entry date) and the new behavior
-    (convert at display date) produce different numbers -- only the new
+    (convert at display date) produce different numbers - only the new
     behavior matches get_asset_values_at.
     """
     date_jan = date(2025, 1, 31)  # USD asset gets its value here (rate 5.0)
-    date_mar = date(2025, 3, 31)  # display date -- different rate (6.0)
+    date_mar = date(2025, 3, 31)  # display date - different rate (6.0)
 
     # Two FX snapshots so convert() finds an exact match at each date
     for fx_date, fx_rate in [(date_jan, "5.0"), (date_mar, "6.0")]:

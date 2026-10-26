@@ -215,7 +215,7 @@ export function InvoiceLineEditor({
                   </Button>
                 </div>
 
-                {/* Only when the workspace shows tax at all -- a rate field
+                {/* Only when the workspace shows tax at all - a rate field
                     on a tracking-preset invoice is a question nobody
                     asked. On its own row so the columns above stay put. */}
                 {showTax && (

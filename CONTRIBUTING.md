@@ -5,7 +5,7 @@ Thanks for your interest in contributing to Quad4 Finance! This guide will help 
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/your-username/quad4.git`
+2. Clone your fork: `git clone https://github.com/your-username/finance.git`
 3. Start the stack: `docker compose up --build`
 4. Open [http://localhost:3000](http://localhost:3000)
 
@@ -41,7 +41,7 @@ So whatever you use, before you open the PR:
 - **You own the approach, not just the output.** You decided the strategy and delegated the typing. If the model picked the architecture and you went along with it, you don't know the change well enough to defend it in review.
 - **You're the quality gate.** The change holds to the standards of the code already here: naming, structure, tests, error handling. AI writes plausible code, and plausible isn't the bar.
 - **It fits where the product is going.** A change can work and still be wrong for Quad4 Finance. Whether it belongs here is your call before it's ours.
-- **You ran it.** Not "the tests should pass" -- you ran them, you ran the app, you saw the change work.
+- **You ran it.** Not "the tests should pass" - you ran them, you ran the app, you saw the change work.
 - **The scope is what the issue asked for.** AI is generous with refactors nobody requested. Strip them. A thirty-file diff for a one-line bug goes back.
 - **You're accountable after it merges.** If it breaks in three weeks, you're who we come to.
 
@@ -94,7 +94,7 @@ cd frontend && npm install <package>     # commit package.json and package-lock.
 ```
 
 If the package you want was published in the last week, npm resolves the release
-before it. That is the point -- wait, or say in the PR why you can't.
+before it. That is the point - wait, or say in the PR why you can't.
 Either works.
 
 ## Commit Messages
@@ -111,7 +111,7 @@ Use clear, descriptive commit messages:
 ```bash
 # Backend tests (run from backend/, needs Python 3.11+; same as CI)
 cd backend
-uv sync --all-extras   # first time only -- builds .venv from uv.lock, same versions as CI
+uv sync --all-extras   # first time only - builds .venv from uv.lock, same versions as CI
 source .venv/bin/activate
 pytest
 
@@ -157,7 +157,7 @@ someone's `alembic upgrade head` after both are merged.
 
 ## Pull Request Guidelines
 
-- Keep PRs focused -- one feature or fix per PR
+- Keep PRs focused - one feature or fix per PR
 - Include a clear description of what changed and why
 - Make sure CI passes (tests + lint)
 - Add tests for new backend functionality

@@ -13,7 +13,7 @@ import { publicInvoices } from '@/lib/api'
  * Outside the app shell entirely: no sidebar, no workspace, no session.
  * The recipient is a client, not a user, and the page shows them one
  * document and a way to save it. A bad or revoked token is a plain
- * not-found -- the same answer a link that never existed gets, because
+ * not-found - the same answer a link that never existed gets, because
  * "this used to be here" is itself information.
  */
 export default function SharedInvoicePage() {

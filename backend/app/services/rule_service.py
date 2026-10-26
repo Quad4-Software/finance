@@ -164,7 +164,7 @@ UNIVERSAL_RULES = [
 
     # Investment movements (dividends, interest, buys/sells, funds). The target
     # category is flagged `treat_as_transfer=true` so reports exclude these
-    # from income/expense -- the "other side" of the movement is the Asset
+    # from income/expense - the "other side" of the movement is the Asset
     # (holding) that grew or shrank, not a real gain or cost.
     {"name": "Investments (Dividends / Trades)", "conditions_op": "or", "conditions": [
         {"field": "description", "op": "regex",
@@ -596,7 +596,7 @@ def _build_rules_from_templates(
 ) -> tuple[list[dict], int]:
     """Convert rule templates (with internal keys) to rules with resolved category UUIDs.
 
-    Returns (resolved_rules, unresolved_count) -- unresolved is how many
+    Returns (resolved_rules, unresolved_count) - unresolved is how many
     templates were dropped because their `set_category` target category
     doesn't exist for this user. Callers use it to distinguish "pack
     already installed" (every rule skipped because the name already
@@ -642,7 +642,7 @@ async def create_default_rules(
     """Create universal default categorization rules for a new user.
 
     `lang` is accepted for backwards compatibility but no longer affects
-    category resolution -- categories are matched by internal key across all
+    category resolution - categories are matched by internal key across all
     language variants.
     """
     # Scope category resolution to the target workspace so rules in a
@@ -713,7 +713,7 @@ async def _ensure_categories_for_keys(
 ) -> int:
     """Create any default categories from `internal_keys` that the user is missing.
 
-    Idempotent -- categories are matched across language variants, so a
+    Idempotent - categories are matched across language variants, so a
     user with English defaults won't get Portuguese duplicates if `lang`
     happens to be pt-BR. Returns the count of newly-created categories.
     """
@@ -809,7 +809,7 @@ async def install_rule_pack(
     """Install a country-specific rule pack for a user. Skips rules whose name already exists.
 
     When `create_missing_categories=True`, creates any default categories
-    referenced by the pack that the user is missing -- so users in a
+    referenced by the pack that the user is missing - so users in a
     degenerate state (or who never had defaults seeded) can opt into
     "install pack, fill in what's needed". `lang` controls the names of
     any newly-created categories.
@@ -1108,7 +1108,7 @@ async def _get_existing_rule_names_for_workspace(
 
 # Exactly the columns `_rule_preview` copies. Anything reading a column that is
 # not here off a transaction loaded with `load_only(*_PREVIEW_COLUMNS)` would
-# trigger a lazy refresh -- which raises under async -- so the two lists move
+# trigger a lazy refresh - which raises under async - so the two lists move
 # together.
 _PREVIEW_COLUMNS = (
     Transaction.user_id,
@@ -1259,25 +1259,25 @@ async def preview_rule(
     """Report which existing transactions an unsaved rule would match.
 
     Read-only counterpart of `apply_single_rule`: same transaction scope, same
-    engine, same overwrite semantics -- so the table the editor shows is exactly
+    engine, same overwrite semantics - so the table the editor shows is exactly
     what saving the rule would produce. Returns the full match/change counts
-    plus one window of the matches -- `limit` of them from `offset`, newest
-    first -- so a rule matching thousands of rows can be paged through rather
+    plus one window of the matches - `limit` of them from `offset`, newest
+    first - so a rule matching thousands of rows can be paged through rather
     than judged by its first screenful. Every match is evaluated whatever the
     window is, which is what keeps the counts exact.
 
     That means honouring the two gates the save path applies before any rule
     touches history: `apply_single_rule` does nothing for an inactive rule, and
     the create/update endpoints only call it when `apply_to_existing` is set.
-    With either off, the matches are still listed -- they are what the
-    conditions select, which is worth seeing -- but nothing is reported as
+    With either off, the matches are still listed - they are what the
+    conditions select, which is worth seeing - but nothing is reported as
     changing, because saving would change nothing.
     """
     will_apply = is_active and apply_to_existing
     await _validate_rule_definition(session, workspace_id, conditions, actions or [])
 
     # Every transaction is evaluated in Python, so only the columns the engine
-    # reads and `_rule_preview` copies are worth fetching -- notably not
+    # reads and `_rule_preview` copies are worth fetching - notably not
     # `raw_data`, whose provider payloads dwarf the rest of the row and which
     # no condition or action can see.
     result = await session.execute(
@@ -1314,7 +1314,7 @@ async def preview_rule(
     for tx in transactions:
         matches = evaluate_conditions(conditions_op, conditions or [], tx)
         # A rule that renamed this row before should still recognise it, so a
-        # miss is retried against the original text -- same as apply_single_rule.
+        # miss is retried against the original text - same as apply_single_rule.
         if not matches and tx.original_description is not None:
             original_target = _rule_preview(tx)
             original_target.description = tx.original_description

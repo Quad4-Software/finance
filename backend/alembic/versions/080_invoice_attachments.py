@@ -98,9 +98,9 @@ def downgrade() -> None:
     """Gives back what `upgrade` took, as far as it can be given back.
 
     `upgrade` folded `series || number` into one text column and cleared
-    both. Splitting that back apart is guesswork in general -- a source
+    both. Splitting that back apart is guesswork in general - a source
     that numbered a document `2026/A/0031` leaves nothing to say where
-    the series ended -- so only the unambiguous case is restored: a value
+    the series ended - so only the unambiguous case is restored: a value
     that is digits and nothing else goes back into `number`.
 
     Anything else stays in `external_number` until the column is dropped

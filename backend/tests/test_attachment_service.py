@@ -24,7 +24,7 @@ from app.services.attachment_service import (
 
 
 # ---------------------------------------------------------------------------
-# sanitize_filename -- pure function
+# sanitize_filename - pure function
 # ---------------------------------------------------------------------------
 
 

@@ -62,7 +62,7 @@ async def _make_user(session: AsyncSession, email: str, is_superuser: bool = Fal
     await session.commit()
     # Every user needs a workspace so the autostamp listener can resolve
     # workspace_id when downstream rows (accounts, connections, etc.) are
-    # inserted without it -- the cascade test relies on this.
+    # inserted without it - the cascade test relies on this.
     await create_personal_workspace_for_user(session, user)
     await session.commit()
     await session.refresh(user)
@@ -334,7 +334,7 @@ async def test_update_user_is_active_and_superuser(session: AsyncSession, clean_
 
 
 # ---------------------------------------------------------------------------
-# delete_user -- cascade
+# delete_user - cascade
 # ---------------------------------------------------------------------------
 
 
@@ -437,12 +437,12 @@ async def test_delete_user_last_superuser(session: AsyncSession, clean_db):
 async def test_delete_last_superuser_blocked(session: AsyncSession, clean_db):
     admin1 = await _make_user(session, "admin1_last@test.com", is_superuser=True)
     admin2 = await _make_user(session, "admin2_last@test.com", is_superuser=True)
-    # admin2 tries to delete admin1 -- should succeed (2 admins remain: admin2)
+    # admin2 tries to delete admin1 - should succeed (2 admins remain: admin2)
     assert await delete_user(session, admin1.id, admin2.id) is True
 
     # Now create a new target admin, make it the last
     target = await _make_user(session, "last_target@test.com", is_superuser=True)
-    # admin2 is one admin, target is another -- delete target is fine
+    # admin2 is one admin, target is another - delete target is fine
     assert await delete_user(session, target.id, admin2.id) is True
 
 

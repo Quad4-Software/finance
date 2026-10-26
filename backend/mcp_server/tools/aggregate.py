@@ -19,7 +19,7 @@ from mcp_server.tools._helpers import num, parse_date, parse_uuid_list, resolve_
         "(sum|count|avg) and a group_by (category|month|account|payee|day). "
         "Returns a list of {bucket, value, count} rows. Amounts use the "
         "user's primary currency when available, falling back to native. "
-        "By default counts only POSTED transactions (already settled) -- "
+        "By default counts only POSTED transactions (already settled) - "
         "set status='all' or 'pending' to include scheduled/recurring rows."
     ),
     parameters={
@@ -31,10 +31,10 @@ from mcp_server.tools._helpers import num, parse_date, parse_uuid_list, resolve_
             "to_date": {"type": "string", "format": "date"},
             "account_ids": {"type": "array", "items": {"type": "string", "format": "uuid"}},
             "category_ids": {"type": "array", "items": {"type": "string", "format": "uuid"}},
-            "payee_id": {"type": "string", "format": "uuid", "description": "Restrict to a single payee -- useful for 'how much did I spend at X?'"},
+            "payee_id": {"type": "string", "format": "uuid", "description": "Restrict to a single payee - useful for 'how much did I spend at X?'"},
             "currency": {"type": "string", "description": "Restrict to one native currency (BRL, USD, EUR, ...)"},
             "tx_type": {"type": "string", "enum": ["expense", "income"], "description": "Filter to expenses or income only"},
-            "description_contains": {"type": "string", "description": "Case-insensitive substring match against the transaction description -- use this to scope to a merchant/keyword like 'uber', 'spotify', 'amigos do bem'."},
+            "description_contains": {"type": "string", "description": "Case-insensitive substring match against the transaction description - use this to scope to a merchant/keyword like 'uber', 'spotify', 'amigos do bem'."},
             "status": {"type": "string", "enum": ["posted", "pending", "all"], "default": "posted", "description": "Default 'posted' = only money that already moved. Use 'pending' for scheduled/recurring not yet settled, or 'all' to include both."},
             "exclude_transfers": {"type": "boolean", "default": True},
             "limit": {"type": "integer", "minimum": 1, "maximum": 50, "default": 25, "description": "Max bucket rows in the result. Capped at 50."},
@@ -61,7 +61,7 @@ async def aggregate(
     exclude_transfers: bool = True,
     limit: int = 25,
 ) -> dict[str, Any]:
-    # Hard cap regardless of LLM input -- keeps payload small enough for
+    # Hard cap regardless of LLM input - keeps payload small enough for
     # token-tight providers.
     limit = max(1, min(int(limit), 50))
     ws_id = await resolve_workspace_id(session, ctx)
@@ -112,7 +112,7 @@ async def aggregate(
     if cats:
         q = q.where(Transaction.category_id.in_(cats))
     if payee_id:
-        # parse_uuid_list returns a list -- single payee_id wrapped works too.
+        # parse_uuid_list returns a list - single payee_id wrapped works too.
         pids = parse_uuid_list([payee_id])
         if pids:
             q = q.where(Transaction.payee_id == pids[0])

@@ -9,7 +9,7 @@ so for every existing Pluggy-linked account the sum of imported transactions
 doesn't equal account.balance. The difference is the account's real balance
 at the start of the import window, which was never recorded anywhere. This
 migration inserts a synthetic `source='opening_balance'` transaction on each
-connected account so that SUM(txs) = account.balance going forward -- making
+connected account so that SUM(txs) = account.balance going forward - making
 balance_history and the running-balance column in the UI line up with the
 card balance.
 
@@ -97,7 +97,7 @@ def upgrade() -> None:
         opening_date = (oldest_date - timedelta(days=1)) if oldest_date else None
 
         if opening_date is None:
-            # No transactions yet -- skip; first sync will create the opening tx.
+            # No transactions yet - skip; first sync will create the opening tx.
             continue
 
         conn.execute(

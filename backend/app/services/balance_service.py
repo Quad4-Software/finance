@@ -40,7 +40,7 @@ async def compute_balances(
     workspace_id: uuid.UUID,
     user_id: uuid.UUID,
 ) -> Optional[dict]:
-    # Visible to anyone with read access to the group -- workspace members
+    # Visible to anyone with read access to the group - workspace members
     # plus cross-workspace linked members. They all see the same
     # who-owes-whom view.
     from app.services.group_service import get_group_visible

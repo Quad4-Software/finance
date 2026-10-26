@@ -1,6 +1,6 @@
 """Tests for market-priced assets (yfinance-backed valuation).
 
-These tests stub the MarketPriceProvider so nothing hits the network --
+These tests stub the MarketPriceProvider so nothing hits the network -
 yfinance flakes often enough in CI that any test depending on real
 Yahoo responses would be permanently yellow. The stub verifies the
 service wiring: create, refresh, upsert-today-value, and rate-limit
@@ -48,7 +48,7 @@ class FakeMarketProvider(MarketPriceProvider):
         quotes: dict[str, MarketSymbolQuote],
         *,
         rate_limit_after: Optional[int] = None,
-        # When set, overrides what `get_latest_prices` returns -- lets tests
+        # When set, overrides what `get_latest_prices` returns - lets tests
         # assert that the batch path is hit (or skipped) independently.
         batch_prices: Optional[dict[str, Optional[Decimal]]] = None,
     ) -> None:
@@ -75,7 +75,7 @@ class FakeMarketProvider(MarketPriceProvider):
 
     async def get_latest_prices(self, symbols: list[str]) -> dict[str, Optional[Decimal]]:
         self.batch_calls += 1
-        # The batch counts as a "request" for rate-limit purposes -- a real
+        # The batch counts as a "request" for rate-limit purposes - a real
         # yfinance batch is exactly one HTTP call to Yahoo, same surface
         # area as any other request. Bumping `_calls` keeps the counter
         # semantics consistent with get_quote.
@@ -304,7 +304,7 @@ async def test_refresh_market_price_updates_cached_price_and_upserts_today(
     )
     all_values = list(values.scalars().all())
     todays = [v for v in all_values if v.date == date.today()]
-    # Exactly one value for today -- the refresh must upsert, not append.
+    # Exactly one value for today - the refresh must upsert, not append.
     assert len(todays) == 1
     assert todays[0].amount == Decimal("1900.000000")
     assert todays[0].source == "sync"
@@ -337,7 +337,7 @@ async def test_refresh_all_uses_batch_endpoint(
             market_provider=provider,
         )
 
-    # Reset counters -- create_asset already used get_quote 3 times.
+    # Reset counters - create_asset already used get_quote 3 times.
     provider.batch_calls = 0
     provider.quote_calls_after_batch = 0
 
@@ -373,7 +373,7 @@ async def test_refresh_all_falls_back_when_batch_misses_symbol(
             market_provider=provider,
         )
 
-    # Simulate Yahoo returning only AAPL from the batch -- MSFT should
+    # Simulate Yahoo returning only AAPL from the batch - MSFT should
     # drop through to the per-asset fallback.
     provider = FakeMarketProvider(
         {"AAPL": _quote("AAPL", 181.0), "MSFT": _quote("MSFT", 402.0)},
@@ -408,7 +408,7 @@ async def test_refresh_all_halts_on_rate_limit(
             market_provider=provider,
         )
 
-    # Now make any further quote call rate-limit -- refresh should stop,
+    # Now make any further quote call rate-limit - refresh should stop,
     # not continue hitting Yahoo after the first throttled response. Since
     # the batch path is tried first and our fake's batch helper internally
     # calls get_quote (no canned batch_prices), the rate-limit fires at
@@ -420,7 +420,7 @@ async def test_refresh_all_halts_on_rate_limit(
     result = await refresh_all_market_prices(session, market_provider=limited)
 
     assert result["rate_limited"] == 1
-    # Nothing refreshed -- batch halt means every asset landed in the
+    # Nothing refreshed - batch halt means every asset landed in the
     # skipped bucket, no per-asset fallback was attempted.
     assert result["refreshed"] == 0
     assert result["skipped"] == 2

@@ -191,7 +191,7 @@ export default function AgentsListPage() {
                     </div>
                   </div>
                 </Link>
-                {/* Default toggle -- wrapper stops the click bubbling so
+                {/* Default toggle - wrapper stops the click bubbling so
                     flipping the switch doesn't navigate into the agent. */}
                 {canWrite && (
                   <div
@@ -199,7 +199,7 @@ export default function AgentsListPage() {
                     onClick={(e) => e.stopPropagation()}
                     title={t(
                       'agents.form.isDefaultHint',
-                      'Used by the global slide-over chat (⌘J). Only one agent can be the default -- turning this on clears it on others.',
+                      'Used by the global slide-over chat (⌘J). Only one agent can be the default - turning this on clears it on others.',
                     )}
                   >
                     <span className="text-xs text-muted-foreground hidden sm:inline">

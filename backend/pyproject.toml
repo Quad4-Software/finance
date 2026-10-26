@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 # These ranges express intent; the resolved versions live in uv.lock, which is
 # what CI and the Docker image actually install (exported with --frozen and
 # fed to pip with hash checking). After changing anything here, run
-# scripts/lock.sh and commit the updated uv.lock -- CI fails if it drifts.
+# scripts/lock.sh and commit the updated uv.lock - CI fails if it drifts.
 dependencies = [
     "fastapi>=0.109.0",
     "uvicorn[standard]>=0.27.0",
@@ -101,7 +101,7 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 # FastAPI/Starlette route handlers run on SQLAlchemy's greenlet, so coverage.py
-# must track greenlet (and thread) execution contexts -- otherwise async endpoint
+# must track greenlet (and thread) execution contexts - otherwise async endpoint
 # bodies execute but their lines are never attributed, under-reporting every API module.
 concurrency = ["greenlet", "thread"]
 omit = [

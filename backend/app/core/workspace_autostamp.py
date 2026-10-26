@@ -88,7 +88,7 @@ def _cache_key(session: Session, user_id: uuid.UUID) -> str:
 
 
 def _resolve_workspace_for_user(session: Session, user_id: uuid.UUID) -> uuid.UUID | None:
-    """Find the user's first workspace. Synchronous -- listener runs on the sync mapper."""
+    """Find the user's first workspace. Synchronous - listener runs on the sync mapper."""
     # The listener is invoked from a sync-binding even in async sessions
     # (SQLAlchemy translates), so use the sync-style execute.
     row = session.execute(
@@ -104,7 +104,7 @@ def _resolve_workspace_for_user(session: Session, user_id: uuid.UUID) -> uuid.UU
     return row[0] if row else None
 
 
-# Parent FK columns to consult in order -- when a row's workspace_id is
+# Parent FK columns to consult in order - when a row's workspace_id is
 # missing, look up the parent and inherit its workspace_id. Order
 # matters: more specific parents come first.
 _PARENT_LOOKUPS: tuple[tuple[str, str], ...] = (
@@ -152,7 +152,7 @@ def _before_insert(mapper: Mapper, connection: Any, target: Any) -> None:
     if session is None:
         return
 
-    # Prefer the parent's workspace -- this keeps synced rows in the
+    # Prefer the parent's workspace - this keeps synced rows in the
     # workspace that owns the bank connection / account / asset, which
     # may not be the user's *default* workspace.
     parent_ws = _resolve_from_parent(session, target)

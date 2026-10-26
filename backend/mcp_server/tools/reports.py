@@ -79,7 +79,7 @@ async def get_income_expenses(
 
 @tool(
     name="get_cash_flow",
-    description="Forward-looking cash flow projection -- current balance plus future bookings and recurring transactions.",
+    description="Forward-looking cash flow projection - current balance plus future bookings and recurring transactions.",
     parameters={
         "type": "object",
         "properties": {

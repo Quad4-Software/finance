@@ -32,7 +32,7 @@ const SELECT_CLASS =
  *
  * Deliberately built from the same pieces as the transaction importer: one
  * dashed drop zone that also carries the template link, then a result card
- * whose first strip picks the destination -- the wallet here, the account
+ * whose first strip picks the destination - the wallet here, the account
  * there. Two importers that look different teach the same person two habits.
  */
 export function AssetImportPanel() {

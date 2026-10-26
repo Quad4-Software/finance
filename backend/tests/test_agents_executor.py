@@ -1,7 +1,7 @@
 """End-to-end-style executor tests with a scripted LLM and a fake MCP.
 
-These exercise the full agent runtime -- turn loop, tool dispatch, message
-persistence, usage logging, error classification -- without ever hitting a
+These exercise the full agent runtime - turn loop, tool dispatch, message
+persistence, usage logging, error classification - without ever hitting a
 real LLM or MCP server.
 
 Pattern:
@@ -54,7 +54,7 @@ class _ScriptedProvider(LLMProvider):
     ) -> AsyncIterator[ChatChunk]:
         self.requests.append(deepcopy(messages))
         if not self._turns:
-            # No more scripted turns -- emit a generic finish.
+            # No more scripted turns - emit a generic finish.
             yield ChatChunk(type="finish", finish_reason="stop")
             return
         turn = self._turns.pop(0)
@@ -295,7 +295,7 @@ async def test_no_model_configured_yields_config_error(session, test_user, test_
     await session.commit()
 
     executor = AgentExecutor(mcp=_FakeMCP(tools=[]))
-    # Provider doesn't matter here -- should never be called.
+    # Provider doesn't matter here - should never be called.
     provider = _ScriptedProvider([])
     with _patch_provider(provider), patch.dict("os.environ", {"AGENTS_DEFAULT_MODEL": ""}, clear=False):
         events = await _drain(
@@ -406,10 +406,10 @@ async def test_tool_result_passed_to_llm_in_full(session, test_user, test_agent,
 
     assert captured_tool_messages, "executor should have fed a tool message into turn 2"
     last = captured_tool_messages[-1]
-    # Every item must appear in the LLM-facing content -- no silent truncation.
+    # Every item must appear in the LLM-facing content - no silent truncation.
     for i in range(20):
         assert f"Transaction number {i}" in last, (
-            f"item {i} missing from tool message of length {len(last)} -- likely truncation regression"
+            f"item {i} missing from tool message of length {len(last)} - likely truncation regression"
         )
 
 
@@ -514,7 +514,7 @@ async def test_runtime_guardrail_always_present_even_with_no_agent_prompt(sessio
             user_message="hi",
         )
     sys_msgs = captured["system"]
-    # Guardrail [0] + identity primer [1] are the irreducible minimum --
+    # Guardrail [0] + identity primer [1] are the irreducible minimum -
     # both are always present even when the user gave no system_prompt
     # and turned auto-context off.
     assert len(sys_msgs) == 2

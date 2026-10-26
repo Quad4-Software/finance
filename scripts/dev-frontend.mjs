@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Frontend dev watcher -- rebuilds on file change and auto-deploys to Docker.
+ * Frontend dev watcher - rebuilds on file change and auto-deploys to Docker.
  *
  * Usage:  node scripts/dev-frontend.mjs
  *         npm run dev:frontend   (once the script is added to package.json)

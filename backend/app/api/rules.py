@@ -31,7 +31,7 @@ def _normalize_condition(condition: dict) -> dict:
     """Reduce one condition list entry to the keys that decide what it matches.
 
     A group entry carries its own operator and leaves instead of a field, so it
-    has to be normalized recursively -- flattening it to `field: None` would make
+    has to be normalized recursively - flattening it to `field: None` would make
     every group compare equal and hide real edits from the change check below.
     """
     nested = condition.get("conditions")

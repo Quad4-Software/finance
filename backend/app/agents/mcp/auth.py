@@ -28,7 +28,7 @@ def mint_token(
     `workspace_id` is recommended for every internal call so MCP tools
     operate within the right tenant. It's optional only because long-
     lived external tokens issued before the multi-workspace migration
-    still verify -- the MCP server falls back to the user's default
+    still verify - the MCP server falls back to the user's default
     workspace when the claim is absent.
     """
     s = get_agent_settings()

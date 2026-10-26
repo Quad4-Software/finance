@@ -1,7 +1,7 @@
 """FastAPI dependency that resolves the current workspace for a request.
 
 Resolution order:
-  1. `X-Workspace-Id` header -- explicit selection from the frontend.
+  1. `X-Workspace-Id` header - explicit selection from the frontend.
   2. The user's first/default workspace (`get_default_workspace`).
 
 If neither resolves, raises 404. Returns a `WorkspaceContext` value
@@ -43,7 +43,7 @@ class WorkspaceContext:
 
     @property
     def user_id(self) -> uuid.UUID:
-        """The current human's user_id -- used as `created_by` on new rows."""
+        """The current human's user_id - used as `created_by` on new rows."""
         return self.user.id
 
     @property

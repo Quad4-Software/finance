@@ -36,7 +36,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       }
     } catch {
       // 401s are handled by the global interceptor; other failures we
-      // just surface as no-data -- the user can retry from the UI.
+      // just surface as no-data - the user can retry from the UI.
       setList([])
     } finally {
       setIsLoading(false)
@@ -46,7 +46,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Stay in the loading state until auth has settled. Reporting "done,
     // no workspaces" while the token is still being restored is a lie
-    // that lasts one render -- long enough for anything gated on
+    // that lasts one render - long enough for anything gated on
     // `hasModule` to decide the module is off and redirect away.
     if (authLoading) return
     if (!user || !token) {
@@ -67,7 +67,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setCurrentId(id)
       // Every cached query was scoped to the previous workspace.
       // `resetQueries` flushes cached data AND refetches active
-      // observers in one call -- `clear()` alone removed data without
+      // observers in one call - `clear()` alone removed data without
       // triggering refetches (mounted components kept their previous
       // render until a manual reload).
       await queryClient.resetQueries()

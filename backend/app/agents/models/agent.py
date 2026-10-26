@@ -29,9 +29,9 @@ class Agent(Base):
     color: Mapped[str] = mapped_column(String(7), default="#6B7280")
 
     # LLM config. There are three layers (most->least specific):
-    #   1. agent.connection_id  -- user-managed connection (recommended)
-    #   2. agent.provider       -- kind name; instance env vars supply creds
-    #   3. instance defaults    -- env vars only
+    #   1. agent.connection_id  - user-managed connection (recommended)
+    #   2. agent.provider       - kind name; instance env vars supply creds
+    #   3. instance defaults    - env vars only
     # `model` is the model id within whichever provider/connection wins.
     connection_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
@@ -53,7 +53,7 @@ class Agent(Base):
     extra: Mapped[dict] = mapped_column(JSON, default=dict)
 
     # When True, the executor prepends a small "context primer" system
-    # message before each turn -- user name, currency, today's date,
+    # message before each turn - user name, currency, today's date,
     # account list. Saves the user from having to repeat themselves.
     auto_context: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
 

@@ -77,7 +77,7 @@ async def _get_recurring_projections(
     include_transfer_like: bool = False,
 ) -> list[dict]:
     """Compute virtual recurring transaction projections for a month.
-    Pure read -- no DB writes. Returns list of dicts with category_id, amount, type, currency.
+    Pure read - no DB writes. Returns list of dicts with category_id, amount, type, currency.
 
     When ``account_ids`` is given (Collection filter), only recurring rules on
     those accounts are projected. Empty list -> no projections.
@@ -260,7 +260,7 @@ async def get_summary(
     # collection's accounts, plus the assets in its wallets (asset_group_ids);
     # group-split redistribution and cross-group shares are gated off so the
     # filtered numbers stay self-consistent. A wallet-only collection (wallets
-    # but no accounts) still filters -- coerce accounts to empty.
+    # but no accounts) still filters - coerce accounts to empty.
     if asset_group_ids is not None and account_ids is None:
         account_ids = []
     filtered = account_ids is not None
@@ -268,7 +268,7 @@ async def get_summary(
 
     # Reporting mode is a global app setting (admin-controlled). When "accrual",
     # aggregation queries bucket credit card transactions by the bill's due
-    # date (effective_date) instead of the purchase date -- gives a true
+    # date (effective_date) instead of the purchase date - gives a true
     # cash-flow view.
     user = await session.get(User, user_id)
     accounting_mode = await get_credit_card_accounting_mode(session)
@@ -366,7 +366,7 @@ async def get_summary(
                     projected_balance.get(claim.currency, 0.0) + float(claim.signed)
                 )
 
-    # Monthly income and expenses -- exclude opening_balance so initial deposits
+    # Monthly income and expenses - exclude opening_balance so initial deposits
     # don't inflate the month's income figure. counts_as_user_pnl() skips
     # paired transfers, transfer-like categories AND settlement movements
     # (whose offset is already in the owner's share, see share-only model).
@@ -393,7 +393,7 @@ async def get_summary(
     monthly_expenses = float(monthly_row[1] or 0)
 
     if not filtered:
-        # Subtract non-owner shares of the user's own split txs -- they paid
+        # Subtract non-owner shares of the user's own split txs - they paid
         # for the others, so those amounts aren't their actual cost.
         own_offset_inc, own_offset_exp = await owner_split_offset_pnl(
             session,
@@ -443,7 +443,7 @@ async def get_summary(
         else:
             projected_monthly_expenses += float(tx.amount)
 
-    # Account count -- the active collection's accounts when filtered, else all
+    # Account count - the active collection's accounts when filtered, else all
     # accounts in this workspace (manual + bank-connected).
     if filtered:
         accounts_count = len(account_ids)
@@ -454,7 +454,7 @@ async def get_summary(
             .where(Account.workspace_id == workspace_id)
         ) or 0
 
-    # Pending categorization -- exclude opening_balance and transfer pairs
+    # Pending categorization - exclude opening_balance and transfer pairs
     pending_cat_filters = [
         Transaction.workspace_id == workspace_id,
         Transaction.category_id.is_(None),
@@ -482,7 +482,7 @@ async def get_summary(
     # Get user's primary currency (user already loaded above for reporting mode)
     primary_currency = user.primary_currency if user else get_settings().default_currency
 
-    # Asset values -- use cutoff so past months show historical values. Under a
+    # Asset values - use cutoff so past months show historical values. Under a
     # collection filter, include only assets in the collection's wallets
     # (asset_group_ids); a collection with no wallets -> no assets.
     assets_value, assets_value_primary = await get_asset_values_at(
@@ -555,7 +555,7 @@ async def get_summary(
     # are stored in the parent transaction's currency, so we convert
     # each currency bucket separately rather than re-using shared_income
     # / shared_expenses (which were summed without conversion).
-    # Gated under a collection filter -- those parent transactions live in
+    # Gated under a collection filter - those parent transactions live in
     # other users'/workspaces' accounts, outside the filtered account set.
     if not filtered:
         from app.models.group import GroupMember
@@ -695,7 +695,7 @@ async def _compute_pending_shares_net(
     # Scope to groups that live in the CURRENT workspace (where the
     # user is the creator) PLUS groups they're a linked member of from
     # other workspaces (cross-workspace projection). Drop `is_self`
-    # links -- those are the user's own self-member in their own group,
+    # links - those are the user's own self-member in their own group,
     # already accounted for by the workspace-scoped path.
     owned_q = await session.execute(
         select(Group.id).where(
@@ -728,7 +728,7 @@ async def _compute_pending_shares_net(
                 signed = line_amount
             else:
                 # Linked-member view: only the line about *us* matters
-                # to our personal net. Flip the sign -- `compute_balances`
+                # to our personal net. Flip the sign - `compute_balances`
                 # frames it from the owner's perspective.
                 if line["member_id"] != member_id_for_group[gid]:
                     continue
@@ -799,7 +799,7 @@ async def get_spending_by_category(
             "projected": 0.0,
         }
 
-    # Subtract non-owner shares per category -- owner-side splits should
+    # Subtract non-owner shares per category - owner-side splits should
     # contribute only the owner's share, not the full amount.
     owner_offset = {} if filtered else await owner_split_offset_by_category(
         session,
@@ -817,7 +817,7 @@ async def get_spending_by_category(
             if spending_map[cat_id]["total"] <= 0:
                 spending_map.pop(cat_id)
 
-    # Add shared shares -- the viewer's portion of group-split debits
+    # Add shared shares - the viewer's portion of group-split debits
     # they participate in but don't own. The category comes from the
     # parent transaction.
     shared_by_cat = {} if filtered else await viewer_shared_spending_by_category(
@@ -862,7 +862,7 @@ async def get_spending_by_category(
     projections = await _get_recurring_projections(
         session, workspace_id, month_start, month_end, account_ids
     )
-    # We need category info for recurring projections -- fetch categories
+    # We need category info for recurring projections - fetch categories
     cat_cache: dict[str, dict] = {}
     for proj in projections:
         if proj["type"] != "debit":
@@ -1268,7 +1268,7 @@ async def _get_open_accounts(
     """Get all non-closed accounts for a workspace.
 
     When ``account_ids`` is provided (an active Collection filter, issue #105),
-    restrict to that subset. An empty list returns no accounts -- a collection
+    restrict to that subset. An empty list returns no accounts - a collection
     with no members shows nothing rather than everything.
     """
     if account_ids is not None and len(account_ids) == 0:

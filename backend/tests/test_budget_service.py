@@ -29,7 +29,7 @@ async def test_create_budget(session: AsyncSession, test_user, test_workspace, t
     data = BudgetCreate(
         category_id=test_categories[0].id,
         amount=Decimal("500.00"),
-        month=date(2025, 3, 15),  # mid-month -- should normalize to day=1
+        month=date(2025, 3, 15),  # mid-month - should normalize to day=1
     )
     budget = await create_budget(session, test_workspace.id, test_user.id, data)
 

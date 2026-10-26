@@ -34,7 +34,7 @@ async def store_state(payload: dict[str, Any]) -> str:
 
 
 async def consume_state(state: str) -> Optional[dict[str, Any]]:
-    """One-shot retrieval -- deletes the key in the same round trip."""
+    """One-shot retrieval - deletes the key in the same round trip."""
     if not state:
         return None
     redis = await get_redis()

@@ -2,7 +2,7 @@
 
 Key derivation: PBKDF2(SHA256, app SECRET_KEY) so we don't need a
 separate key file. If the operator rotates SECRET_KEY, existing
-ciphertexts become unreadable -- that's by design (rotation = re-enter
+ciphertexts become unreadable - that's by design (rotation = re-enter
 your provider keys).
 """
 from __future__ import annotations

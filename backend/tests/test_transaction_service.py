@@ -176,7 +176,7 @@ async def test_create_transaction_applies_rules(
     session.add(rule)
     await session.commit()
 
-    # Create transaction without category -- rule should apply
+    # Create transaction without category - rule should apply
     data = TransactionCreate(
         description="UBER TRIP",
         amount=Decimal("25"),
@@ -206,7 +206,7 @@ async def test_create_transaction_with_category_skips_rules(
     session.add(rule)
     await session.commit()
 
-    # Explicitly provide a different category -- rule should NOT override
+    # Explicitly provide a different category - rule should NOT override
     data = TransactionCreate(
         description="UBER TRIP",
         amount=Decimal("25"),
@@ -233,7 +233,7 @@ async def test_create_transaction_invalid_account(session: AsyncSession, test_us
 
 
 # ---------------------------------------------------------------------------
-# get_transactions -- pagination & filters
+# get_transactions - pagination & filters
 # ---------------------------------------------------------------------------
 
 
@@ -924,7 +924,7 @@ def test_apply_fx_override_zero_amount():
 
 
 # ---------------------------------------------------------------------------
-# create_transaction -- FX and category
+# create_transaction - FX and category
 # ---------------------------------------------------------------------------
 
 
@@ -1076,7 +1076,7 @@ async def test_create_transfer_invalid_to_account(
 
 
 # ---------------------------------------------------------------------------
-# get_transactions -- additional filters
+# get_transactions - additional filters
 # ---------------------------------------------------------------------------
 
 
@@ -1227,7 +1227,7 @@ async def test_get_transactions_skip_pagination(
 
 
 # ---------------------------------------------------------------------------
-# update_transaction -- FX and cascade
+# update_transaction - FX and cascade
 # ---------------------------------------------------------------------------
 
 
@@ -1408,7 +1408,7 @@ async def test_update_transfer_cascades(
 
 
 # ---------------------------------------------------------------------------
-# delete_transaction -- transfer cascade
+# delete_transaction - transfer cascade
 # ---------------------------------------------------------------------------
 
 
@@ -1444,7 +1444,7 @@ async def test_delete_transfer_cascades(
 
 
 # ---------------------------------------------------------------------------
-# update_transaction -- changing account_id (regression for #63)
+# update_transaction - changing account_id (regression for #63)
 # ---------------------------------------------------------------------------
 
 
@@ -1598,7 +1598,7 @@ async def test_update_transfer_rejects_collapsing_accounts(
 async def test_get_transactions_filters_tags_with_exact_match(
     session: AsyncSession, test_user, test_workspace, txn_account
 ):
-    """Filtering by `#test` must NOT match `#test2` -- exact tag boundaries."""
+    """Filtering by `#test` must NOT match `#test2` - exact tag boundaries."""
     txns = [
         Transaction(
             id=uuid.uuid4(),
@@ -1636,7 +1636,7 @@ async def test_get_transactions_filters_multiple_tags_with_or(
     session: AsyncSession, test_user, test_workspace, txn_account
 ):
     """Multiple `tags` are OR-combined: a row matches if it carries ANY
-    of the requested tags -- issue #88."""
+    of the requested tags - issue #88."""
     txns = [
         Transaction(
             id=uuid.uuid4(),
@@ -1725,7 +1725,7 @@ async def test_bulk_add_tags_appends_to_each_transaction(
 async def test_bulk_remove_tags_clears_only_exact_matches(
     session: AsyncSession, test_user, test_workspace, txn_account
 ):
-    """Removing `#test` must NOT touch `#test2` -- exact match boundary."""
+    """Removing `#test` must NOT touch `#test2` - exact match boundary."""
     t1 = Transaction(
         id=uuid.uuid4(),
         user_id=test_user.id,

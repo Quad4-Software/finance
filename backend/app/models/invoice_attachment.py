@@ -10,8 +10,8 @@ Two consequences shape this table:
 
   - **`kind` is a role, not a file type.** What matters is what a file
     proves, not that it is a PDF. The roles are the ones every
-    jurisdiction has -- the bill, the fiscal document, the receipt, the
-    agreement -- and each pack names them in its own vocabulary. Nota
+    jurisdiction has - the bill, the fiscal document, the receipt, the
+    agreement - and each pack names them in its own vocabulary. Nota
     fiscal, facture, Rechnung and invoice all land on `fiscal` here.
 
   - **`is_primary` marks the document itself.** When we wrote the invoice,
@@ -46,14 +46,14 @@ if TYPE_CHECKING:
     from app.models.invoice import Invoice
 
 
-#: What a file proves. Roles, deliberately -- a jurisdiction pack supplies
+#: What a file proves. Roles, deliberately - a jurisdiction pack supplies
 #: the words a user sees, and no value here names a country's paperwork.
 #:
-#:   bill     -- the demand for payment, as issued or as received
-#:   fiscal   -- the tax document (nota fiscal, facture, Rechnung, invoice)
-#:   receipt  -- proof the money moved
-#:   contract -- the agreement or order the work came from
-#:   other    -- anything else worth keeping next to the debt
+#:   bill     - the demand for payment, as issued or as received
+#:   fiscal   - the tax document (nota fiscal, facture, Rechnung, invoice)
+#:   receipt  - proof the money moved
+#:   contract - the agreement or order the work came from
+#:   other    - anything else worth keeping next to the debt
 ATTACHMENT_KINDS = ("bill", "fiscal", "receipt", "contract", "other")
 
 
@@ -65,7 +65,7 @@ class InvoiceAttachment(Base):
         Index("ix_invoice_attachments_invoice", "invoice_id"),
         # At most one file can be *the* document: a partial unique index
         # is the only way to say "unique among the true ones". Declared
-        # for both dialects on purpose -- `postgresql_where` alone is
+        # for both dialects on purpose - `postgresql_where` alone is
         # silently dropped elsewhere, and the index then degrades into
         # "one attachment per invoice", the opposite of a table whose
         # whole point is gathering several.
@@ -78,7 +78,7 @@ class InvoiceAttachment(Base):
         ),
         # One row per file per source. Partial, because a null external id
         # is "this system does not name its files", not a value two rows
-        # can collide on -- and hand-uploaded files have no source at all.
+        # can collide on - and hand-uploaded files have no source at all.
         Index(
             "uq_invoice_attachments_external",
             "workspace_id",
@@ -108,9 +108,9 @@ class InvoiceAttachment(Base):
 
     # Where the file came from, and its name over there.
     #
-    # An invoice assembled from several systems -- the bill from a payment
+    # An invoice assembled from several systems - the bill from a payment
     # provider, the fiscal document from a government portal, a receipt
-    # forwarded by email -- is a folder whose contents have different
+    # forwarded by email - is a folder whose contents have different
     # authors. Without this the folder is a pile: three files, no way to
     # say which system produced which, or to recognise one already
     # collected when that system syncs again.
@@ -126,7 +126,7 @@ class InvoiceAttachment(Base):
     kind: Mapped[str] = mapped_column(String(20), default="other", server_default="other")
     is_primary: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
 
-    # The number the document carries on its face -- an NF-e key, a
+    # The number the document carries on its face - an NF-e key, a
     # facture number, a receipt reference. Text, because it is a name
     # given elsewhere and nothing here may assume it counts.
     document_number: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)

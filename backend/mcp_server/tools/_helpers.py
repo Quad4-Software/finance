@@ -52,7 +52,7 @@ async def resolve_workspace_id(session, ctx) -> uuid.UUID:
     """Return the workspace the call operates in.
 
     Prefer the explicit `ws_id` claim from the JWT. Fall back to the
-    caller's default (first) workspace -- supports tokens minted before
+    caller's default (first) workspace - supports tokens minted before
     the workspace migration AND keeps single-workspace callers free of
     having to specify a workspace.
     """

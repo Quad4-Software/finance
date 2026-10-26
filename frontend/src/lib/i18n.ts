@@ -43,7 +43,7 @@ export const i18nReady = i18n
     fallbackLng: 'en',
     // English is the default. Honour an explicit, persisted choice
     // (querystring/localStorage/cookie) but do NOT auto-pick the browser
-    // language -- otherwise a pt-BR/es-* browser would override the English
+    // language - otherwise a pt-BR/es-* browser would override the English
     // default before the user ever chooses.
     detection: {
       order: ['querystring', 'localStorage', 'cookie'],

@@ -106,7 +106,7 @@ class ChatResponse:
 class LLMProvider(ABC):
     name: str
     supports_native_tools: bool = True
-    # Embedding capability -- Anthropic returns False, others True.
+    # Embedding capability - Anthropic returns False, others True.
     supports_embeddings: bool = True
 
     def __init__(self, *, api_key: str = "", base_url: Optional[str] = None, model: Optional[str] = None):

@@ -1,6 +1,6 @@
 """create credit_card_bills table
 
-Provider-agnostic credit-card bill (fatura) snapshot -- see issue #92.
+Provider-agnostic credit-card bill (fatura) snapshot - see issue #92.
 Schema is a generic billing shape; provider-specific payloads live in
 `raw_data` so we don't tie the table to one integration.
 

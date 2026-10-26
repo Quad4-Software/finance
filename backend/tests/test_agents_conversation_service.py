@@ -1,5 +1,5 @@
 """Direct unit tests for app/agents/services/conversation_service. The
-HTTP layer covers most paths in test_agents_api.py -- this fills in the
+HTTP layer covers most paths in test_agents_api.py - this fills in the
 service-only utilities (append_message ordinal generation,
 update_title_if_empty, etc.) that don't ride a route."""
 from __future__ import annotations
@@ -119,7 +119,7 @@ async def test_update_title_if_empty_only_writes_when_blank(session, test_user, 
 
 @pytest.mark.asyncio
 async def test_update_title_if_empty_silent_on_missing_conv(session):
-    # No exception when the conv doesn't exist -- used by streaming code.
+    # No exception when the conv doesn't exist - used by streaming code.
     await svc.update_title_if_empty(session, uuid.uuid4(), "x")
 
 
@@ -169,7 +169,7 @@ async def test_delete_conversation_removes_row(session, test_user, test_workspac
 @pytest.mark.asyncio
 async def test_list_messages_window_keeps_newest_turns(session, test_user, test_workspace, test_agent):
     """Regression: with more messages than `limit`, the returned window must
-    end at the NEWEST message. The executor replays this window to the LLM --
+    end at the NEWEST message. The executor replays this window to the LLM -
     when the limit selected the oldest rows instead, the model never saw the
     user's latest question in long conversations and re-answered stale ones."""
     conv = await svc.create_conversation(

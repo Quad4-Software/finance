@@ -73,7 +73,7 @@ export default function AgentDetailPage() {
     //   - mobile sticky header  = h-14 (3.5rem)
     //   - p-6 wrapper top+bottom = 3rem
     // Without subtracting both, the input bar gets pushed past the viewport
-    // and the user has to scroll the whole page -- which they don't want.
+    // and the user has to scroll the whole page - which they don't want.
     // overflow-hidden ensures only the messages div inside ChatPanel scrolls.
     <div className="flex flex-col h-[calc(100dvh-6.5rem)] lg:h-[calc(100dvh-3rem)] overflow-hidden">
       <div className="border-b px-4 py-3 flex items-center gap-3">
@@ -130,7 +130,7 @@ export default function AgentDetailPage() {
               </Button>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto">
-              {/* Placeholder row for an unsaved new conversation -- appears
+              {/* Placeholder row for an unsaved new conversation - appears
                   when conversationId is null so the user can see what
                   they're working on. Replaced by the real entry once the
                   first message is sent. */}

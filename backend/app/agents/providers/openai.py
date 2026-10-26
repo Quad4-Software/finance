@@ -25,7 +25,7 @@ def normalize_openai_base_url(url: str) -> str:
 
     Most local OpenAI-compatible servers (LM Studio, vLLM, Ollama's
     openai endpoint, etc.) live under `/v1/*`. Users typically paste
-    just the host -- `http://lmstudio:1234` -- expecting the client to
+    just the host - `http://lmstudio:1234` - expecting the client to
     append `/v1`. Without this, requests hit `/chat/completions` and
     silently 404 (LM Studio in particular returns 200 with no body).
 
@@ -122,7 +122,7 @@ class OpenAIProvider(LLMProvider):
     def _headers(self) -> dict[str, str]:
         # Only attach Authorization when we actually have a key. Many local
         # OpenAI-compatible servers (LM Studio, vLLM, Ollama's OpenAI mode)
-        # don't require auth -- and httpx refuses to send the literal
+        # don't require auth - and httpx refuses to send the literal
         # `Bearer ` (with trailing space) as an illegal header value.
         h = {"Content-Type": "application/json"}
         if self.api_key:
@@ -166,7 +166,7 @@ class OpenAIProvider(LLMProvider):
                     # as the stable key for tool calls across chunks. The
                     # first chunk for an index carries `id` and `name`;
                     # subsequent chunks only carry `arguments` deltas.
-                    # We MUST key by index, not by id -- otherwise later
+                    # We MUST key by index, not by id - otherwise later
                     # chunks (without id) get registered as new entries
                     # with empty names and the dispatcher fails with
                     # "unknown tool: ".

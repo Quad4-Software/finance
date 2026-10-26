@@ -1,4 +1,4 @@
-"""Lifecycle entities -- recurring transactions, assets, goals, budgets.
+"""Lifecycle entities - recurring transactions, assets, goals, budgets.
 
 These come up in 'do I have any subscriptions?' / 'how are my goals
 going?' / 'list my investments' type questions. Surfacing them as
@@ -21,7 +21,7 @@ from mcp_server.tools._helpers import num, parse_date, resolve_workspace_id
     description=(
         "List the user's recurring transactions / subscriptions. Each row "
         "has frequency (weekly/monthly/...), next_occurrence, amount, "
-        "category, and account. Use this -- not list_transactions search -- "
+        "category, and account. Use this - not list_transactions search - "
         "to answer 'what subscriptions do I have?' or 'show my recurring "
         "expenses'."
     ),

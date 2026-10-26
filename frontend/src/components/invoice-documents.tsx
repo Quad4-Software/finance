@@ -57,12 +57,12 @@ export function InvoiceDocumentBrowser({
   canWrite: boolean
   /** The number the generated page carries, when it has one. */
   ourPageLabel?: string | null
-  /** When the page came into being -- the moment the invoice was issued,
+  /** When the page came into being - the moment the invoice was issued,
    *  which is also the date printed on it. The other entries say when
    *  they arrived; this one says when it was made. */
   ourPageDate?: string | null
   /** The rendered invoice. Passed in so this component never learns how a
-   *  document is drawn -- only that one exists. */
+   *  document is drawn - only that one exists. */
   ourPage: React.ReactNode | null
   onChanged?: () => void
 }) {
@@ -144,7 +144,7 @@ export function InvoiceDocumentBrowser({
       year: 'numeric',
     })
   /** When the file reached us, which is rarely the date on the document
-   *  itself -- an integration can deliver a fiscal document weeks late.
+   *  itself - an integration can deliver a fiscal document weeks late.
    *  A full timestamp, so it is read in the reader's own zone. */
   const showArrival = (value: string) => longDate(new Date(value))
   /** A date with no time. Parsed at local midnight rather than handed to
@@ -346,7 +346,7 @@ function ShelfItem({
   /** Which system delivered the file and when it arrived. Absent on our
    *  own generated page, which was not delivered by anybody. */
   provenance?: string
-  /** True on the file the download hands over. Shown as a filled star --
+  /** True on the file the download hands over. Shown as a filled star -
    *  the same mark the button on the other rows sets, so the flag and the
    *  way to move it read as one thing rather than two. */
   isPrimary?: boolean

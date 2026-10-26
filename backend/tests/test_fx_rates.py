@@ -95,7 +95,7 @@ async def historical_fx_rates(session: AsyncSession, clean_db) -> list[FxRate]:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 1. FX RATE SERVICE -- UNIT TESTS
+# 1. FX RATE SERVICE - UNIT TESTS
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -356,7 +356,7 @@ class TestStampPrimaryAmount:
         await session.flush()
 
         await stamp_primary_amount(session, test_user.id, txn, allow_fetch=False)
-        # No fake 1:1 persisted -- honestly NULL so it can self-heal later.
+        # No fake 1:1 persisted - honestly NULL so it can self-heal later.
         assert txn.amount_primary is None
         assert txn.fx_rate_used is None
 
@@ -691,7 +691,7 @@ class TestOpenExchangeRatesProvider:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 6. SYNC RATES (mocked provider -- pg_insert incompatible with SQLite)
+# 6. SYNC RATES (mocked provider - pg_insert incompatible with SQLite)
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -907,7 +907,7 @@ class TestTransactionUpdateRestamp:
         txn_id = resp.json()["id"]
         original_rate = resp.json()["fx_rate_used"]
 
-        # Update only category -- should not re-stamp
+        # Update only category - should not re-stamp
         resp2 = await client.patch(
             f"/api/transactions/{txn_id}",
             headers=auth_headers,
@@ -939,7 +939,7 @@ class TestTransactionUpdateRestamp:
         txn_id = resp.json()["id"]
         assert resp.json()["amount_primary"] == 100.0  # BRL->BRL = 1:1
 
-        # Change currency to USD -- should re-stamp with USD->BRL rate
+        # Change currency to USD - should re-stamp with USD->BRL rate
         resp2 = await client.patch(
             f"/api/transactions/{txn_id}",
             headers=auth_headers,
@@ -951,7 +951,7 @@ class TestTransactionUpdateRestamp:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 9. REPORT SERVICE -- NET WORTH WITH MULTI-CURRENCY
+# 9. REPORT SERVICE - NET WORTH WITH MULTI-CURRENCY
 # ═══════════════════════════════════════════════════════════════════════════
 
 
@@ -1270,7 +1270,7 @@ class TestBackfillTask:
         test_account: Account,
     ):
         """Re-stamping must NEVER downgrade an existing 1:1 row to NULL when no real
-        rate is available -- that would push a visible transaction into limbo
+        rate is available - that would push a visible transaction into limbo
         (issue #353). stamp_primary_amount only upgrades; otherwise it leaves the
         row exactly as-is (this is what makes the periodic healer safe)."""
         from decimal import Decimal as D
@@ -1287,7 +1287,7 @@ class TestBackfillTask:
         session.add(tx)
         await session.flush()
 
-        # Re-stamp with no rate available -- must leave the row untouched.
+        # Re-stamp with no rate available - must leave the row untouched.
         await stamp_primary_amount(session, test_user.id, tx, allow_fetch=False)
 
         # Still visible with its previous value, not NULL.

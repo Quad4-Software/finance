@@ -16,7 +16,7 @@ docker compose up -d
 # Full default seed (2024-01-01 through today)
 docker compose exec backend python scripts/seed_perf.py
 
-# Quick smoke run -- 10% volume, same structure
+# Quick smoke run - 10% volume, same structure
 docker compose exec backend python scripts/seed_perf.py --scale 0.1
 ```
 
@@ -69,7 +69,7 @@ docker compose exec backend python scripts/seed_perf.py --start-date 2020-01-01
 
 ### `--no-reset`
 
-By default the script wipes all existing data for the seed user before inserting. Pass `--no-reset` to skip the wipe -- if the user already has transactions the script exits immediately without inserting anything.
+By default the script wipes all existing data for the seed user before inserting. Pass `--no-reset` to skip the wipe - if the user already has transactions the script exits immediately without inserting anything.
 
 ## Examples
 
@@ -86,7 +86,7 @@ docker compose exec backend python scripts/seed_perf.py \
 docker compose exec backend python scripts/seed_perf.py \
   --email analyst@quad4.app --password Quad4Finance123!
 
-# Re-seed only transactions (skip wipe, then add more -- only works on a fresh user)
+# Re-seed only transactions (skip wipe, then add more - only works on a fresh user)
 docker compose exec backend python scripts/seed_perf.py --no-reset
 ```
 

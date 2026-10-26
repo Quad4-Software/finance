@@ -1,4 +1,4 @@
-"""Enable Banking (PSD2) provider -- European banks via open banking.
+"""Enable Banking (PSD2) provider - European banks via open banking.
 
 Auth model: RS256 JWT signed with the operator's application private key,
 `kid` header set to the application ID. No client secret, no refresh token.
@@ -317,7 +317,7 @@ class EnableBankingProvider(BankProvider):
                 f"Enable Banking returned {resp.status_code} for {path}"
             )
         if resp.status_code == 429:
-            # The bank (ASPSP) is throttling us -- transient, not a broken
+            # The bank (ASPSP) is throttling us - transient, not a broken
             # connection. Surface a distinct type so sync can skip-and-retry
             # instead of erroring the connection.
             raise ProviderRateLimited(

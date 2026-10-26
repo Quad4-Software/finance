@@ -2,8 +2,8 @@
 
 A portfolio arrives as a list of orders, not as positions: a hundred rows of
 "ticker, date, quantity, price, fee". Quad4 Finance already knows how to turn orders
-into a position -- `asset_transaction_service._recompute` does the weighted
-average, the fees and the realized gain -- so this module's whole job is to get
+into a position - `asset_transaction_service._recompute` does the weighted
+average, the fees and the realized gain - so this module's whole job is to get
 the rows out of the file and onto the right holdings.
 
 Two things shape the design:
@@ -319,7 +319,7 @@ def parse_orders_csv(
             continue
 
         # Buy or sell comes from an explicit column when the file has one, and
-        # from the sign of the quantity otherwise -- the convention brokers use.
+        # from the sign of the quantity otherwise - the convention brokers use.
         kind_word = _normalize_header(cell(row, 'kind'))
         if kind_word in _SELL_WORDS:
             kind = 'sell'
@@ -367,8 +367,8 @@ async def resolve_tickers(
 
     One batch call answers for the whole file, which is what keeps a 200-row
     import from making 200 requests. The bulk endpoint is not authoritative
-    though: it answers with an empty result often enough -- the same ticker can
-    come back priced and then empty seconds later -- that treating a miss as
+    though: it answers with an empty result often enough - the same ticker can
+    come back priced and then empty seconds later - that treating a miss as
     proof would reject real holdings. So the few it did not answer for are
     confirmed one by one against the quote endpoint, which is.
 
@@ -433,7 +433,7 @@ async def _holdings_in_other_wallets(
     """The same tickers held under a *different* wallet, with that wallet's name.
 
     Holdings are scoped per wallet, so importing AAPL into one wallet while
-    AAPL already sits in another is a legitimate thing to do -- two brokers,
+    AAPL already sits in another is a legitimate thing to do - two brokers,
     two positions. It is also exactly what a mis-picked wallet looks like, and
     the portfolio then counts the same shares twice, so the preview says it out
     loud instead of leaving it to be noticed later.
@@ -488,7 +488,7 @@ async def import_orders(
 ) -> dict:
     """Apply a file of orders to the workspace's holdings.
 
-    Returns the counts the UI reports, and -- on a dry run -- the same numbers
+    Returns the counts the UI reports, and - on a dry run - the same numbers
     without writing anything, so the preview can promise what the import will
     do instead of guessing.
     """
@@ -673,7 +673,7 @@ async def undo_import(
 
     Deleting the rows is only half of it. A position is derived from its
     ledger, so each touched holding has to be recomputed, and a holding this
-    import created from nothing has to go with it -- otherwise undoing leaves
+    import created from nothing has to go with it - otherwise undoing leaves
     an empty ticker sitting in the wallet. A holding that still has orders
     after the delete is one the user also fed by hand or by an earlier import,
     so it stays.

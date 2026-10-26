@@ -12,7 +12,7 @@ interface Props {
 
 /**
  * Expandable tool-call inspector. Compact by default (status, name, brief
- * summary). Clicking reveals the raw JSON arguments and result -- same
+ * summary). Clicking reveals the raw JSON arguments and result - same
  * "show your work" affordance anything-llm uses for agent skills.
  */
 export function ToolDebugChip({ name, args, result, pending, defaultOpen = false }: Props) {

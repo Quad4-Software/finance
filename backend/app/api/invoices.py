@@ -3,7 +3,7 @@
 Every route is gated twice: `require_module(INVOICES)` asks whether this
 workspace has the module at all, and the write variant additionally asks
 whether the member's role may write. A personal workspace gets a 404
-from all of them -- the same answer it would get for a URL that does not
+from all of them - the same answer it would get for a URL that does not
 exist, which is the honest thing to say to a client that should not know
 the feature is there.
 """
@@ -58,15 +58,15 @@ write_ctx = require_module_write(ModuleId.INVOICES)
 
 #: Every list, count and total is about one side of the ledger. The
 #: parameter defaults rather than being required so today's callers keep
-#: working unchanged, and so a caller that forgets it gets receivables --
-#: the side that exists -- instead of both mixed together.
+#: working unchanged, and so a caller that forgets it gets receivables -
+#: the side that exists - instead of both mixed together.
 DirectionParam = Query("receivable", description="Which side of the ledger to read")
 
 
 def _serialize(invoice, today: Optional[_date] = None) -> InvoiceRead:
     """Attach the derived answers to the stored row.
 
-    Computed here, once, from the single definition in the service -- so
+    Computed here, once, from the single definition in the service - so
     the API can expose `state`, `balance` and `days_overdue` without any
     of them ever being written to a column that could drift.
     """
@@ -99,7 +99,7 @@ def _http(error: InvoiceError) -> HTTPException:
 
 
 # ---------------------------------------------------------------------------
-# Settings -- before /{invoice_id} so the literal path wins the match
+# Settings - before /{invoice_id} so the literal path wins the match
 # ---------------------------------------------------------------------------
 @router.get("/settings", response_model=InvoiceSettingsRead)
 async def read_settings(
@@ -151,7 +151,7 @@ async def read_summary(
 
 
 # ---------------------------------------------------------------------------
-# Issuer identity -- the workspace describing itself (T10)
+# Issuer identity - the workspace describing itself (T10)
 # ---------------------------------------------------------------------------
 @router.get("/issuer", response_model=IssuerProfileRead)
 async def read_issuer(
@@ -401,7 +401,7 @@ async def reopen_invoice(
 
 
 # ---------------------------------------------------------------------------
-# Allocations -- money bound to debt
+# Allocations - money bound to debt
 # ---------------------------------------------------------------------------
 @router.post("/{invoice_id}/make-recurring", response_model=ScheduleRead, status_code=status.HTTP_201_CREATED)
 async def make_recurring(
@@ -577,7 +577,7 @@ async def read_document(
     )
 
     # If a real document was filed, say so. The resolved page is still
-    # returned -- it is the summary the screen shows around the file -- but
+    # returned - it is the summary the screen shows around the file - but
     # the reader now knows a page exists that nobody has to redraw.
     primary = await invoice_attachment_service.primary_for(session, invoice.id)
     payload["source_file"] = (
@@ -661,7 +661,7 @@ async def download_pdf(
 
     # When a real document was filed, that file is the answer. Rendering
     # our own page over the top of one we were handed produces something
-    # that looks official and is not -- and on a supplier's bill it would
+    # that looks official and is not - and on a supplier's bill it would
     # be a page nobody issued.
     primary = await invoice_attachment_service.primary_for(session, invoice.id)
     if primary is not None:

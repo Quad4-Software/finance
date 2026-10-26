@@ -5,7 +5,7 @@ them, but the 14-day sync rewind doesn't refetch older transactions. For
 already-synced data, the bill linkage is recoverable directly: every
 Pluggy CC transaction stores the original payload in raw_data, including
 creditCardMetadata.billId. This migration matches those to the bills table
-and stamps bill_id + effective_date in one shot -- no HTTP traffic needed.
+and stamps bill_id + effective_date in one shot - no HTTP traffic needed.
 
 Idempotent (only touches rows where bill_id is NULL). Safe to re-run.
 Issue #92.

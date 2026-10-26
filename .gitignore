@@ -16,5 +16,5 @@ docker-compose.override.yml
 
 # Runtime artifacts written by the agents feature (uploaded KB files,
 # downloaded ONNX embedding models, transaction attachments). User data
-# -- never commit.
+# - never commit.
 backend/data/

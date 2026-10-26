@@ -674,7 +674,7 @@ export default function AdminSettingsPage() {
                     <SelectContent>
                       {(supportedCurrencies ?? []).map((c) => (
                         <SelectItem key={c.code} value={c.code}>
-                          {c.flag} {c.code} -- {c.name}
+                          {c.flag} {c.code} - {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -732,7 +732,7 @@ export default function AdminSettingsPage() {
                     <p className="text-sm font-medium">{editUser.email}</p>
                     <p className="text-xs text-muted-foreground">
                       {editUser.is_superuser ? t('admin.users.admin') : t('admin.users.user')}
-                      {isSelf(editUser) && ` -- ${t('admin.users.you')}`}
+                      {isSelf(editUser) && ` - ${t('admin.users.you')}`}
                     </p>
                   </div>
                 </div>

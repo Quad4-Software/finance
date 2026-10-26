@@ -51,7 +51,7 @@ class WorkspaceCreate(BaseModel):
     icon: Optional[str] = Field(default=None, max_length=50)
     color: Optional[str] = Field(default=None, max_length=7)
     # When True, also add the creator as an `owner` member. When False
-    # (default), the creator is only the external manager -- useful when
+    # (default), the creator is only the external manager - useful when
     # the workspace will be handed off to someone else as the day-to-day
     # owner.
     self_membership: bool = False
@@ -87,7 +87,7 @@ class MemberRead(BaseModel):
 class MemberInvite(BaseModel):
     email: EmailStr
     role: str = "editor"
-    # Optional password -- only used when inviting a brand-new user. If
+    # Optional password - only used when inviting a brand-new user. If
     # omitted, the endpoint rejects the invite when the target user
     # doesn't exist. (Email-based magic-link onboarding can come later.)
     password: Optional[str] = Field(default=None, min_length=8, max_length=128)

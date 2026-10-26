@@ -1,4 +1,4 @@
-"""Collection account-filter (issue #105) -- verifies dashboard & reports
+"""Collection account-filter (issue #105) - verifies dashboard & reports
 aggregations scope to the active collection's accounts.
 
 The contract: passing ``account_ids`` restricts balances and P&L to those
@@ -173,7 +173,7 @@ async def test_wallet_only_collection_shows_assets_no_accounts(
     session: AsyncSession, test_user: User, test_workspace
 ):
     """A wallet-only collection (no accounts) filters accounts to none and
-    shows only the wallet's assets -- driven by asset_group_ids with
+    shows only the wallet's assets - driven by asset_group_ids with
     account_ids omitted, the way the frontend sends it."""
     # An account with a balance that must NOT appear (it's not in the collection).
     other = await _account(session, test_user, "Not in collection")

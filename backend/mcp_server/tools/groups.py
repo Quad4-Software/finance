@@ -1,7 +1,7 @@
 """Read-only group + member + balance + settlement exposure for the agent.
 
 Splits are written through `propose_create_transaction` (with its
-`group_id` + `splits` parameters) -- there's no `propose_create_split`
+`group_id` + `splits` parameters) - there's no `propose_create_split`
 tool because splits live attached to the parent transaction, not as
 standalone rows.
 """

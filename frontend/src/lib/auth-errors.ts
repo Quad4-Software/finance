@@ -11,10 +11,10 @@ import type { AxiosError } from 'axios'
  */
 export function isServerUnreachable(err: unknown): boolean {
   const axiosErr = err as AxiosError
-  // No HTTP response at all: connection refused, DNS, timeout, CORS -- the
+  // No HTTP response at all: connection refused, DNS, timeout, CORS - the
   // server never answered.
   if (!axiosErr?.response) return true
-  // 5xx (500/502/503/504) -- e.g. a reverse proxy returning 502 while the
+  // 5xx (500/502/503/504) - e.g. a reverse proxy returning 502 while the
   // backend container is down.
   return axiosErr.response.status >= 500
 }

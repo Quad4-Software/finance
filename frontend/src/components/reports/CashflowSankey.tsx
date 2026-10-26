@@ -10,17 +10,17 @@ import type { ReportCompositionItem } from '@/types'
 
 // Colour carries MEANING, not category identity: green = money in, red = money
 // out, gray = uncategorised/folded. Tinting by category (the old approach) made
-// a green "Groceries" expense look like green "Salary" income -- the direction of
+// a green "Groceries" expense look like green "Salary" income - the direction of
 // flow was invisible. Category identity is carried by the always-on labels
 // instead. Links fade from their source colour to their target colour, so an
 // expense flow visibly turns from green (cash flow) to red at the category.
-const INCOME_COLOR = '#10B981' // emerald -- money in
-const EXPENSE_COLOR = '#F43F5E' // rose -- money out
-const INVEST_COLOR = '#0EA5E9' // sky blue -- money set aside (investments)
-const CENTER_COLOR = '#059669' // deeper emerald -- the cash-flow hub
-const SURPLUS_COLOR = '#10B981' // emerald -- leftover income
-const DEFICIT_COLOR = '#F59E0B' // amber -- overspend drawn from reserves
-const NEUTRAL_COLOR = '#9CA3AF' // gray -- uncategorised / folded long tail
+const INCOME_COLOR = '#10B981' // emerald - money in
+const EXPENSE_COLOR = '#F43F5E' // rose - money out
+const INVEST_COLOR = '#0EA5E9' // sky blue - money set aside (investments)
+const CENTER_COLOR = '#059669' // deeper emerald - the cash-flow hub
+const SURPLUS_COLOR = '#10B981' // emerald - leftover income
+const DEFICIT_COLOR = '#F59E0B' // amber - overspend drawn from reserves
+const NEUTRAL_COLOR = '#9CA3AF' // gray - uncategorised / folded long tail
 
 // Keep the diagram legible: personal-finance Sankeys read best at ~a dozen
 // streams per side. Beyond this we fold the smallest categories into "Other".
@@ -47,7 +47,7 @@ interface SankeyLinkDatum {
 }
 
 // What the cursor is isolating. A plain node hover lights its own flows; the
-// two halves of the centre bar light *all* expenses or the surplus at once --
+// two halves of the centre bar light *all* expenses or the surplus at once -
 // the "show me everything I spent" gesture the single bar couldn't offer.
 type Hover =
   | { kind: 'node'; index: number }
@@ -109,7 +109,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
       composition.filter((c) => c.group === 'expenses' && c.value > 0),
       t('reports.other'),
     )
-    // Investments are a third outflow lane -- money set aside, neither spent nor
+    // Investments are a third outflow lane - money set aside, neither spent nor
     // surplus. Treated like Sure's "Investment Contributions" node.
     const investment = collapse(
       composition.filter((c) => c.group === 'investments' && c.value > 0),
@@ -123,7 +123,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
     const totalIncome = income.reduce((s, c) => s + c.value, 0)
     const totalExpense = expense.reduce((s, c) => s + c.value, 0)
     const totalInvest = investment.reduce((s, c) => s + c.value, 0)
-    // Surplus is what's left after BOTH spending and investing -- so investing
+    // Surplus is what's left after BOTH spending and investing - so investing
     // shrinks surplus instead of silently inflating it.
     const net = totalIncome - totalExpense - totalInvest
 
@@ -164,7 +164,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
     })
 
     // Right column, top -> bottom: expenses (red), investments (teal), surplus
-    // (green) -- matching the centre bar's stacked split.
+    // (green) - matching the centre bar's stacked split.
     expense.forEach((c, i) =>
       pushNode({
         id: `ex-${c.key}-${i}`,
@@ -224,7 +224,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
         [8, TOP_GUTTER],
         [width - 8, height - 14],
       ])
-    // d3-sankey mutates its input -- clone so re-renders stay pure.
+    // d3-sankey mutates its input - clone so re-renders stay pure.
     return generator({
       nodes: rawNodes.map((n) => ({ ...n })),
       links: rawLinks.map((l) => ({ ...l })),
@@ -282,7 +282,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
   }
 
   const linkPath = sankeyLinkHorizontal<SankeyNodeDatum, SankeyLinkDatum>()
-  // Percentages are relative to total cash-flow throughput -- the centre node's
+  // Percentages are relative to total cash-flow throughput - the centre node's
   // value (d3-sankey sets it to the larger of its in/out sums).
   const total = layout?.nodes.find((n) => n.id === 'center')?.value ?? 0
   const fmtAmount = (v: number) =>
@@ -333,7 +333,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
             })}
           </defs>
 
-          {/* Links -- gradient from source colour to target colour */}
+          {/* Links - gradient from source colour to target colour */}
           <g fill="none">
             {layout.links.map((link, i) => {
               const dimmed = linkDimmed(i)
@@ -451,7 +451,7 @@ export function CashflowSankey({ composition, currency, locale }: CashflowSankey
         </svg>
       )}
 
-      {/* Accessible table fallback -- also a non-visual summary of the flows. */}
+      {/* Accessible table fallback - also a non-visual summary of the flows. */}
       <table className="sr-only">
         <caption>{t('reports.flowChartAria')}</caption>
         <thead>

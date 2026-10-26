@@ -27,7 +27,7 @@ async def backup(
 ):
     """Export every entity in the current workspace as a JSON zip.
 
-    Backup is scoped to one workspace at a time -- users with multiple
+    Backup is scoped to one workspace at a time - users with multiple
     workspaces back each one up separately. AssetValue inherits its
     workspace from its Asset and is filtered transitively.
     """

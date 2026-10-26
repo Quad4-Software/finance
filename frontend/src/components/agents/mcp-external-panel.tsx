@@ -62,7 +62,7 @@ function clientConfigFor(client: ClientId, url: string, token: string): string {
       2,
     )
   }
-  // OpenAI Responses API tool spec -- paste into the `tools` array of
+  // OpenAI Responses API tool spec - paste into the `tools` array of
   // your API call. ChatGPT.com itself adds MCP via the Connectors UI,
   // not a JSON paste.
   return JSON.stringify(
@@ -157,7 +157,7 @@ export function McpExternalPanel() {
             <div className="text-xs text-muted-foreground">
               {t(
                 'agents.mcpExternal.warning',
-                "Copy now -- Quad4 Finance does not store the token, so we can't show it again. Revoke by rotating AGENTS_MCP_JWT_SECRET.",
+                "Copy now - Quad4 Finance does not store the token, so we can't show it again. Revoke by rotating AGENTS_MCP_JWT_SECRET.",
               )}
             </div>
             {universalSnippets.map((s) => (

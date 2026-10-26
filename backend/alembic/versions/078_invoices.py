@@ -6,8 +6,8 @@ Create Date: 2026-08-26
 
 Four new tables, no change to any existing one. That is deliberate and
 worth stating: the link between an invoice and the money that settles it
-lives entirely in `invoice_allocations`, so `transactions` -- the largest
-and hottest table in every install -- is not touched by this feature at
+lives entirely in `invoice_allocations`, so `transactions` - the largest
+and hottest table in every install - is not touched by this feature at
 all. A foreign key there would also have been wrong on the merits: a
 gateway payout is one bank credit settling many invoices, and a Pix-paid
 invoice is one debt settled by several credits.
@@ -30,7 +30,7 @@ them references them.
 Numbering note: renumbered once already. This chains off `076`
 (`payee_workspace_uniqueness`), which landed on `main` while this branch
 was open. Any migration that lands before this one merges will need the
-same two-line change plus a rename -- nothing references the revision id
+same two-line change plus a rename - nothing references the revision id
 but the chain itself, which is why the CI check for it exists.
 """
 from typing import Sequence, Union
@@ -165,7 +165,7 @@ def upgrade() -> None:
         sa.Column("amount", sa.Numeric(precision=15, scale=2), nullable=False),
         # How the link came to exist: `manual`, or the id of the matching
         # strategy that produced the row. Sized for a strategy id rather
-        # than an enum value, and left without a CHECK on purpose -- those
+        # than an enum value, and left without a CHECK on purpose - those
         # ids come from a policy document the user will edit, so
         # constraining them here would mean a migration per strategy.
         sa.Column("method", sa.String(length=60), nullable=False, server_default="manual"),
@@ -203,7 +203,7 @@ def upgrade() -> None:
         # `tracking` (the document was issued elsewhere, or there is
         # none) vs `document` (the invoice is the deliverable). A
         # starting point that fills the next three fields, each
-        # overridable afterwards -- never a mode, and never a branch on
+        # overridable afterwards - never a mode, and never a branch on
         # the UI language.
         sa.Column("preset", sa.String(length=20), nullable=False, server_default="tracking"),
         sa.Column("document_required", sa.Boolean(), nullable=False, server_default="false"),
@@ -212,7 +212,7 @@ def upgrade() -> None:
         sa.Column("default_payment_terms_days", sa.Integer(), nullable=False, server_default="30"),
         sa.Column("number_prefix", sa.String(length=20), nullable=True),
         sa.Column("series", sa.String(length=20), nullable=True),
-        # Consumed at issuance and never rolled back -- not even when an
+        # Consumed at issuance and never rolled back - not even when an
         # invoice is voided a second later. A reused number would put two
         # documents under one identifier.
         sa.Column("next_number", sa.Integer(), nullable=False, server_default="1"),

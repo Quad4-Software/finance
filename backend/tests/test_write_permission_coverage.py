@@ -27,7 +27,7 @@ from app.main import app
 MUTATING = {"POST", "PATCH", "PUT", "DELETE"}
 
 #: Dependencies that constitute a workspace write decision. Add to this set
-#: when a narrower gate is introduced -- never loosen the assertion instead.
+#: when a narrower gate is introduced - never loosen the assertion instead.
 WRITE_GATES = {"current_writable_workspace"}
 
 #: Mutating routes that are legitimately not workspace-write-gated, each with
@@ -84,8 +84,8 @@ ALLOWLIST: dict[tuple[str, str], str] = {
     ("POST", "/api/export/backup"): "exports the workspace it can already read; writes nothing",
     # The agents surface, mounted only when AGENTS_ENABLED is on (the test
     # suite turns it on so these are always covered). An LLM connection is
-    # the requester's own credential -- scoped by `user.id`, never by
-    # workspace -- so it belongs to the same family as passkeys rather than
+    # the requester's own credential - scoped by `user.id`, never by
+    # workspace - so it belongs to the same family as passkeys rather than
     # to workspace data.
     ("POST", "/api/agents/connections"): "the requester's own LLM credentials",
     ("PATCH", "/api/agents/connections/{conn_id}"): "the requester's own LLM credentials",
@@ -159,8 +159,8 @@ ALL_MUTATING = sorted({(m, p) for m, p, _ in _mutating_routes()})
 
 
 def test_the_walk_actually_finds_the_routes():
-    """Guards the guard. If route discovery silently returns nothing -- a
-    FastAPI internal renamed, say -- every assertion below would pass on an
+    """Guards the guard. If route discovery silently returns nothing - a
+    FastAPI internal renamed, say - every assertion below would pass on an
     empty set and this file would be decoration."""
     assert len(ALL_MUTATING) > 100, f"only found {len(ALL_MUTATING)} mutating routes"
 
@@ -191,8 +191,8 @@ def test_a_mutating_route_declares_a_permission_decision(method, path):
 
 
 def test_the_allowlist_has_no_stale_entries():
-    """An allowlisted route that no longer exists -- renamed, deleted, or since
-    gated -- is a stale exemption that would silently cover a future route
+    """An allowlisted route that no longer exists - renamed, deleted, or since
+    gated - is a stale exemption that would silently cover a future route
     reusing the path."""
     stale = sorted(set(ALLOWLIST) - set(ALL_MUTATING))
     assert stale == [], f"allowlist entries matching no route: {stale}"

@@ -65,8 +65,8 @@ function isImageType(contentType: string): boolean {
 }
 
 function canExtendRuleFromTransaction(rule: Rule): boolean {
-  // Rules that mix AND and OR are left out: appending a top-level condition --
-  // and possibly flipping the rule to OR -- would silently change what the
+  // Rules that mix AND and OR are left out: appending a top-level condition -
+  // and possibly flipping the rule to OR - would silently change what the
   // grouped rule matches. Those are edited from the rules page instead.
   if (hasConditionGroups(rule.conditions)) return false
   return rule.is_active && !!getRuleCategoryId(rule) && (rule.conditions_op === 'or' || rule.conditions.length <= 1)
@@ -441,7 +441,7 @@ function TransactionForm({
   const seed = transaction ?? duplicateDraft
   const [description, setDescription] = useState(seed?.description ?? '')
   // Amount fields hold display-locale strings (comma decimals on dot_comma),
-  // so seeds from stored numbers go through formatAmountInput -- a raw
+  // so seeds from stored numbers go through formatAmountInput - a raw
   // toString() would read back through parseAmountInput with the dot taken
   // for a thousands separator.
   const [amount, setAmount] = useState(
@@ -510,7 +510,7 @@ function TransactionForm({
   const showConversion = currency !== userCurrency && !isSynced
   // Privacy mode hides monetary values across the app, but the edit modal
   // surfaced the raw amount anyway (issue #323). Only existing transactions
-  // carry a value worth hiding -- when creating, the user must see what they
+  // carry a value worth hiding - when creating, the user must see what they
   // type. A reveal toggle keeps the field editable when needed.
   const [revealAmounts, setRevealAmounts] = useState(false)
   const canHideAmounts = privacyMode && !isCreating
@@ -566,7 +566,7 @@ function TransactionForm({
   const displayCategoryGroups = allCategoryGroupsList ?? categoryGroups
 
   // Counterpart leg of a transfer. Fetched lazily so only transfer dialogs
-  // pay for it -- the list response carries just the shared pair id.
+  // pay for it - the list response carries just the shared pair id.
   const { data: transferPair } = useQuery({
     queryKey: ['transactions', transaction?.id, 'transfer-pair'],
     queryFn: () => transactionsApi.transferPair(transaction!.id),
@@ -579,7 +579,7 @@ function TransactionForm({
 
   // Picking an existing rule opens the same rich editor used for creating a
   // rule (RuleDialog), pre-filled with that rule's data plus the extra
-  // "description contains" condition -- instead of a separate, cut-down form.
+  // "description contains" condition - instead of a separate, cut-down form.
   const extendRuleDialogProps = useMemo(() => {
     if (!extendRuleTarget || !transaction) return null
     const { conditions, conditionsOp } = buildExtendedRuleConditions(extendRuleTarget, transaction.description)
@@ -760,7 +760,7 @@ function TransactionForm({
         const action = pendingActionRef.current
         pendingActionRef.current = 'save'
         // Amounts are typed under the display locale's separators (comma
-        // decimals on dot_comma), so they must be read back the same way --
+        // decimals on dot_comma), so they must be read back the same way -
         // parseFloat would stop at the first comma and silently save the
         // wrong value.
         const parsedAmount = parseAmountInput(amount, displayLocale)
@@ -772,7 +772,7 @@ function TransactionForm({
         const parsedConverted = parseAmountInput(convertedAmount, displayLocale)
         const parsedFxRate = parseAmountInput(fxRate, displayLocale)
         // A conversion field left empty is optional, but a non-empty one
-        // that doesn't parse must block the save like the amount does --
+        // that doesn't parse must block the save like the amount does -
         // silently dropping it would persist a transaction missing the
         // conversion the user typed.
         if (
@@ -801,7 +801,7 @@ function TransactionForm({
         const overridePayload: Partial<Transaction> = isCcSelected
           ? { effective_bill_date: effectiveBillDate || null }
           : {}
-        // Splits ride along on the same payload -- the backend treats a
+        // Splits ride along on the same payload - the backend treats a
         // missing `splits` field as untouched and a present payload as
         // full replacement. To clear existing splits when the user
         // toggles off, send an explicit empty payload.
@@ -1326,7 +1326,7 @@ function TransactionForm({
         />
       )}
 
-      {/* Create options -- recurring and installment toggles share one row
+      {/* Create options - recurring and installment toggles share one row
           when creating non-synced transactions. "Repeat as installments"
           mirrors the transaction N times for debits and receivables. */}
       {isCreating && !isSynced && (

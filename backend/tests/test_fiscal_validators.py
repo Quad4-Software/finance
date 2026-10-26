@@ -10,7 +10,7 @@ from app.fiscal import validators as v
 
 
 # ---------------------------------------------------------------------------
-# Brazil -- the only ones with check digits worth enforcing
+# Brazil - the only ones with check digits worth enforcing
 # ---------------------------------------------------------------------------
 @pytest.mark.parametrize("value", ["11222333000181", "34028316000103"])
 def test_valid_cnpj(value):

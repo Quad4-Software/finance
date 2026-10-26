@@ -1,7 +1,7 @@
 /**
  * Shared "from -> to" range formatting for the transactions filter bar
  * (chip and picker trigger) and the Reports custom date-range picker. Both
- * need the same three shapes -- a closed range, and each one-sided bound --
+ * need the same three shapes - a closed range, and each one-sided bound -
  * differing only in whether the year is shown: the full form for a trigger
  * label with room to spare, the compact form for a tight chip or an active
  * segment where the year would just add noise.

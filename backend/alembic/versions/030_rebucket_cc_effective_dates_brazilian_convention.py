@@ -12,7 +12,7 @@ for every transaction on every credit card that has both statement_close_day
 and payment_due_day configured, using the corrected formula.
 
 Accounts without both cycle days stay untouched (effective_date already
-equals the transaction date for them -- there's nothing to rebucket).
+equals the transaction date for them - there's nothing to rebucket).
 """
 
 import calendar
@@ -86,7 +86,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     # The old formula used `>=` instead of `>`. Restoring it precisely would
     # require re-running that variant on every row. We skip the back-migration
-    # since effective_date is a derived/cached column -- any future recompute
+    # since effective_date is a derived/cached column - any future recompute
     # (account edit or resync) will regenerate it from whichever formula is
     # current. No schema changes to reverse.
     pass

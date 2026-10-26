@@ -98,7 +98,7 @@ function defaultCycleForCreditCard(
     const nm = m === 11 ? 0 : m + 1
     billDate = new Date(ny, nm, clampDue(ny, nm))
   }
-  // Step 2: find the cycle whose bill is `billDate` -- its close date is the
+  // Step 2: find the cycle whose bill is `billDate` - its close date is the
   // most recent closeDay on or before billDate. The cycle's inclusive last
   // day is one day before that close (per Brazilian convention).
   const by = billDate.getFullYear()
@@ -233,7 +233,7 @@ function formatDateStr(dateStr: string, locale = 'en-US') {
 }
 
 function formatFriendlyDate(dateStr: string, dateLocale: string) {
-  // Compact friendly weekday+day+month -- words follow the UI language, field
+  // Compact friendly weekday+day+month - words follow the UI language, field
   // order follows the regional date setting (e.g. "Thu, Apr 16" vs "Thu, 16 Apr").
   return new Date(dateStr + 'T00:00:00').toLocaleDateString(dateLocale, {
     weekday: 'short',
@@ -308,7 +308,7 @@ export default function AccountDetailPage() {
     enabled: !!id,
   })
 
-  // Bills (faturas) from the provider's bills feed -- issue #92. Only fetched
+  // Bills (faturas) from the provider's bills feed - issue #92. Only fetched
   // for CC accounts; non-CC and CC-without-bills both return [] so the UI
   // falls back to local cycle math wherever bills aren't available.
   // Declared before the initial cycle selection and navigation helpers.
@@ -459,8 +459,8 @@ export default function AccountDetailPage() {
 
   // Last 6 cycles (oldest -> newest) for the bill timeline strip.
   // When we have a bills feed from a provider the strip is driven
-  // directly by bills -- total comes from bill.total_amount, label from the
-  // bill's actual due_date -- so the bars match the bank statement-for-statement
+  // directly by bills - total comes from bill.total_amount, label from the
+  // bill's actual due_date - so the bars match the bank statement-for-statement
   // even when the close day shifts month to month (issue #92). Otherwise we
   // fall back to local cycle math.
   const timelineCycles: { start: string; end: string; bill?: CreditCardBill }[] = useMemo(() => {
@@ -474,7 +474,7 @@ export default function AccountDetailPage() {
         cycles.push({ ...rangeForBill(b, prev), bill: b })
       }
       // The current in-progress cycle (no bill yet) is ALWAYS a trailing
-      // bar when the account has any bills -- charges accrue to the next
+      // bar when the account has any bills - charges accrue to the next
       // bill the moment the previous one closes, regardless of whether
       // its due date has passed. Skipping it hides the user's currently-
       // accumulating spend from the strip until ~10 days into the cycle.
@@ -1134,7 +1134,7 @@ export default function AccountDetailPage() {
         </div>
       )}
 
-      {/* Bill timeline (last 6 cycles) -- only for CC with cycle metadata */}
+      {/* Bill timeline (last 6 cycles) - only for CC with cycle metadata */}
       {isCreditCard && timelineCycles.length > 0 && (() => {
         const dfLocale = resolveDateFnsLocale(i18n.resolvedLanguage ?? i18n.language)
         const totals = timelineQueries.map((q, i) => {
@@ -1142,7 +1142,7 @@ export default function AccountDetailPage() {
           // Single source of truth: live debit sum from the summary endpoint,
           // filtered by bill_id when the cycle has a bill (handles dynamic
           // close days) or by [start, end] otherwise. Same number whether
-          // the bar is active or not -- clicking doesn't shift the value.
+          // the bar is active or not - clicking doesn't shift the value.
           const total = Number(q.data?.projected_expenses ?? q.data?.monthly_expenses ?? 0)
           return {
             ...c,
@@ -1201,7 +1201,7 @@ export default function AccountDetailPage() {
       {/* Compact stat bar */}
       {isCreditCard ? (() => {
         // Total da fatura. When a real bill is active, sum debits from the
-        // bill_id-filtered tx list (matches the bank app -- bills' total_amount
+        // bill_id-filtered tx list (matches the bank app - bills' total_amount
         // can lag any charges added since the last sync). Otherwise use the
         // summary endpoint's monthly_expenses now nets refund credits against
         // debits for CC accounts (matches the bank's bill total).
@@ -1235,7 +1235,7 @@ export default function AccountDetailPage() {
         // compare against. A current bill of 0 is still meaningful (shows -100%
         // and tells the user "nothing spent yet vs last month").
         // Cycle-over-cycle comparison. When we have a previous bill, use ITS
-        // total_amount as the prev (stable bank snapshot -- the date-range
+        // total_amount as the prev (stable bank snapshot - the date-range
         // summary endpoint can't bucket linked txs by bill_id and ends up
         // mismatched). Falls back to summary for the cycle-math case.
         let prevLabelBill: CreditCardBill | null = null

@@ -350,7 +350,7 @@ async def test_rename_preserves_extension(
         )
         attachment_id = upload_resp.json()["id"]
 
-    # Try renaming with wrong extension -- should keep .pdf
+    # Try renaming with wrong extension - should keep .pdf
     response = await client.patch(
         f"/api/transactions/{txn.id}/attachments/{attachment_id}",
         headers=auth_headers,

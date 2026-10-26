@@ -798,7 +798,7 @@ class TestConditionValidation:
             rules.validate_config({"outcome": "link", "when": when}, whole=False)
         return caught.value.code
 
-    # -- accounts ----------------------------------------------------------
+    # - accounts ----------------------------------------------------------
     def test_accounts_are_stored_as_canonical_ids(self):
         account = uuid.uuid4()
         assert self.check({"accounts": {"in": [str(account).upper()]}}) == {
@@ -821,7 +821,7 @@ class TestConditionValidation:
         disable the rule. Leaving the condition out is how you say "any"."""
         assert self.refused({"accounts": {"in": []}}) == "bad_accounts"
 
-    # -- payees ------------------------------------------------------------
+    # - payees ------------------------------------------------------------
     def test_payees_are_validated_like_accounts(self):
         payee = uuid.uuid4()
         assert self.check({"payees": {"in": [str(payee)]}}) == {
@@ -829,7 +829,7 @@ class TestConditionValidation:
         }
         assert self.refused({"payees": {"in": ["Alpha"]}}) == "bad_payees"
 
-    # -- direction ---------------------------------------------------------
+    # - direction ---------------------------------------------------------
     @pytest.mark.parametrize("value", ["any", "credit", "debit"])
     def test_the_three_directions_are_accepted(self, value):
         assert self.check({"direction": value}) == {"direction": value}
@@ -837,7 +837,7 @@ class TestConditionValidation:
     def test_a_direction_that_is_neither_in_nor_out_is_refused(self):
         assert self.refused({"direction": "sideways"}) == "bad_direction"
 
-    # -- currency ----------------------------------------------------------
+    # - currency ----------------------------------------------------------
     def test_currency_codes_are_normalised_to_upper_case(self):
         assert self.check({"currency": {"in": ["usd", "eur"]}}) == {
             "currency": {"conversion": "reject", "in": ["USD", "EUR"]}
@@ -858,7 +858,7 @@ class TestConditionValidation:
     def test_an_unknown_conversion_mode_is_refused(self):
         assert self.refused({"currency": {"conversion": "guess"}}) == "bad_currency"
 
-    # -- amount ------------------------------------------------------------
+    # - amount ------------------------------------------------------------
     def test_a_band_is_stored_alongside_the_comparison(self):
         assert self.check(
             {"amount": {"match": "exact", "min": "100", "max": "10000"}}
@@ -900,7 +900,7 @@ class TestConditionValidation:
         )
         assert checked["amount"]["ratios"] == "@jurisdiction.withholding_ratios"
 
-    # -- text --------------------------------------------------------------
+    # - text --------------------------------------------------------------
     def test_text_conditions_are_trimmed(self):
         assert self.check({"text": {"contains": "  PIX  "}}) == {
             "text": {"contains": "PIX"}
@@ -917,7 +917,7 @@ class TestConditionValidation:
     def test_an_essay_is_refused(self):
         assert self.refused({"text": {"contains": "x" * 200}}) == "bad_text"
 
-    # -- shape -------------------------------------------------------------
+    # - shape -------------------------------------------------------------
     def test_an_unknown_signal_is_dropped_rather_than_stored(self):
         """Storing a key the engine cannot read would produce a rule that
         looks stricter on screen than it is in fact."""

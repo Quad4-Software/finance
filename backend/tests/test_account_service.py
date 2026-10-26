@@ -502,7 +502,7 @@ async def test_delete_account_with_recurring_transactions(session: AsyncSession,
 async def test_delete_account_with_imported_transactions(session: AsyncSession, test_user, test_workspace):
     """Regression (#110 v2, @ivancarlosti): deleting an account whose transactions
     were imported from a file must succeed. The imported rows reference the
-    import_log via transactions.import_id -- deleting import_logs first would
+    import_log via transactions.import_id - deleting import_logs first would
     trip transactions_import_id_fkey until that reference is cleared."""
     from sqlalchemy import select
 
@@ -884,7 +884,7 @@ async def test_get_account_summary_bill_pending_charge_with_transfer_category_co
 ):
     """The in-progress cycle's projected bill total must also stop
     excluding transfer-tagged charges while they're still pending, not
-    just once they post -- otherwise the total jumps the moment the charge
+    just once they post - otherwise the total jumps the moment the charge
     settles."""
     account = await _make_account(session, test_user.id, "CC Bill Pending", acc_type="credit_card")
     today = date.today()
@@ -905,7 +905,7 @@ async def test_get_account_summary_bill_pending_charge_with_transfer_category_co
 async def test_get_account_summary_bill_unpaired_payment_credit_still_nets_out(
     session: AsyncSession, test_user, test_workspace
 ):
-    """An unpaired card payment (no matching transfer leg -- the paying
+    """An unpaired card payment (no matching transfer leg - the paying
     account isn't connected, or the amount doesn't match exactly) is
     normally filed under a transfer-like category. That category tag must
     keep netting it against the bill, or a real repayment would count as
@@ -1081,7 +1081,7 @@ async def test_get_account_summary_bill_excludes_ignored_category_charge(
     session: AsyncSession, test_user, test_workspace
 ):
     """Unlike `treat_as_transfer`, a category the user explicitly marked
-    `is_ignored` is a direct "don't count this" -- those rows still render
+    `is_ignored` is a direct "don't count this" - those rows still render
     with an ignored badge elsewhere, so they should keep shrinking the
     bill total too."""
     account = await _make_account(session, test_user.id, "CC Bill Ignored", acc_type="credit_card")
@@ -1354,7 +1354,7 @@ def test_simplefin_to_internal_balance_checking_unchanged():
 
 
 def test_simplefin_to_internal_balance_other_provider_unchanged():
-    """Other providers already use positive-for-debt -- never flip their cards."""
+    """Other providers already use positive-for-debt - never flip their cards."""
     assert _simplefin_to_internal_balance(
         "other_provider", "credit_card", Decimal("500.00")
     ) == Decimal("500.00")
@@ -1370,7 +1370,7 @@ async def test_update_simplefin_account_to_credit_card_flips_balance(
     """Decisive case: a SimpleFIN account stores debt as a negative balance under
     type="checking". When the user overrides the type to credit_card, the stored
     balance must flip to positive-for-debt so the downstream negation in
-    serialize_account / dashboard yields -500 (owed) instead of +500 -- without
+    serialize_account / dashboard yields -500 (owed) instead of +500 - without
     the flip the card double-counts in net worth (≈2x the debt)."""
     conn_id = await _make_provider_connection(session, test_user.id, "simplefin")
     account = await _make_account(
@@ -1428,7 +1428,7 @@ async def test_update_other_provider_account_to_credit_card_does_not_flip(
     )
     assert updated is not None
     assert updated.type == "credit_card"
-    # Untouched -- the provider was already positive-for-debt.
+    # Untouched - the provider was already positive-for-debt.
     assert updated.balance == Decimal("500.00")
     payload = serialize_account(updated, None, None)
     assert payload["current_balance"] == pytest.approx(-500.0)
@@ -1485,7 +1485,7 @@ def _mem_multi_connection(**overrides):
 
 
 def test_institution_falls_back_to_connection_when_account_has_none():
-    """Accounts without an institution row -- connection wins."""
+    """Accounts without an institution row - connection wins."""
     from app.services.account_service import _institution
 
     acc = Account(name="Checking", type="checking")
@@ -1507,7 +1507,7 @@ def test_institution_prefers_the_accounts_own_on_multi_links():
 
 def test_institution_never_mixes_name_and_logo_on_multi_links():
     """On a multi-institution link, an account whose institution has no logo
-    must not borrow the connection's -- that would pair one bank's name with
+    must not borrow the connection's - that would pair one bank's name with
     another bank's icon."""
     from app.services.account_service import _institution
 
@@ -1571,8 +1571,8 @@ def _hint(name, logo=None, ext=None):
 async def test_resolve_institution_matches_by_org_id_across_renames(
     session: AsyncSession, test_user,
 ):
-    """A bank renamed on the provider side updates its row in place -- same id,
-    new name -- instead of minting a new row (review on #654)."""
+    """A bank renamed on the provider side updates its row in place - same id,
+    new name - instead of minting a new row (review on #654)."""
     from app.services.connection_service import _resolve_institution
 
     conn_id = await _make_provider_connection(session, test_user.id, "simplefin")
@@ -1587,7 +1587,7 @@ async def test_resolve_institution_matches_by_org_id_across_renames(
     assert renamed is not None
     assert renamed.id == first.id
     assert renamed.name == "Chase"
-    # The favicon-derived logo follows the provider too -- a rename that
+    # The favicon-derived logo follows the provider too - a rename that
     # moves domains must not keep the old bank's icon.
     assert renamed.logo_url == "https://logos.example/new.png"
 
@@ -1648,7 +1648,7 @@ async def test_resolve_institution_upserts_and_reuses(session: AsyncSession, tes
 
 
 def test_clean_logo_url_drops_overlong_urls():
-    """A URL longer than the column is dropped, not truncated -- a truncated
+    """A URL longer than the column is dropped, not truncated - a truncated
     URL is a broken URL (review on #654)."""
     from app.services.connection_service import _clean_logo_url
 

@@ -181,7 +181,7 @@ function renderSummary(
     case 'create_category':
       return t('agents.proposal.summary.createCategory', {
         name: String(p.name ?? '?'),
-      }) + (d.name_collision ? ` -- ${t('agents.proposal.collision', { name: d.name_collision.name })}` : '')
+      }) + (d.name_collision ? ` - ${t('agents.proposal.collision', { name: d.name_collision.name })}` : '')
     case 'create_budget':
       return t('agents.proposal.summary.createBudget', {
         category: String((p.category_name as string) ?? p.category_id ?? '?'),
@@ -308,7 +308,7 @@ function SplitPreview({ proposed }: { proposed?: Record<string, unknown> }) {
 }
 
 // Each kind maps to one Quad4 Finance endpoint already exposed via lib/api.ts.
-// Returns a string ref (id of the new entity) when available -- used as a
+// Returns a string ref (id of the new entity) when available - used as a
 // breadcrumb in the localStorage record so a future "view created entity"
 // affordance can deep-link to it.
 async function applyProposal(data: ProposalData): Promise<string | void> {

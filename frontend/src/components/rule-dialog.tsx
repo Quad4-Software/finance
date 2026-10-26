@@ -218,11 +218,11 @@ const PREVIEW_PAGE_SIZE = 50
 /** Collapsible "what would this rule do?" panel.
  *
  * Matching runs on the backend against the same engine that applies rules, so
- * the table shows exactly what saving the draft would produce -- including the
+ * the table shows exactly what saving the draft would produce - including the
  * transactions it matches but leaves untouched because they already have a
  * category. The counts cover every match; the table is one window of them at a
- * time, so a broad rule -- the kind this panel exists to catch before it is
- * saved -- can be read through rather than judged by its first screenful. Any
+ * time, so a broad rule - the kind this panel exists to catch before it is
+ * saved - can be read through rather than judged by its first screenful. Any
  * edit to the draft collapses the panel rather than leaving a stale table on
  * screen.
  */
@@ -255,7 +255,7 @@ function RulePreviewPanel({
   const draftActions = useMemo(() => previewableActions(actions), [actions])
 
   // Keyed on the whole draft, so flipping a flag refetches while the panel
-  // stays open -- and a slower response for a previous draft can never land on
+  // stays open - and a slower response for a previous draft can never land on
   // top of the current one. Paged, because a rule matching four figures of
   // transactions is one worth reading past the first page of.
   const preview = useInfiniteQuery({
@@ -323,7 +323,7 @@ function RulePreviewPanel({
             <p className="text-xs text-rose-500">{t('rules.previewError')}</p>
           ) : /* also while a flag change is being recomputed: the old numbers
                  no longer describe the flags now on screen. Fetching a further
-                 page is not that -- those rows are appended to a table that is
+                 page is not that - those rows are appended to a table that is
                  still current. */
           !data || (preview.isFetching && !preview.isFetchingNextPage) ? (
             <p className="text-xs text-muted-foreground">{t('common.loading')}</p>
@@ -507,7 +507,7 @@ export function RuleDialog({
     }))
   }
 
-  // Removing a group's last condition removes the group -- an empty one never
+  // Removing a group's last condition removes the group - an empty one never
   // matches anything and the API rejects it.
   function removeGroupCondition(i: number, j: number) {
     setConditions(prev => prev.flatMap((node, idx) => {
@@ -565,7 +565,7 @@ export function RuleDialog({
         aria-describedby={undefined}
         className={cn(
           // The preview table needs room to breathe, so the dialog widens while
-          // it is expanded -- same idiom as the transaction dialog's preview pane.
+          // it is expanded - same idiom as the transaction dialog's preview pane.
           'max-h-[90vh] overflow-y-auto overflow-x-hidden transition-[max-width] duration-300',
           previewOpen ? 'sm:max-w-5xl max-w-2xl' : 'sm:max-w-2xl max-w-2xl',
         )}

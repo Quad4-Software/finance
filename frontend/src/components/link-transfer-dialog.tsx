@@ -118,7 +118,7 @@ export function LinkTransferDialog({
   }, [candidates, searchTerm])
 
   // The "Best match" badge should only appear when the top-ranked candidate
-  // is genuinely close to the anchor -- same date neighborhood AND amount
+  // is genuinely close to the anchor - same date neighborhood AND amount
   // close enough to suggest they're the same transfer (allowing for FX/fees).
   const bestMatchId = useMemo(() => {
     if (!candidates || candidates.length === 0 || !anchor) return null
@@ -299,7 +299,7 @@ export function LinkTransferDialog({
     )
   }
 
-  // Confirm view -- used in direct mode and after picking a candidate.
+  // Confirm view - used in direct mode and after picking a candidate.
   if (!effectiveDebit || !effectiveCredit) return null
 
   const fromAccount = accounts.find((a) => a.id === effectiveDebit.account_id)

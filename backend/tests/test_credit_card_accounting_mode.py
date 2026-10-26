@@ -4,7 +4,7 @@ Covers:
     1. compute_effective_date cycle math (edge cases, month-end clamping, wraparound).
     2. apply_effective_date dispatch (CC vs non-CC, missing metadata).
     3. Event-listener safety net (defaults effective_date to date when unset).
-    4. Aggregation services in both modes -- dashboard, budgets, reports.
+    4. Aggregation services in both modes - dashboard, budgets, reports.
     5. Global setting getter + default fallback.
     6. Account-level balance queries are NOT affected by mode (ledger invariant).
     7. Transaction updates refresh effective_date when date or account_id changes.
@@ -38,7 +38,7 @@ from app.services.credit_card_service import (
 
 
 # ---------------------------------------------------------------------------
-# Unit tests: compute_effective_date -- pure cycle math, no DB needed.
+# Unit tests: compute_effective_date - pure cycle math, no DB needed.
 # ---------------------------------------------------------------------------
 
 
@@ -88,7 +88,7 @@ class TestComputeEffectiveDate:
         assert compute_effective_date(date(2026, 12, 29), 28, 5) == date(2027, 2, 5)
 
     def test_passthrough_when_close_day_missing(self):
-        # Without a close day, we can't compute the cycle -- return tx_date.
+        # Without a close day, we can't compute the cycle - return tx_date.
         assert compute_effective_date(date(2026, 4, 3), None, 16) == date(2026, 4, 3)
 
     def test_passthrough_when_due_day_missing(self):
@@ -101,13 +101,13 @@ class TestComputeEffectiveDate:
         # Edge: close and due are the same calendar day. A cycle where the
         # bill is due on the close day itself (uncommon but legal).
         # Close=15, due=15. Mar 10 purchase -> cycle closes Mar 15 -> due Mar 15.
-        # Wait -- due > close required. With close=15 and due=15, "due day
+        # Wait - due > close required. With close=15 and due=15, "due day
         # strictly after close" wraps to next month. So Mar 10 -> Apr 15.
         assert compute_effective_date(date(2026, 3, 10), 15, 15) == date(2026, 4, 15)
 
 
 # ---------------------------------------------------------------------------
-# Unit tests: apply_effective_date -- dispatch on account type.
+# Unit tests: apply_effective_date - dispatch on account type.
 # ---------------------------------------------------------------------------
 
 
@@ -184,7 +184,7 @@ class TestApplyEffectiveDate:
 
     def test_manual_effective_bill_date_works_for_non_cc_too(self):
         """The override is mainly for CC accounts but the helper applies it
-        regardless -- useful if a future feature lets users override on other
+        regardless - useful if a future feature lets users override on other
         accounts; today the schema only exposes it for CC."""
         tx = Transaction(
             user_id=uuid.uuid4(),
@@ -366,7 +366,7 @@ class TestGlobalSetting:
 
 
 # ---------------------------------------------------------------------------
-# Aggregation queries: dashboard summary -- the showcase case.
+# Aggregation queries: dashboard summary - the showcase case.
 #
 # Scenario: gold card with close=11, due=16.
 #   • Mar 30 charge R$100  -> effective_date Apr 16 (bill paid in Apr)
@@ -461,7 +461,7 @@ class TestDashboardSummary:
         summary = await dashboard_service.get_summary(
             session, test_workspace.id, test_user.id, month=date(2026, 5, 1)
         )
-        # Accrual: Apr 12 (30) + Apr 20 (20) = 50 -- bills due May 16
+        # Accrual: Apr 12 (30) + Apr 20 (20) = 50 - bills due May 16
         assert summary.monthly_expenses == 50.0
 
     @pytest.mark.asyncio
@@ -560,14 +560,14 @@ class TestSpendingByCategory:
     ):
         """Issue #232: when the user manually moves a credit-card purchase to
         a different invoice via effective_bill_date, the dashboard category
-        panel must aggregate it under the invoice month -- not the purchase
-        month -- in BOTH cash and accrual modes. The override beats whichever
+        panel must aggregate it under the invoice month - not the purchase
+        month - in BOTH cash and accrual modes. The override beats whichever
         date column the mode would otherwise bucket by, matching the
         transaction list and the bill view."""
         food = test_categories[0]
         # Purchased May 27. effective_date deliberately left in May (the stale
         # purchase month) so the only thing that can move it to June is the
-        # override -- proving the override wins over both report columns.
+        # override - proving the override wins over both report columns.
         tx = await _make_tx(
             session, test_user.id, cc_account.id, date(2026, 5, 27),
             Decimal("100"), effective_date=date(2026, 5, 27), category_id=food.id,
@@ -653,7 +653,7 @@ class TestBudgetVsActual:
             session, test_user.id, cc_account.id, date(2026, 4, 5),
             Decimal("30"), effective_date=date(2026, 4, 16), category_id=food.id,
         )
-        # Apr 15 R$20 food (effective May 16 -- next cycle)
+        # Apr 15 R$20 food (effective May 16 - next cycle)
         await _make_tx(
             session, test_user.id, cc_account.id, date(2026, 4, 15),
             Decimal("20"), effective_date=date(2026, 5, 16), category_id=food.id,
@@ -794,7 +794,7 @@ class TestAccountCycleEditRecomputesEffectiveDates:
 
 
 # ---------------------------------------------------------------------------
-# Manual cycle override (effective_bill_date) -- tx list filter must respect
+# Manual cycle override (effective_bill_date) - tx list filter must respect
 # the override regardless of accounting mode (issue #92, LucasFidelis).
 # ---------------------------------------------------------------------------
 
@@ -806,7 +806,7 @@ class TestEffectiveBillDateFiltersList:
     ):
         """A tx whose natural date falls in May, but with an effective_bill_date
         in March, must be returned for a March-window query AND excluded from
-        a May-window query -- even in cash mode (where the default filter is
+        a May-window query - even in cash mode (where the default filter is
         Transaction.date)."""
         from app.services.transaction_service import get_transactions
         await _set_mode(session, "cash")
@@ -838,7 +838,7 @@ class TestEffectiveBillDateFiltersList:
     async def test_override_moves_tx_between_cycles_in_accrual_mode(
         self, session, test_user, test_workspace, cc_account
     ):
-        """Same behavior in accrual mode -- override must beat both modes'
+        """Same behavior in accrual mode - override must beat both modes'
         default columns."""
         from app.services.transaction_service import get_transactions
         await _set_mode(session, "accrual")
@@ -863,7 +863,7 @@ class TestEffectiveBillDateFiltersList:
     ):
         """When a tx is NOT linked to the bill via bill_id (e.g. a manual
         recurring entry the user added to compensate for a tx the provider failed
-        to fetch -- abdalanervoso's Wellhub on Bradesco case), it should
+        to fetch - abdalanervoso's Wellhub on Bradesco case), it should
         still count toward the bill's cycle if its date falls in the
         cycle window."""
         from app.services.transaction_service import get_transactions
@@ -916,7 +916,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """Pending sync tx with bill_id NULL but effective_date == active
-        bill's due_date IS included -- cycle math pre-classified it to this
+        bill's due_date IS included - cycle math pre-classified it to this
         bill, even though the provider hasn't tagged a billId yet. This is
         abdalanervoso's empty-May case: late-April pending charges with
         effective_date=2026-05-10 must show up in May."""
@@ -975,7 +975,7 @@ class TestEffectiveBillDateFiltersList:
         await session.commit()
 
         # In-progress June cycle (cycle-math fallback, no bill_id passed)
-        # range = [April 30, May 29] -- the start INCLUDES the prev close day.
+        # range = [April 30, May 29] - the start INCLUDES the prev close day.
         txs, _, _ = await get_transactions(
             session, test_workspace.id, test_user.id, account_id=cc_account.id,
             from_date=date(2026, 4, 30), to_date=date(2026, 5, 29),
@@ -989,7 +989,7 @@ class TestEffectiveBillDateFiltersList:
     ):
         """When the user views the in-progress cycle (no bill_id passed) but
         the date window overlaps a closed bill's range, txs already linked
-        to that closed bill must NOT appear -- otherwise they'd double-count
+        to that closed bill must NOT appear - otherwise they'd double-count
         in the bar/total against their bill's view."""
         from app.services.transaction_service import get_transactions
         from app.models.credit_card_bill import CreditCardBill
@@ -1027,7 +1027,7 @@ class TestEffectiveBillDateFiltersList:
         assert billed.id not in {t.id for t in txs}
 
         # Without unbilled_only (e.g., the global /transactions list page),
-        # the same tx IS visible -- the flag is opt-in.
+        # the same tx IS visible - the flag is opt-in.
         txs_unfiltered, _, _ = await get_transactions(
             session, test_workspace.id, test_user.id, account_id=cc_account.id,
             from_date=date(2026, 4, 30), to_date=date(2026, 5, 29),
@@ -1121,7 +1121,7 @@ class TestEffectiveBillDateFiltersList:
     ):
         """Reverse case: pending sync tx whose effective_date points to a
         FUTURE bill must NOT show in a past closed bill. Keeps ingrid's
-        fix intact -- pending charges don't pollute closed statements."""
+        fix intact - pending charges don't pollute closed statements."""
         from app.services.transaction_service import get_transactions
         from app.models.credit_card_bill import CreditCardBill
         from datetime import datetime, timezone
@@ -1146,7 +1146,7 @@ class TestEffectiveBillDateFiltersList:
         pending.status = "pending"
         await session.commit()
 
-        # Viewing April bill -- must NOT include this pending tx
+        # Viewing April bill - must NOT include this pending tx
         txs, _, _ = await get_transactions(
             session, test_workspace.id, test_user.id, account_id=cc_account.id,
             bill_id=april_bill.id,
@@ -1180,7 +1180,7 @@ class TestEffectiveBillDateFiltersList:
         await session.flush()
 
         # Pending sync tx with effective_date pointing to a DIFFERENT bill
-        # (May) -- cycle math classified it elsewhere, must NOT show in April
+        # (May) - cycle math classified it elsewhere, must NOT show in April
         pending = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 8), Decimal("99"),
@@ -1189,7 +1189,7 @@ class TestEffectiveBillDateFiltersList:
         )
         pending.status = "pending"
 
-        # Posted sync tx in window without billId -- SHOULD count (provider
+        # Posted sync tx in window without billId - SHOULD count (provider
         # returned but didn't tag, reasonable to fill in by date)
         posted_synced = await _make_tx(
             session, test_user.id, cc_account.id,
@@ -1199,7 +1199,7 @@ class TestEffectiveBillDateFiltersList:
         )
         posted_synced.status = "posted"
 
-        # Manual user entry in window -- SHOULD count (explicit intent)
+        # Manual user entry in window - SHOULD count (explicit intent)
         manual = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 10), Decimal("75"),
@@ -1227,7 +1227,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """An unlinked tx with a date outside the cycle window must NOT be
-        counted -- otherwise we'd pick up unrelated manual entries."""
+        counted - otherwise we'd pick up unrelated manual entries."""
         from app.services.transaction_service import get_transactions
         from app.models.credit_card_bill import CreditCardBill
         from datetime import datetime, timezone
@@ -1242,7 +1242,7 @@ class TestEffectiveBillDateFiltersList:
         session.add(bill)
         await session.flush()
 
-        # Unlinked tx in a totally different month -- should NOT be in cycle
+        # Unlinked tx in a totally different month - should NOT be in cycle
         outside = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 1, 5), Decimal("99"),
@@ -1264,7 +1264,7 @@ class TestEffectiveBillDateFiltersList:
     ):
         """The pending-sync exclusion only applies when bill_id IS NULL.
         A pending tx that the provider already tagged with a billId is still
-        bank-truth and must count -- otherwise we'd lose pending charges
+        bank-truth and must count - otherwise we'd lose pending charges
         that the bank has already classified."""
         from app.services.transaction_service import get_transactions
         from app.models.credit_card_bill import CreditCardBill
@@ -1280,7 +1280,7 @@ class TestEffectiveBillDateFiltersList:
         session.add(bill)
         await session.flush()
 
-        # the provider tagged a pending tx -- bill_id is set even though status is pending
+        # the provider tagged a pending tx - bill_id is set even though status is pending
         tx = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 8), Decimal("50"),
@@ -1305,7 +1305,7 @@ class TestEffectiveBillDateFiltersList:
     ):
         """Posted sync tx without billId is the rare case where the provider
         returned the tx but didn't tag a bill. Date-window inclusion is
-        reasonable -- the user wants to see their charges, and the tx is
+        reasonable - the user wants to see their charges, and the tx is
         definitively settled. Only pending sync without billId is excluded."""
         from app.services.transaction_service import get_transactions
         from app.models.credit_card_bill import CreditCardBill
@@ -1343,7 +1343,7 @@ class TestEffectiveBillDateFiltersList:
     async def test_bill_id_filter_includes_ofx_imported_in_window(
         self, session, test_user, test_workspace, cc_account
     ):
-        """An OFX import is a definitive user intent -- must count toward the
+        """An OFX import is a definitive user intent - must count toward the
         bill cycle whose window contains its date. Confirms the pending-sync
         exclusion is narrow (sync+pending only), not blanket source-based."""
         from app.services.transaction_service import get_transactions
@@ -1380,7 +1380,7 @@ class TestEffectiveBillDateFiltersList:
     async def test_override_to_date_with_no_matching_bill_keeps_bill_id_null(
         self, session, test_user, test_workspace, cc_account
     ):
-        """The user can pick any date as effective_bill_date -- including one
+        """The user can pick any date as effective_bill_date - including one
         that doesn't correspond to a known bill (e.g. a far-future statement
         that hasn't been issued yet). bill_id stays null, effective_date
         follows the override, and the tx is bucketed by override only."""
@@ -1395,7 +1395,7 @@ class TestEffectiveBillDateFiltersList:
         )
         await session.commit()
 
-        # No bill exists for 2099-01-01 -- override still takes effect
+        # No bill exists for 2099-01-01 - override still takes effect
         await update_transaction(
             session, tx.id, test_workspace.id, test_user.id,
             TransactionUpdate(effective_bill_date=date(2099, 1, 1)),
@@ -1412,7 +1412,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """Refund/return txs are type=credit. Per-bill summary must include
-        them in monthly_income when their bill_id matches -- otherwise CC
+        them in monthly_income when their bill_id matches - otherwise CC
         refunds show up as 0 for the cycle."""
         from app.services.account_service import get_account_summary
         from app.models.credit_card_bill import CreditCardBill
@@ -1453,7 +1453,7 @@ class TestEffectiveBillDateFiltersList:
         """For CC accounts, refund credits must subtract from the cycle's
         monthly_expenses so 'Total da fatura' matches the bank's bill (which
         is net of refunds, e.g. R$50 charge + R$50 refund = R$0 owed).
-        abdalanervoso reported this on Bradesco -- refunds on the same day
+        abdalanervoso reported this on Bradesco - refunds on the same day
         as the original charge should zero out the cycle."""
         from app.services.account_service import get_account_summary
         from app.models.credit_card_bill import CreditCardBill
@@ -1477,7 +1477,7 @@ class TestEffectiveBillDateFiltersList:
         )
         charge.bill_id = bill.id
 
-        # Same-day refund (credit) -- fully reverses the charge
+        # Same-day refund (credit) - fully reverses the charge
         refund = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 17), Decimal("44.90"),
@@ -1510,7 +1510,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, test_connection
     ):
         """For non-CC accounts (checking, etc.), monthly_expenses must STAY
-        as sum-of-debits -- credits there are income, not refunds. Confirms
+        as sum-of-debits - credits there are income, not refunds. Confirms
         the CC netting fix doesn't leak into other account types."""
         from app.services.account_service import get_account_summary
 
@@ -1528,7 +1528,7 @@ class TestEffectiveBillDateFiltersList:
             date(2026, 4, 5), Decimal("50"),
             effective_date=date(2026, 4, 5),
         )
-        # Salary credit -- must NOT subtract from expenses
+        # Salary credit - must NOT subtract from expenses
         await _make_tx(
             session, test_user.id, checking.id,
             date(2026, 4, 10), Decimal("3000"),
@@ -1585,7 +1585,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """get_account_summary applies the same effective_date-aware pending
-        rule as get_transactions -- pending sync pointing to a DIFFERENT bill
+        rule as get_transactions - pending sync pointing to a DIFFERENT bill
         must NOT pollute this bill's total. Otherwise the totals card and
         bar chart would sum a tx the transactions list omits."""
         from app.services.account_service import get_account_summary
@@ -1611,7 +1611,7 @@ class TestEffectiveBillDateFiltersList:
         )
         pending.status = "pending"
 
-        # Manual entry in the same window -- must be included
+        # Manual entry in the same window - must be included
         await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 9), Decimal("50"),
@@ -1661,7 +1661,7 @@ class TestEffectiveBillDateFiltersList:
         does NOT exactly match any bill's due_date (so `bill_id` stays null)
         must still appear in the bill view whose cycle window contains the
         override. The sync-pending exclusion clause exists to keep auto-
-        classified pending charges out of the wrong bill -- but a manual
+        classified pending charges out of the wrong bill - but a manual
         override is the user's explicit correction and beats that caution
         (issue #162: txs disappearing after setting effective_bill_date)."""
         from app.services.transaction_service import get_transactions
@@ -1751,7 +1751,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """User sets `effective_bill_date` to a date past the in-progress
-        cycle's right edge -- typically because they want the tx on a future
+        cycle's right edge - typically because they want the tx on a future
         bill that doesn't exist yet. Closed bill windows can't host such
         forward-pointing overrides (they're by definition past), so the
         in-progress cycle catches them as the only forward-looking bucket.
@@ -1990,8 +1990,8 @@ class TestBillTotalIgnoresReportingExclusions:
         self, session, test_user, test_workspace, cc_account
     ):
         """`exclude_from_pnl` says "do not report this as spending", not
-        "the bank did not bill me". Its canonical use -- a work expense on a
-        personal card, reimbursed later -- is a card case, so the bill total
+        "the bank did not bill me". Its canonical use - a work expense on a
+        personal card, reimbursed later - is a card case, so the bill total
         has to stay whole or the card's own numbers split apart."""
         await _make_tx(
             session, test_user.id, cc_account.id,

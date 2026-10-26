@@ -1,7 +1,7 @@
 """The files gathered under an invoice.
 
 Kept in its own router rather than folded into `invoices.py` because it
-is the transaction-attachment shape verbatim -- multipart in, bytes out --
+is the transaction-attachment shape verbatim - multipart in, bytes out -
 and mixing that with a JSON resource makes both harder to read.
 """
 import uuid

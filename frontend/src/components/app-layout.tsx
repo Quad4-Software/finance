@@ -115,8 +115,8 @@ export function AppLayout() {
   const { agentsEnabled } = useFeatureFlags()
   const { hasModule, isLoading: workspaceLoading, canWrite } = useWorkspace()
   // The chat is offered only to members who can write. Sending a message
-  // reaches a tool set that persists -- `propose_create_transaction` and its
-  // siblings -- so the backend refuses it for a read-only role. Showing the
+  // reaches a tool set that persists - `propose_create_transaction` and its
+  // siblings - so the backend refuses it for a read-only role. Showing the
   // panel anyway would put a raw `403: {"detail":"Read-only role"}` in front
   // of the user, which is what happened before this guard.
   //
@@ -130,7 +130,7 @@ export function AppLayout() {
   // ⌘J / Ctrl+J toggles the global slide-over chat from anywhere.
   // Distinct from ⌘K (command palette) so users can have both open.
   // Gated on agentsEnabled so the hotkey is a no-op when the feature is
-  // off -- keeps ⌘J free for browsers/other tools.
+  // off - keeps ⌘J free for browsers/other tools.
   useEffect(() => {
     adminApi.defaultColors().then(({ light, dark }) => {
       setThemeBasedOnSystem(light, dark, resolvedTheme)
@@ -245,7 +245,7 @@ export function AppLayout() {
           >
             <ThemeIcon size={18} />
           </button>
-          {/* AI chat -- opens the global slide-over (also reachable via
+          {/* AI chat - opens the global slide-over (also reachable via
               ⌘J). Sits next to the theme toggle so the icon is always
               within thumb reach on mobile too. */}
           {chatAvailable && (
@@ -291,7 +291,7 @@ export function AppLayout() {
             desktopSidebarCollapsed ? 'lg:w-16' : 'lg:w-60',
           )}
         >
-          {/* Logo -- clickable link to the dashboard. Replaces the
+          {/* Logo - clickable link to the dashboard. Replaces the
               dedicated 'Painel' nav item so the sidebar stays focused
               on the main destinations. */}
           {/* Collapsed on desktop, the header becomes a column: logo on
@@ -332,7 +332,7 @@ export function AppLayout() {
               >
                 {privacyMode ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
-              {/* AI chat -- same trigger as the mobile bar, ⌘J also
+              {/* AI chat - same trigger as the mobile bar, ⌘J also
                   works. Lives in the sidebar header so the entry point
                   is visible even on first load (no floating button). */}
               {chatAvailable && (
@@ -403,12 +403,12 @@ export function AppLayout() {
           <nav className={cn('flex flex-col gap-0.5 px-3 pt-1 pb-3', desktopSidebarCollapsed && 'lg:items-center lg:gap-1 lg:px-0 lg:pt-3')} data-tour="sidebar">
             {/* Which modules this workspace shows is resolved server-side,
                 so until the workspace list lands there is no honest answer
-                -- a placeholder beats both an empty sidebar and a guess. */}
+                - a placeholder beats both an empty sidebar and a guess. */}
             {workspaceLoading && <NavSkeleton />}
             {!workspaceLoading && finalNavItems.map((item, idx) => {
               if (item.type === 'separator') {
                 // The first separator sits right below the search bar
-                // -- without trimming the top padding it leaves a wide
+                // - without trimming the top padding it leaves a wide
                 // gap that makes the section header feel disconnected
                 // from the search trigger.
                 const isFirstSep = idx === 0
@@ -558,7 +558,7 @@ export function AppLayout() {
             <UpdateAvailableBanner onOpen={() => setUpdateDialogOpen(true)} />
           </div>
 
-          {/* Merged account + workspace menu -- one trigger at the
+          {/* Merged account + workspace menu - one trigger at the
               bottom of the sidebar shows the active workspace as the
               primary identity, the user email + role as the secondary
               line, and combines workspace switching with all the
@@ -627,7 +627,7 @@ export function AppLayout() {
         </Suspense>
       )}
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
-      {/* Slide-over global chat -- opened from the sidebar pill or via
+      {/* Slide-over global chat - opened from the sidebar pill or via
           ⌘J. The previous floating bottom-right button was removed
           since the entry point now lives in the sidebar next to ⌘K. */}
       {chatAvailable && <GlobalChatPanel open={chatOpen} onOpenChange={setChatOpen} />}

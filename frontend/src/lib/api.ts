@@ -1500,7 +1500,7 @@ export const assetGroups = {
   },
 }
 
-// Collections -- user-defined account groups for filtering (issue #105)
+// Collections - user-defined account groups for filtering (issue #105)
 export const collections = {
   list: async (): Promise<Collection[]> => {
     const { data } = await api.get('/collections')
@@ -1761,7 +1761,7 @@ export const info = {
   },
 }
 
-// Agents / MCP / RAG -- only meaningful when info.features.agents === true.
+// Agents / MCP / RAG - only meaningful when info.features.agents === true.
 export interface Agent {
   id: string
   name: string
@@ -1971,7 +1971,7 @@ export const agents = {
       await api.delete(`/agents/conversations/${id}`)
     },
   },
-  // Streaming chat endpoint -- caller handles the SSE response themselves
+  // Streaming chat endpoint - caller handles the SSE response themselves
   // (see lib/agents-stream.ts). We just expose the URL + body builder.
   chatUrl: (agentId: string) => `/api/agents/${agentId}/chat`,
 
@@ -2004,12 +2004,12 @@ export const agents = {
 
 export default api
 
-// Invoices -- business workspaces only. Every route 404s for a workspace
+// Invoices - business workspaces only. Every route 404s for a workspace
 // without the module, so these are never called from a personal one.
 export interface InvoiceWritePayload {
   direction?: InvoiceDirection
   /** Keep it a draft even where the workspace would open it on creation.
-   *  Not a status field -- only the difference between "still writing
+   *  Not a status field - only the difference between "still writing
    *  this" and "this is owed". Ignored on update. */
   as_draft?: boolean
   /** Provenance, for anything that did not originate here: a gateway
@@ -2322,8 +2322,8 @@ export const invoices = {
   },
 }
 
-/** The shared invoice. Unauthenticated by design -- the token is the whole
- *  credential -- so these bypass the api instance and its interceptors. */
+/** The shared invoice. Unauthenticated by design - the token is the whole
+ *  credential - so these bypass the api instance and its interceptors. */
 export const publicInvoices = {
   get: async (token: string): Promise<InvoiceDocumentPayload> => {
     // Bare axios, not the shared instance: the interceptors would attach

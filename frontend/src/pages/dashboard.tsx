@@ -184,7 +184,7 @@ export default function DashboardPage() {
   const acctIds = activeAccountIds ?? undefined
   const walletIds = activeWalletIds ?? undefined
   // A wallet-only collection (active, but with zero accounts) has no account
-  // data -- skip the account-only cards so they render empty instead of
+  // data - skip the account-only cards so they render empty instead of
   // silently falling back to "all accounts".
   const noAccounts = activeAccountIds !== null && activeAccountIds.length === 0
 
@@ -394,7 +394,7 @@ export default function DashboardPage() {
   const hasProjectedBalance = Math.abs(projectedBalance - totalBalance) >= 0.01
   const assetsValue = summary?.assets_value_primary ?? Object.values(summary?.assets_value ?? {}).reduce((a, b) => a + b, 0)
 
-  // Available balance: checking/savings accounts only -- what's actually
+  // Available balance: checking/savings accounts only - what's actually
   // spendable today, as opposed to `totalBalance` (net worth: accounts +
   // investments - open card bills). Scoped to the active Collection filter,
   // same as the rest of the dashboard.
@@ -424,7 +424,7 @@ export default function DashboardPage() {
   // Net worth's "Available balance" breakdown row: every account that is not
   // a card or loan (unlike the headline `availableBalance`, which is
   // checking/savings only), so with the card and loan rows it reconciles with
-  // `totalBalance` -- which sums all account types.
+  // `totalBalance` - which sums all account types.
   const nonCardAccountsBalance = (accountsList ?? [])
     .filter((a) => (activeAccountIds ? activeAccountIds.includes(a.id) : true) && a.type !== 'credit_card' && a.type !== 'loan')
     .reduce((sum, a) => sum + Number(a.balance_primary ?? a.current_balance), 0)
@@ -724,7 +724,7 @@ export default function DashboardPage() {
                   })}
                 </div>
               )}
-              {/* Net of pending group shares -- show only when meaningfully
+              {/* Net of pending group shares - show only when meaningfully
                   nonzero so users without groups see the same UI as before. */}
               {summary && Math.abs(summary.pending_shares_net) >= 0.01 && (
                 <Tooltip>
@@ -1423,7 +1423,7 @@ export default function DashboardPage() {
                       onClick={() => {
                         if (row.isProjected) return
                         if (row.isShared) {
-                          // Shared rows belong to another user -- open the
+                          // Shared rows belong to another user - open the
                           // group instead of the (locked) edit dialog.
                           if (row.groupId) navigate(`/groups/${row.groupId}`)
                           return

@@ -234,7 +234,7 @@ async def number_format(
 ):
     """Global display format for numbers and dates. Readable by any signed-in
     user (not just admins) so the frontend can format consistently for everyone.
-    Defaults to 'auto' -- derive separators from each user's display currency."""
+    Defaults to 'auto' - derive separators from each user's display currency."""
     fmt = await admin_service.get_number_format(session)
     return {"format": fmt}
 
@@ -245,7 +245,7 @@ async def date_format(
     _user: User = Depends(current_active_user),
 ):
     """Global display format for dates. Readable by any signed-in user.
-    Defaults to 'auto' -- derive the field order from the number format /
+    Defaults to 'auto' - derive the field order from the number format /
     display currency. Month names always follow the user's app language."""
     fmt = await admin_service.get_date_format(session)
     return {"format": fmt}

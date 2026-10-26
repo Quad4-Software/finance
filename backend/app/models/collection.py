@@ -37,7 +37,7 @@ collection_accounts = Table(
 
 # Many-to-many: a collection can also bundle asset "wallets" (asset_groups),
 # so net-worth/reports for the collection include those wallets' assets.
-# Individual assets aren't added directly -- only wallets -- which keeps
+# Individual assets aren't added directly - only wallets - which keeps
 # membership stable as assets flow in/out of a wallet.
 collection_asset_groups = Table(
     "collection_asset_groups",
@@ -59,7 +59,7 @@ collection_asset_groups = Table(
 
 class Collection(Base):
     """A user-defined, named group of accounts used to filter the app's
-    views (dashboard, reports, transactions) -- issue #105.
+    views (dashboard, reports, transactions) - issue #105.
 
     Cross-cutting and many-to-many: an account can belong to several
     collections simultaneously. Workspace-scoped. Deliberately distinct from

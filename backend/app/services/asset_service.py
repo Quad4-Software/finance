@@ -79,8 +79,8 @@ def _generate_growth_values(
     growth_start_date: Optional[date],
 ) -> list[AssetValue]:
     """Generate all AssetValue rows from base_date to today using the growth rule.
-    When growth_start_date is set, growth iteration begins from that date -- not
-    from base_date -- so the asset accrues no growth for the gap between
+    When growth_start_date is set, growth iteration begins from that date - not
+    from base_date - so the asset accrues no growth for the gap between
     purchase and the configured growth start."""
     today = app_today()
     if growth_start_date and today < growth_start_date:
@@ -220,13 +220,13 @@ def build_market_value_series(
     A point is emitted at every stored-value date *and* every trade date, so a
     quantity change shows up on the chart at the date it happened. Without the
     trade-date points, a holding whose stored prices only start recently (the
-    common case -- prices are recorded daily from when the holding was added)
+    common case - prices are recorded daily from when the holding was added)
     collapses every backdated trade onto a single early anchor and renders one
     long straight interpolation across the gap. `value_rows` must be sorted by
     date.
 
     A holding with no ledger at all (e.g. a pre-ledger "no cost" position that
-    still has a stored quantity) keeps its baked amounts -- replaying an empty
+    still has a stored quantity) keeps its baked amounts - replaying an empty
     ledger would wrongly zero it out.
     """
     if not txs:
@@ -472,7 +472,7 @@ async def create_asset(
         workspace_id=workspace_id,
         name=data.name,
         type=data.type,
-        # For market_price, the quote's currency is authoritative -- a user
+        # For market_price, the quote's currency is authoritative - a user
         # entering PETR4.SA from an English-language form shouldn't end up
         # with USD just because the dropdown defaulted to USD.
         currency=quote.currency if quote else data.currency,
@@ -719,7 +719,7 @@ async def update_asset(
     # If units change on a market-priced asset, rewrite today's AssetValue with
     # the new (units × last_price). Without this, the portfolio chart keeps
     # plotting the old position size even though the header and wallet totals
-    # (computed live) already reflect the new units -- the two disagree until
+    # (computed live) already reflect the new units - the two disagree until
     # the next scheduled refresh overwrites today's row.
     if (
         "units" in update_data
@@ -952,7 +952,7 @@ async def get_portfolio_trend(
 
     # Build trend with fill-forward; 0 before first date (for stacking).
     # Each native-currency amount is converted at the display date `d` so that
-    # fill-forwarded values reflect current FX rates -- consistent with
+    # fill-forwarded values reflect current FX rates - consistent with
     # get_asset_values_at(as_of_date=d).
     trend = []
     last_known: dict[str, float] = {}  # native currency amounts
@@ -970,7 +970,7 @@ async def get_portfolio_trend(
                 native = last_known[aid]
             else:
                 native = 0.0
-            # After sell_date, the asset has been liquidated -- drop to 0 so
+            # After sell_date, the asset has been liquidated - drop to 0 so
             # it stops contributing to the portfolio total going forward.
             if aid in sell_date_by_aid and d > sell_date_by_aid[aid]:
                 native = 0.0
@@ -994,7 +994,7 @@ async def get_portfolio_trend(
         row["_total"] = float(date_total.quantize(Decimal("0.01")))
         trend.append(row)
 
-    # The header total matches the last row's _total -- both use the same
+    # The header total matches the last row's _total - both use the same
     # per-display-date conversion so no second conversion is needed.
     total: float = cast(float, trend[-1]["_total"]) if trend else 0.0
 
@@ -1159,13 +1159,13 @@ async def refresh_all_market_prices(
 ) -> dict[str, int]:
     """Refresh every non-archived market-priced asset in the database.
 
-    Uses the provider's batch ``get_latest_prices`` endpoint when possible --
+    Uses the provider's batch ``get_latest_prices`` endpoint when possible -
     one HTTP request covers the whole portfolio via ``yfinance.download``
     instead of one call per asset. Falls back silently to per-asset refresh
     if the batch returns nothing (provider without bulk support, or a hard
     failure on Yahoo's end).
 
-    Returns a summary counting successes, skips, and rate-limit halts --
+    Returns a summary counting successes, skips, and rate-limit halts -
     surfaced as the Celery task's return payload for observability.
     """
     result = await session.execute(
@@ -1185,7 +1185,7 @@ async def refresh_all_market_prices(
     tickers = [a.ticker for a in assets if a.ticker]
 
     # Batch path: one request -> dict[SYMBOL, price]. On rate-limit we halt
-    # immediately -- retrying within the same task would just pile on 429s
+    # immediately - retrying within the same task would just pile on 429s
     # and risk an IP-level cookie ban.
     try:
         prices = await provider.get_latest_prices(tickers)

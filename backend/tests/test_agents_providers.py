@@ -149,7 +149,7 @@ async def test_openai_parser_handles_index_keyed_tool_call_chunks():
     """Regression: OpenAI streams tool calls with `id` and `name` only in
     the FIRST chunk for an `index`; subsequent chunks have just args.
     Earlier code keyed by id (falling back to `_idx_N` when missing),
-    creating phantom entries with empty names -- dispatch then failed with
+    creating phantom entries with empty names - dispatch then failed with
     `unknown tool: `."""
     from unittest.mock import patch
     from app.agents.providers.base import ChatMessage

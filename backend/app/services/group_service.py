@@ -21,7 +21,7 @@ def _tag_owner(group: Group, user_id: uuid.UUID) -> Group:
     """Set a transient `is_owner` flag for the response layer.
 
     The "owner" of a group is the human who created it, not the
-    workspace it lives in -- `Group.user_id` retains creator semantics
+    workspace it lives in - `Group.user_id` retains creator semantics
     even after the workspace migration.
     """
     group.is_owner = group.user_id == user_id
@@ -64,7 +64,7 @@ async def _resolve_member_email(
     session: AsyncSession, email: Optional[str]
 ) -> Optional[uuid.UUID]:
     """If `email` matches an existing Quad4 Finance user, return their id.
-    Otherwise return None -- the member is created as a shadow row."""
+    Otherwise return None - the member is created as a shadow row."""
     if not email:
         return None
     result = await session.execute(
@@ -77,12 +77,12 @@ def _visible_predicate(workspace_id: uuid.UUID, user_id: uuid.UUID):
     """Group is visible when EITHER:
       - it lives in the current workspace (any workspace member sees it), OR
       - the requesting user is linked as a member from outside the
-        workspace (cross-workspace settlement projection -- the Splitwise
+        workspace (cross-workspace settlement projection - the Splitwise
         case where Adam invites Eve from her own workspace).
 
     `is_self` memberships are EXCLUDED from the cross-workspace
     projection: those represent the group's owner, who should see the
-    group only in the workspace where it lives -- not in every other
+    group only in the workspace where it lives - not in every other
     workspace they belong to.
     """
     member_groups = (
@@ -168,7 +168,7 @@ async def create_group(
     user_id: uuid.UUID,
     data: GroupCreate,
 ) -> Group:
-    # Uniqueness is scoped to the workspace, not the creator -- a
+    # Uniqueness is scoped to the workspace, not the creator - a
     # workspace can't have two "Lunch Club" groups even if different
     # members created them.
     existing = await session.execute(
@@ -248,7 +248,7 @@ async def list_members(
     workspace_id: uuid.UUID,
     user_id: uuid.UUID,
 ) -> Optional[list[GroupMember]]:
-    # Skip the eager-loaded `Group.members` collection here -- within a
+    # Skip the eager-loaded `Group.members` collection here - within a
     # long-lived session (notably tests) the identity map can hold a
     # stale snapshot after upstream mutations like `_clear_self_flag`.
     # A direct query always reflects the current row state.

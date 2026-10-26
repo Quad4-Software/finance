@@ -1,7 +1,7 @@
 """Coverage for app/agents/services/connection_service.
 
 The CRUD paths use the real test SQLite session. test_connection() is
-the largest function in the module -- we drive it through a fake
+the largest function in the module - we drive it through a fake
 httpx.AsyncClient so each provider branch is exercised without real
 network calls.
 """
@@ -59,7 +59,7 @@ async def test_default_is_unique_per_user(session, test_user):
     b = await cs.create_connection(
         session, test_user.id, name="b", kind="openai", is_default=True,
     )
-    # Re-fetch a -- its default flag should be cleared.
+    # Re-fetch a - its default flag should be cleared.
     refreshed_a = await cs.get_connection(session, a.id, test_user.id)
 
     assert refreshed_a is not None

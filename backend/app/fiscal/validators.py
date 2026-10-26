@@ -18,7 +18,7 @@ Two rules hold for everything in this file:
 from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
-# normalisation -- what gets stored
+# normalisation - what gets stored
 # ---------------------------------------------------------------------------
 def normalise_digits(value: str) -> str:
     """Keep digits only. For documents that are numbers wearing punctuation."""
@@ -87,7 +87,7 @@ def _luhn_ok(digits: str) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# validators -- return None when valid, else a machine-readable reason
+# validators - return None when valid, else a machine-readable reason
 # ---------------------------------------------------------------------------
 def validate_none(value: str) -> None:
     """Accept anything non-empty.

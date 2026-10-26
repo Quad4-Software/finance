@@ -49,7 +49,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   // Whether the user is "pinned" to the bottom of the scroll area. We
-  // only auto-scroll while pinned -- if the user scrolls up to read,
+  // only auto-scroll while pinned - if the user scrolls up to read,
   // streaming deltas no longer yank them back down.
   const isAtBottomRef = useRef(true)
 
@@ -61,7 +61,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
   })
 
   // Snap to bottom when the conversation switches (it should look fresh)
-  // and move keyboard focus to the input -- covers both "+" (null) and
+  // and move keyboard focus to the input - covers both "+" (null) and
   // selecting an existing conversation. focusSignal also triggers focus
   // when the user clicks "+" while already on a null conversation.
   useEffect(() => {
@@ -75,7 +75,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
   // Clear any stale optimistic draft when the conversation prop changes
   // for a reason OTHER than the in-flight stream getting its id assigned
   // (i.e. user picked a different thread from history, or hit "+"). We
-  // detect "stream is mid-flight" via the `streaming` flag -- during that
+  // detect "stream is mid-flight" via the `streaming` flag - during that
   // window the conversationId may legitimately go from null -> real, and
   // we don't want to wipe the loading bubble. Once the stream finishes,
   // the existing finally{} clears the draft anyway.
@@ -89,7 +89,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
   }, [conversationId])
 
   // Reset the textarea's inline height when the input is cleared (after
-  // send, on conversation change, etc.) -- onChange's auto-grow leaves
+  // send, on conversation change, etc.) - onChange's auto-grow leaves
   // an explicit `style.height` behind that won't shrink on its own.
   useEffect(() => {
     if (input === '' && inputRef.current) {
@@ -108,7 +108,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
   const handleScroll = () => {
     const el = scrollRef.current
     if (!el) return
-    // 80px tolerance -- close enough to count as "at the bottom".
+    // 80px tolerance - close enough to count as "at the bottom".
     const distance = el.scrollHeight - el.scrollTop - el.clientHeight
     isAtBottomRef.current = distance < 80
   }
@@ -119,10 +119,10 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
     setInput('')
     setLastError(null)
     setStreaming(true)
-    // User just took an action -- they want to see the response.
+    // User just took an action - they want to see the response.
     isAtBottomRef.current = true
     let errorThisTurn: string | null = null
-    // Track the active conversation id locally -- the React state for it
+    // Track the active conversation id locally - the React state for it
     // updates asynchronously, so a closure over `conversationId` still
     // sees the value at the start of send() and would invalidate the
     // wrong query key on a brand-new conversation.
@@ -179,7 +179,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
         try {
           await qc.refetchQueries({ queryKey: ['agent-conv-messages', activeConvId] })
         } catch {
-          // ignore -- we still want to clear the draft below
+          // ignore - we still want to clear the draft below
         }
       }
       qc.invalidateQueries({ queryKey: ['agent-conversations'] })
@@ -188,7 +188,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
       if (errorThisTurn) setLastError(errorThisTurn)
       // After the very first round of a brand-new conversation, ask the
       // backend to summarize the exchange into a short title via the
-      // LLM. Fire-and-forget -- the conversations list will refetch when
+      // LLM. Fire-and-forget - the conversations list will refetch when
       // it lands.
       if (!errorThisTurn && startedFresh && activeConvId) {
         agents.conversations
@@ -223,7 +223,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
         {/* `pendingUser` is the optimistic bubble shown the instant the
             user hits send. As soon as the SSE `conversation` event fires
             for a brand-new chat, the parent updates conversationId and
-            the history query refetches -- at which point the persisted
+            the history query refetches - at which point the persisted
             user message lands in `history` while the optimistic bubble
             is still mounted, briefly duplicating the message. Suppress
             the optimistic bubble once history already contains a
@@ -243,7 +243,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
             {draft.tools.map((tool, i) => {
               const isProposal = isProposalToolName(tool.name) && tool.result?.data && isProposalData(tool.result.data)
               if (isProposal) {
-                // Stable id for the localStorage "applied" marker -- the
+                // Stable id for the localStorage "applied" marker - the
                 // draft uses an in-flight uuid so we suffix with the index.
                 return (
                   <ProposalCard
@@ -334,7 +334,7 @@ export function ChatPanel({ agent, conversationId, onConversationCreated, focusS
 /**
  * Persisted history. Pairs each assistant tool_call with its matching
  * `tool` message (looked up by tool_call_id) so the call and its result
- * render together in a single expandable chip -- same UX as the live
+ * render together in a single expandable chip - same UX as the live
  * streaming draft.
  */
 function HistoryView({ agent, history }: { agent: Agent; history: AgentMessage[] }) {
@@ -370,7 +370,7 @@ function HistoryView({ agent, history }: { agent: Agent; history: AgentMessage[]
                   const tres = resultsById[tc.id]
                   const data = tres?.tool_result?.data
                   if (isProposalToolName(tc.name) && data && isProposalData(data)) {
-                    // Persisted tool_call_id is stable across reloads --
+                    // Persisted tool_call_id is stable across reloads -
                     // perfect localStorage key for the "applied" marker.
                     return <ProposalCard key={tc.id} toolCallId={tc.id} data={data as Record<string, unknown>} />
                   }
@@ -413,12 +413,12 @@ function HistoryView({ agent, history }: { agent: Agent; history: AgentMessage[]
 /** Shown in a fresh conversation (no history, no draft). Centers the
  *  Quad4 Finance mark + agent name and surfaces ~6 randomized example prompts
  *  pulled from i18n. Picking one fills the textarea and focuses it
- *  (cheaper than auto-sending -- gives the user a chance to tweak). */
+ *  (cheaper than auto-sending - gives the user a chance to tweak). */
 function ChatEmptyState({ agent, onPick }: { agent: Agent; onPick: (text: string) => void }) {
   const { t } = useTranslation()
 
   // Resolve the LLM connector tied to this agent so the empty state
-  // can show "Connected via X" -- useful trust signal: the user knows
+  // can show "Connected via X" - useful trust signal: the user knows
   // which provider/key/model is going to handle the next message.
   // Falls back gracefully when the agent has no connection_id (uses
   // raw provider/model fields or instance default).
@@ -465,7 +465,7 @@ function ChatEmptyState({ agent, onPick }: { agent: Agent; onPick: (text: string
 
   return (
     <div className="flex flex-col items-center justify-center text-center gap-5 py-12 min-h-[65vh]">
-      {/* Brand mark -- uses the primary accent so it reads as Quad4 Finance,
+      {/* Brand mark - uses the primary accent so it reads as Quad4 Finance,
           not as the agent's accent color. Transparent background. */}
       <ShellLogo size={56} className="text-primary opacity-90" />
       <div className="space-y-1 px-6">

@@ -5,7 +5,7 @@ Revises: 035
 Create Date: 2026-04-20
 
 The seed in 033 created one condition using a long pipe-separated regex.
-That works but reads poorly in the rules UI -- an unreadable wall of tokens
+That works but reads poorly in the rules UI - an unreadable wall of tokens
 that users can't meaningfully edit. This migration rewrites any rule still
 in that form into a list of OR'd `contains` conditions, one per keyword.
 Semantically identical (the rule engine normalizes accents/case on both

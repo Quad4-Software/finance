@@ -7,7 +7,7 @@ Create Date: 2026-08-26
 Three groups of change, all additive.
 
 **The issuer side of the fiscal pack.** `workspace_tax_ids` mirrors
-`payee_tax_ids` from `070` exactly -- same closed `kind` vocabulary, same
+`payee_tax_ids` from `070` exactly - same closed `kind` vocabulary, same
 named validators, same normalisation. Two small tables rather than one
 with a polymorphic owner: the cardinality differs by orders of magnitude
 (one row set per workspace against thousands of payees), and a
@@ -15,7 +15,7 @@ discriminator column would buy nothing but a filter on every query.
 
 `workspaces.legal_name` and `workspaces.address` sit on the workspace
 rather than in `invoice_settings` because they are the workspace
-describing *itself*, not a preference about invoicing -- fiscal documents
+describing *itself*, not a preference about invoicing - fiscal documents
 will want the same two fields, and a personal workspace simply leaves
 them null forever, which is the expected end state and not an incomplete
 migration.
@@ -24,7 +24,7 @@ migration.
 free text: a Brazilian writes a Pix key, a German an IBAN and BIC, an
 American a routing number. Structuring it would bake one country's shape
 into the schema, which is exactly the rule this model refuses.
-`accent_color` is the one visual knob worth having -- a document that
+`accent_color` is the one visual knob worth having - a document that
 carries the sender's colour reads as theirs.
 
 **Delivery.** `share_token` is null until someone asks for a link, and
@@ -53,7 +53,7 @@ def upgrade() -> None:
         sa.Column("workspace_id", postgresql.UUID(as_uuid=True), nullable=False),
         # A value from `fiscal.registry.TaxIdKind`. A string so a new kind is
         # a pull request rather than a migration, kept closed by validation
-        # on the way in -- the same trade `payee_tax_ids` makes.
+        # on the way in - the same trade `payee_tax_ids` makes.
         sa.Column("kind", sa.String(length=30), nullable=False),
         sa.Column("value", sa.String(length=60), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),

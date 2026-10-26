@@ -5,15 +5,15 @@ Four tables and one rule that shapes all of them:
     Stored status is a decision a human took.
     Derived status is a fact about money and time.
 
-`Invoice.status` therefore holds only decisions -- someone issued it,
+`Invoice.status` therefore holds only decisions - someone issued it,
 someone voided it, someone gave up on it. Whether an invoice is paid,
 partially paid or overdue is computed from its allocations and its due
 date, never written down. Peers that store `overdue` need a job to set
 it and compensating SQL to unset it when a due date moves, and every
 query downstream has to remember to say `IN ('unpaid', 'overdue')`.
 
-Nothing here is jurisdiction-specific. The schema carries *shapes* -- a
-document type, a fiscal reference, a competence date -- and the
+Nothing here is jurisdiction-specific. The schema carries *shapes* - a
+document type, a fiscal reference, a competence date - and the
 jurisdiction packs (`app/fiscal/`) carry the vocabulary that fills them.
 Brazil is the stress test because it is among the most demanding, not
 because the model is shaped around it: the same tables serve a French
@@ -54,10 +54,10 @@ if TYPE_CHECKING:
 #: Decisions a human takes about an invoice. Closed, and closed on
 #: decisions only.
 #:
-#:   draft         -- being written. Mutable, deletable, counted nowhere.
-#:   open          -- issued. Carries a number, appears in receivables.
-#:   void          -- cancelled. Keeps its number, reads as zero, terminal.
-#:   uncollectible -- given up on. Leaves aging, never counts as paid.
+#:   draft         - being written. Mutable, deletable, counted nowhere.
+#:   open          - issued. Carries a number, appears in receivables.
+#:   void          - cancelled. Keeps its number, reads as zero, terminal.
+#:   uncollectible - given up on. Leaves aging, never counts as paid.
 #:
 #: `paid`, `partial` and `overdue` are deliberately absent: they are
 #: derived (see `invoice_service.derive_state`).
@@ -71,13 +71,13 @@ INVOICE_DOCUMENT_TYPES = ("invoice", "credit_note")
 
 #: Which side of the ledger a document sits on.
 #:
-#:   receivable -- we issued it; the money comes in
-#:   payable    -- we received it; the money goes out
+#:   receivable - we issued it; the money comes in
+#:   payable    - we received it; the money goes out
 #:
 #: Kept **separate from `document_type`** rather than folded into a single
 #: four-value enum (out_invoice / out_refund / in_invoice / in_refund, as
-#: some accounting systems do). They answer different questions -- which
-#: direction the money moves, and what kind of document this is -- and
+#: some accounting systems do). They answer different questions - which
+#: direction the money moves, and what kind of document this is - and
 #: crossing them means every new document type doubles the enum.
 #:
 #: Everything issued today is `receivable`. `payable` exists now because
@@ -94,7 +94,7 @@ INVOICE_ORIGINS = ("local", "imported")
 #:
 #: Deliberately **not** a closed set. `manual` is a person pointing at a
 #: transaction; everything else is the **id of the matching strategy that
-#: produced the row**, and those ids come from the reconciliation policy --
+#: produced the row**, and those ids come from the reconciliation policy -
 #: a document the user will eventually edit, not an enum this file owns.
 #: Closing this tuple would mean a migration every time somebody adds a
 #: strategy, which is the opposite of the point.
@@ -202,7 +202,7 @@ class Invoice(Base):
         String(20), default="receivable", server_default="receivable"
     )
     # Lineage for a credit note: which document it corrects. Provenance
-    # only -- applying a credit is an allocation, and this column never
+    # only - applying a credit is an allocation, and this column never
     # takes part in the arithmetic.
     corrects_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True), ForeignKey("invoices.id", ondelete="SET NULL"), nullable=True
@@ -212,13 +212,13 @@ class Invoice(Base):
     external_source: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     external_id: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
-    # Assigned at issuance, gapless within a series, never reused -- not
+    # Assigned at issuance, gapless within a series, never reused - not
     # even by a voided invoice, which keeps the number it was given.
     #
     # Ours alone. An imported document is named in `external_number`
     # instead: an integer plus a series cannot hold `2026/A/0031` without
     # dropping the padding and turning the series into a workaround, and
-    # a source's numbering is not a sequence we may reason about -- only a
+    # a source's numbering is not a sequence we may reason about - only a
     # name we must reproduce exactly.
     number: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     series: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
@@ -231,7 +231,7 @@ class Invoice(Base):
     # The accountant's axis, and only it. Defaults to `issue_date`, but is
     # its own field because the two genuinely diverge: work delivered in
     # July and invoiced in August is booked in July under accrual
-    # accounting -- competência in Brazil, fait générateur in France, and
+    # accounting - competência in Brazil, fait générateur in France, and
     # the Leistungsdatum that German law requires on the invoice itself.
     competence_date: Mapped[Optional[_date]] = mapped_column(Date, nullable=True)
     # A timestamp, not a status. It distinguishes "sent, awaiting payment"
@@ -241,7 +241,7 @@ class Invoice(Base):
     currency: Mapped[str] = mapped_column(String(3), default="USD")
     subtotal: Mapped[Decimal] = mapped_column(Numeric(precision=15, scale=2), default=Decimal("0"))
     discount: Mapped[Decimal] = mapped_column(Numeric(precision=15, scale=2), default=Decimal("0"))
-    # Tax charged TO the client -- part of what they owe. Tax withheld BY
+    # Tax charged TO the client - part of what they owe. Tax withheld BY
     # the client is not this: that reduces the cash without reducing the
     # debt, and lands in the deductions table T6 introduces.
     tax_total: Mapped[Decimal] = mapped_column(Numeric(precision=15, scale=2), default=Decimal("0"))
@@ -252,7 +252,7 @@ class Invoice(Base):
 
     # Everything the document said about itself when it was issued:
     # issuer identity, counterparty details, the labels and logo in force.
-    # Frozen on purpose -- renaming a client or changing a logo in
+    # Frozen on purpose - renaming a client or changing a logo in
     # September must not rewrite August's invoice.
     snapshot: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
     # Values for fields this workspace defined (a PO number, a project
@@ -300,8 +300,8 @@ class Invoice(Base):
         lazy="selectin",
     )
     # `foreign_keys` is not optional here: an allocation points at
-    # `invoices` twice -- once for the debt it settles, once for a credit
-    # note that settles it -- and SQLAlchemy cannot guess which edge this
+    # `invoices` twice - once for the debt it settles, once for a credit
+    # note that settles it - and SQLAlchemy cannot guess which edge this
     # collection means.
     allocations: Mapped[list["InvoiceAllocation"]] = relationship(
         back_populates="invoice",
@@ -358,7 +358,7 @@ class InvoiceLine(Base):
     )
     description: Mapped[str] = mapped_column(String(500))
     quantity: Mapped[Decimal] = mapped_column(Numeric(precision=15, scale=4), default=Decimal("1"))
-    # What the quantity counts -- hours, days, pieces, kilos. Free text
+    # What the quantity counts - hours, days, pieces, kilos. Free text
     # rather than a list: a translator bills by word, a photographer by
     # image, a freight company by tonne-kilometre, and an enum here would
     # be a guess about somebody else's trade. Null keeps the line reading
@@ -395,7 +395,7 @@ class InvoiceAllocation(Base):
     settling many invoices net of fees; a Pix-paid invoice is one debt
     settled by several credits. A foreign key on the transaction could
     express neither, and would put a column on the hottest table in the
-    system to do it -- so the whole relationship lives here, and
+    system to do it - so the whole relationship lives here, and
     `transactions` is untouched by this feature.
     """
 
@@ -552,7 +552,7 @@ class InvoiceSettings(Base):
 
     One row per workspace. The two presets exist so the Brazilian
     tracking flow and the international document flow are the same
-    product configured differently -- never two code paths, and never a
+    product configured differently - never two code paths, and never a
     branch on the UI language. A jurisdiction may *suggest* a preset; it
     never imposes one, because a Brazilian MEI serving a foreign client
     has every reason to pick the other.
@@ -597,7 +597,7 @@ class InvoiceSettings(Base):
     #
     # The logo is a file this workspace uploaded, not a URL pointing
     # somewhere else. A remote address would fetch the mark from a third
-    # party every time a document is drawn -- on a self-hosted install
+    # party every time a document is drawn - on a self-hosted install
     # that is a request out of the building for something the user
     # already owns, and it breaks the day that host does.
     #
@@ -610,7 +610,7 @@ class InvoiceSettings(Base):
     issuer_display_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     footer_note: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     # Free text, deliberately. A Brazilian writes a Pix key, a German an
-    # IBAN and a BIC, an American a routing number -- structuring this
+    # IBAN and a BIC, an American a routing number - structuring this
     # would bake one country's shape into the schema.
     payment_details: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     # The one visual knob worth having: a document that carries the

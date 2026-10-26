@@ -2,7 +2,7 @@
 
 The rule under every test here: an invoice is often a folder, not a
 document. What it holds may have been written by somebody else, and when
-it was, that file is the invoice -- not a page we would draw from our own
+it was, that file is the invoice - not a page we would draw from our own
 fields.
 """
 import uuid
@@ -320,7 +320,7 @@ async def test_a_folder_records_which_system_produced_each_file(
 @pytest.mark.asyncio
 async def test_two_hand_uploads_do_not_collide(client: AsyncClient, biz_headers):
     """The uniqueness is per source, and a null source is not a value two
-    rows can collide on -- otherwise a second manual upload would fail."""
+    rows can collide on - otherwise a second manual upload would fail."""
     invoice = await make_invoice(client, biz_headers)
     first = await upload(client, biz_headers, invoice["id"], filename="a.pdf")
     second = await upload(client, biz_headers, invoice["id"], filename="b.pdf")

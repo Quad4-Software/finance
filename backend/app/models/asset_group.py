@@ -21,7 +21,7 @@ class AssetGroup(Base):
     each provider connection becomes one group so brokerage positions collapse
     into a single expandable row instead of 20 sibling cards.
 
-    Assets link via nullable `group_id` -- deleting a group leaves its
+    Assets link via nullable `group_id` - deleting a group leaves its
     assets behind ungrouped rather than cascading away real user data.
     """
 
@@ -50,7 +50,7 @@ class AssetGroup(Base):
     color: Mapped[str] = mapped_column(String(7), default="#0EA5E9")
     position: Mapped[int] = mapped_column(Integer, default=0)
 
-    # Provenance fields -- mirror Asset's sync fields so sync code can
+    # Provenance fields - mirror Asset's sync fields so sync code can
     # upsert groups idempotently by (user_id, source, external_id).
     source: Mapped[str] = mapped_column(String(50), default="manual")
     connection_id: Mapped[Optional[uuid.UUID]] = mapped_column(

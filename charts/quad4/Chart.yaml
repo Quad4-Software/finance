@@ -2,8 +2,8 @@ apiVersion: v2
 name: quad4
 description: A Helm chart for Quad4 Finance, a security-hardened self-hosted personal finance application.
 type: application
-version: 0.16.5
-appVersion: "0.16.5"
+version: 1.0.0
+appVersion: "1.0.0"
 icon: https://quad4.io/favicon.svg
 home: https://github.com/Quad4-Software/quad4-finance
 sources:

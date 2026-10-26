@@ -2521,7 +2521,13 @@
       "backupTestSuccess": "接続に成功しました",
       "backupTestFailed": "接続に失敗しました",
       "backupRunNow": "今すぐバックアップを実行",
-      "backupRunQueued": "バックアップジョブをキューに追加しました"
+      "backupRunQueued": "バックアップジョブをキューに追加しました",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "SimpleFIN プロトコルとセットアップトークンを発行するブリッジサーバーによる銀行接続。",
+      "simplefinEnabled": "SimpleFIN を有効化",
+      "simplefinEnabledHint": "ユーザーがセットアップトークンを貼り付けて銀行を接続できるようにします。",
+      "simplefinApiUrl": "ブリッジ URL",
+      "simplefinApiUrlHint": "セットアップトークンの作成と受け取りに使用する SimpleFIN サーバー。"
     }
   },
   "onboarding": {

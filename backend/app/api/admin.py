@@ -29,9 +29,11 @@ from app.schemas.admin import (
     BackupS3TestResult,
     BackupSettingsRead,
     BackupSettingsUpdate,
+    SimplefinSettingsRead,
+    SimplefinSettingsUpdate,
     TimezoneSettingRead,
 )
-from app.services import admin_service, backup_config
+from app.services import admin_service, backup_config, simplefin_config
 
 logger = logging.getLogger(__name__)
 
@@ -262,6 +264,39 @@ async def test_backup_s3(
     """Probe the S3 bucket with the saved or just-submitted credentials."""
     success, error = await backup_config.test_s3_connection(session, data)
     return BackupS3TestResult(success=success, error=error)
+
+
+def _simplefin_settings_read(config: simplefin_config.SimplefinConfig) -> SimplefinSettingsRead:
+    return SimplefinSettingsRead(
+        simplefin_enabled=config.simplefin_enabled,
+        simplefin_api_url=config.simplefin_api_url,
+    )
+
+
+@router.get("/simplefin-settings", response_model=SimplefinSettingsRead)
+async def get_simplefin_settings(
+    session: AsyncSession = Depends(get_async_session),
+    _user: User = Depends(current_superuser),
+):
+    """The effective SimpleFIN configuration: saved overrides over env values."""
+    config = await simplefin_config.get_simplefin_config(session)
+    return _simplefin_settings_read(config)
+
+
+@router.put("/simplefin-settings", response_model=SimplefinSettingsRead)
+async def update_simplefin_settings(
+    data: SimplefinSettingsUpdate,
+    session: AsyncSession = Depends(get_async_session),
+    _user: User = Depends(current_superuser),
+):
+    await simplefin_config.save_simplefin_settings(session, data)
+    # The saved flag decides registration, so resync it now instead of
+    # waiting for the next provider listing to notice.
+    from app.providers import refresh_provider_flags
+
+    await refresh_provider_flags(session)
+    config = await simplefin_config.get_simplefin_config(session)
+    return _simplefin_settings_read(config)
 
 
 @router.post("/backup/run", response_model=BackupRunResult)

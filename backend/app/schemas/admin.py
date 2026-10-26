@@ -96,6 +96,29 @@ class BackupSettingsUpdate(BaseModel):
     storage_s3_secret_key: Optional[str] = None
 
 
+class SimplefinSettingsRead(BaseModel):
+    """The effective SimpleFIN provider configuration.
+
+    Neither field is a secret, so the read shape echoes both values back
+    verbatim (saved override or environment default).
+    """
+
+    simplefin_enabled: bool
+    simplefin_api_url: str
+
+
+class SimplefinSettingsUpdate(BaseModel):
+    """Admin-editable SimpleFIN fields.
+
+    An unset field keeps the stored override as it is. An empty string on
+    the URL clears the stored override so the environment value applies
+    again.
+    """
+
+    simplefin_enabled: Optional[bool] = None
+    simplefin_api_url: Optional[str] = None
+
+
 class BackupS3TestRequest(BaseModel):
     """Optional S3 credentials submitted from the form before saving.
 

@@ -26,7 +26,7 @@ from app.models.credit_card_bill import CreditCardBill
 from app.models.payee import Payee, PayeeMapping
 from app.models.transaction import Transaction
 from app.models.user import User
-from app.providers import get_provider
+from app.providers import get_provider, refresh_provider_flags
 from app.providers.base import (
     AccountData,
     HoldingData,
@@ -1232,6 +1232,10 @@ async def handle_oauth_callback(
     if not provider_name:
         raise ValueError("OAuth callback missing provider")
 
+    if provider_name == "simplefin":
+        # Admin-saved settings can enable or disable the provider at
+        # runtime; refresh so the effective flag applies, not only env.
+        await refresh_provider_flags(session)
     provider = get_provider(provider_name)
     connection_data = await provider.handle_oauth_callback(code)
 
@@ -2189,6 +2193,9 @@ async def sync_connection(
     # Resolve the provider before the error-handling block: an unregistered
     # provider is a server misconfiguration, and the catch-all below would
     # wrongly stamp the (healthy) connection with status="error".
+    if connection.provider == "simplefin":
+        # Admin-saved settings override the import-time env registration.
+        await refresh_provider_flags(session)
     try:
         provider = get_provider(connection.provider)
     except ValueError as exc:

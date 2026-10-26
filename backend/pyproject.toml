@@ -1,6 +1,6 @@
 [project]
 name = "quad4-backend"
-version = "1.1.0"
+version = "1.2.0"
 description = "Quad4 Finance API - Personal Finance Manager"
 requires-python = ">=3.11"
 # These ranges express intent; the resolved versions live in uv.lock, which is

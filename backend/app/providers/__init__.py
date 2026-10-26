@@ -41,6 +41,11 @@ def register_provider(name: str, cls: type[BankProvider]) -> None:
     _PROVIDERS[name] = cls
 
 
+# Extra fields merged into each KNOWN_PROVIDERS entry by all_known_providers,
+# populated from the effective admin config by refresh_provider_flags.
+_PROVIDER_EXTRAS: dict[str, dict] = {}
+
+
 def get_provider(name: str) -> BankProvider:
     """Get an instance of a registered bank provider by name."""
     provider_class = _PROVIDERS.get(name)
@@ -57,7 +62,38 @@ def list_providers() -> list[dict[str, str]]:
 
 def all_known_providers() -> list[dict]:
     """Return all known providers with a configured flag."""
-    return [{**p, "configured": p["name"] in _PROVIDERS} for p in KNOWN_PROVIDERS]
+    return [
+        {
+            **p,
+            **_PROVIDER_EXTRAS.get(p["name"], {}),
+            "configured": p["name"] in _PROVIDERS,
+        }
+        for p in KNOWN_PROVIDERS
+    ]
+
+
+async def refresh_provider_flags(session) -> None:
+    """Sync the registry with admin-saved provider settings.
+
+    Registration at import time only sees the environment; the admin
+    settings stored in app_settings override it without a restart. Callers
+    holding a session invoke this before listing providers or resolving one
+    for a connect/sync so the effective flag applies. Currently only
+    SimpleFIN is admin-configurable.
+    """
+    from app.services.simplefin_config import get_simplefin_config
+
+    config = await get_simplefin_config(session)
+    if config.simplefin_enabled:
+        from app.providers.simplefin import SimpleFinProvider
+
+        register_provider("simplefin", SimpleFinProvider)
+    else:
+        _PROVIDERS.pop("simplefin", None)
+    api_url = config.simplefin_api_url.rstrip("/")
+    _PROVIDER_EXTRAS["simplefin"] = {
+        "connect_url": f"{api_url}/simplefin/create" if api_url else None,
+    }
 
 
 def _auto_register_providers() -> None:

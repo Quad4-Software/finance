@@ -642,6 +642,7 @@ export default function AccountsPage() {
         onClose={() => setSelectedProvider(null)}
         provider={selectedProvider?.name ?? ''}
         supportsAssetSync={selectedProvider?.supports_asset_sync ?? false}
+        connectUrl={selectedProvider?.connect_url}
       />
 
       {/* Reconnect Dialog - paste-a-token flow (SimpleFIN) */}
@@ -650,6 +651,11 @@ export default function AccountsPage() {
         onClose={() => setTokenReconnectConnection(null)}
         provider={tokenReconnectConnection?.provider ?? ''}
         reconnectConnectionId={tokenReconnectConnection?.id}
+        connectUrl={
+          tokenReconnectConnection
+            ? providersByName.get(tokenReconnectConnection.provider)?.connect_url
+            : undefined
+        }
       />
 
       {/* Connection Settings Dialog */}

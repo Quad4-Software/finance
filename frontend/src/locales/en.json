@@ -2521,7 +2521,13 @@
       "backupTestSuccess": "Connection successful",
       "backupTestFailed": "Connection failed",
       "backupRunNow": "Run backup now",
-      "backupRunQueued": "Backup job queued"
+      "backupRunQueued": "Backup job queued",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Bank connections via the SimpleFIN protocol and the bridge server that issues setup tokens.",
+      "simplefinEnabled": "Enable SimpleFIN",
+      "simplefinEnabledHint": "Let users connect banks by pasting a setup token.",
+      "simplefinApiUrl": "Bridge URL",
+      "simplefinApiUrlHint": "The SimpleFIN server used to create and claim setup tokens."
     }
   },
   "onboarding": {

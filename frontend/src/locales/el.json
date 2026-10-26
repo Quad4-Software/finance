@@ -2521,7 +2521,13 @@
       "backupTestSuccess": "Επιτυχής σύνδεση",
       "backupTestFailed": "Αποτυχία σύνδεσης",
       "backupRunNow": "Εκτέλεση αντιγράφου τώρα",
-      "backupRunQueued": "Το αντίγραφο μπήκε σε ουρά"
+      "backupRunQueued": "Το αντίγραφο μπήκε σε ουρά",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Τραπεζικές συνδέσεις μέσω του πρωτοκόλλου SimpleFIN και του bridge server που εκδίδει tokens ρύθμισης.",
+      "simplefinEnabled": "Ενεργοποίηση SimpleFIN",
+      "simplefinEnabledHint": "Να επιτρέπεται στους χρήστες να συνδέουν τράπεζες επικολλώντας ένα token ρύθμισης.",
+      "simplefinApiUrl": "URL bridge",
+      "simplefinApiUrlHint": "Ο διακομιστής SimpleFIN που χρησιμοποιείται για τη δημιουργία και τη διεκδίκηση tokens ρύθμισης."
     }
   },
   "onboarding": {

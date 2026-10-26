@@ -2522,7 +2522,13 @@
       "backupTestSuccess": "Verbindung erfolgreich",
       "backupTestFailed": "Verbindung fehlgeschlagen",
       "backupRunNow": "Backup jetzt ausführen",
-      "backupRunQueued": "Backup-Auftrag eingereiht"
+      "backupRunQueued": "Backup-Auftrag eingereiht",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Bankverbindungen über das SimpleFIN-Protokoll und den Bridge-Server, der Setup-Tokens ausstellt.",
+      "simplefinEnabled": "SimpleFIN aktivieren",
+      "simplefinEnabledHint": "Nutzern erlauben, Banken durch Einfügen eines Setup-Tokens zu verbinden.",
+      "simplefinApiUrl": "Bridge-URL",
+      "simplefinApiUrlHint": "Der SimpleFIN-Server zum Erstellen und Einlösen von Setup-Tokens."
     }
   },
   "onboarding": {

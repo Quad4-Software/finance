@@ -2538,7 +2538,13 @@
       "backupTestSuccess": "З'єднання успішне",
       "backupTestFailed": "Помилка з'єднання",
       "backupRunNow": "Створити копію зараз",
-      "backupRunQueued": "Завдання копіювання в черзі"
+      "backupRunQueued": "Завдання копіювання в черзі",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Банківські підключення за протоколом SimpleFIN і bridge-сервером, що видає токени налаштування.",
+      "simplefinEnabled": "Увімкнути SimpleFIN",
+      "simplefinEnabledHint": "Дозволити користувачам підключати банки, вставляючи токен налаштування.",
+      "simplefinApiUrl": "URL bridge",
+      "simplefinApiUrlHint": "Сервер SimpleFIN, що використовується для створення та отримання токенів налаштування."
     }
   },
   "onboarding": {

@@ -2521,7 +2521,13 @@
       "backupTestSuccess": "Sikeres kapcsolat",
       "backupTestFailed": "Sikertelen kapcsolat",
       "backupRunNow": "Mentés futtatása most",
-      "backupRunQueued": "Mentési feladat sorba állítva"
+      "backupRunQueued": "Mentési feladat sorba állítva",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Bankkapcsolatok a SimpleFIN protokollon és a beállítási tokeneket kiállító bridge szerveren keresztül.",
+      "simplefinEnabled": "SimpleFIN engedélyezése",
+      "simplefinEnabledHint": "Lehetővé teszi, hogy a felhasználók beállítási token beillesztésével kapcsolják a bankjaikat.",
+      "simplefinApiUrl": "Bridge URL",
+      "simplefinApiUrlHint": "A beállítási tokenek létrehozásához és beváltásához használt SimpleFIN szerver."
     }
   },
   "onboarding": {

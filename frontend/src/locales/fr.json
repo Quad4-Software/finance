@@ -2525,7 +2525,13 @@
       "backupTestSuccess": "Connexion réussie",
       "backupTestFailed": "Échec de la connexion",
       "backupRunNow": "Lancer une sauvegarde",
-      "backupRunQueued": "Tâche de sauvegarde en file d'attente"
+      "backupRunQueued": "Tâche de sauvegarde en file d'attente",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Connexions bancaires via le protocole SimpleFIN et le serveur bridge qui délivre les jetons de configuration.",
+      "simplefinEnabled": "Activer SimpleFIN",
+      "simplefinEnabledHint": "Permettre aux utilisateurs de connecter leurs banques en collant un jeton de configuration.",
+      "simplefinApiUrl": "URL du bridge",
+      "simplefinApiUrlHint": "Le serveur SimpleFIN utilisé pour créer et réclamer les jetons de configuration."
     }
   },
   "onboarding": {

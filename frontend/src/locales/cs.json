@@ -2673,7 +2673,13 @@
       "backupTestSuccess": "Připojení úspěšné",
       "backupTestFailed": "Připojení selhalo",
       "backupRunNow": "Spustit zálohu nyní",
-      "backupRunQueued": "Záloha zařazena do fronty"
+      "backupRunQueued": "Záloha zařazena do fronty",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Bankovní připojení přes protokol SimpleFIN a bridge server, který vydává setup tokeny.",
+      "simplefinEnabled": "Povolit SimpleFIN",
+      "simplefinEnabledHint": "Umožnit uživatelům připojit banky vložením setup tokenu.",
+      "simplefinApiUrl": "URL bridge",
+      "simplefinApiUrlHint": "SimpleFIN server používaný k vytváření a uplatňování setup tokenů."
     }
   },
   "onboarding": {

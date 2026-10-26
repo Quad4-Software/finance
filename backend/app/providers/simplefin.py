@@ -25,7 +25,7 @@ import logging
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any, Optional
-from urllib.parse import unquote, urlsplit, urlunsplit
+from urllib.parse import urlencode, unquote, urlsplit, urlunsplit
 
 import httpx
 
@@ -50,6 +50,17 @@ SIMPLEFIN_MAX_WINDOW_DAYS = 90
 SIMPLEFIN_DEFAULT_HISTORY_DAYS = 45  # routine overlap, not the per-request cap
 SIMPLEFIN_INITIAL_HISTORY_DAYS = 365  # ~1 year backfill on first connect
 SIMPLEFIN_HTTP_TIMEOUT = 60.0
+# Requested on every /accounts read unless the server's /info answer
+# advertised something else at claim time.
+SIMPLEFIN_DEFAULT_VERSION = "2"
+# The spec requires apps to talk TLS only. Loopback stays allowed so a
+# development SimpleFIN server on http://localhost keeps working.
+_TLS_EXEMPT_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+# Beyond this request-line length, /accounts calls go out as chunked POSTs
+# with the params in the form body: the spec lets account repeat per id, so
+# a big account set (or long opaque ids) overflows a GET URL and proxies
+# answer 414 or silently truncate the query.
+SIMPLEFIN_MAX_URL_LENGTH = 4000
 
 # Error codes that signal the user must re-authorize via the Bridge (the
 # stored Access URL is no longer valid). Everything else under con.* / act.*
@@ -76,7 +87,18 @@ def _decode_setup_token(raw: str) -> str:
         raise ValueError("SimpleFIN setup token is not valid base64") from exc
     if not decoded.startswith(("http://", "https://")):
         raise ValueError("SimpleFIN setup token did not decode to a URL")
+    _require_tls_url(decoded, "setup token")
     return decoded
+
+
+def _require_tls_url(url: str, what: str) -> None:
+    """Enforce the spec's HTTPS-only rule, with a loopback dev exemption."""
+    parsed = urlsplit(url)
+    if parsed.scheme == "https":
+        return
+    if parsed.scheme == "http" and (parsed.hostname or "") in _TLS_EXEMPT_HOSTS:
+        return
+    raise ValueError(f"SimpleFIN {what} must be an HTTPS URL")
 
 
 def _epoch_to_date(value: Any) -> Optional[date]:
@@ -91,15 +113,113 @@ def _epoch_to_date(value: Any) -> Optional[date]:
         return None
 
 
-def _accounts_url_and_auth(access_url: str) -> tuple[str, Optional[tuple[str, str]]]:
+def _resource_url_and_auth(
+    access_url: str, resource: str
+) -> tuple[str, Optional[tuple[str, str]]]:
+    """URL + Basic Auth pair for one resource under the Access URL root."""
     parsed = urlsplit(access_url.rstrip("/"))
     if parsed.username is None:
-        return f"{access_url.rstrip('/')}/accounts", None
+        return f"{access_url.rstrip('/')}/{resource}", None
     host = parsed.hostname or ""
     if parsed.port:
         host = f"{host}:{parsed.port}"
-    url = urlunsplit((parsed.scheme, host, f"{parsed.path}/accounts", parsed.query, ""))
+    url = urlunsplit((parsed.scheme, host, f"{parsed.path}/{resource}", parsed.query, ""))
     return url, (unquote(parsed.username), unquote(parsed.password or ""))
+
+
+def _accounts_url_and_auth(access_url: str) -> tuple[str, Optional[tuple[str, str]]]:
+    return _resource_url_and_auth(access_url, "accounts")
+
+
+def _pick_protocol_version(versions: Any) -> str:
+    """Choose the version to request from a server's /info answer.
+
+    ``versions`` is a list of prefix strings ("1", "2", "1.0", ...). We
+    prefer 2 - its errlist is structured - and fall back to whatever the
+    server advertises so a v1-only server is still understood.
+    """
+    if not isinstance(versions, list):
+        return SIMPLEFIN_DEFAULT_VERSION
+    normalized = [str(v).strip() for v in versions if str(v).strip()]
+    if any(v.startswith("2") for v in normalized):
+        return "2"
+    if normalized:
+        return normalized[0]
+    return SIMPLEFIN_DEFAULT_VERSION
+
+
+def _normalize_error_entries(payload: dict) -> list[dict]:
+    """Structured errlist plus the deprecated top-level errors strings.
+
+    v1 servers reply with an ``errors`` list of display strings; v2 replaces
+    it with structured ``errlist`` entries (code/msg/conn_id/account_id).
+    Normalizing both into the v2 shape keeps one code path surfacing every
+    error the server reported, which the spec requires be shown to users.
+    """
+    entries = [
+        e for e in (payload.get("errlist") or []) if isinstance(e, dict)
+    ]
+    for msg in payload.get("errors") or []:
+        if isinstance(msg, str) and msg.strip():
+            entries.append({"code": "gen.", "msg": msg})
+    return entries
+
+
+def _request_url_length(url: str, params: dict[str, Any]) -> int:
+    return len(url) + 1 + len(urlencode(params, doseq=True))
+
+
+def _account_id_chunks(
+    url: str, params: dict[str, Any], account_ids: list[str]
+) -> list[list[str]]:
+    """Split account ids so each chunk keeps the GET URL under the limit.
+
+    The spec repeats ``account=`` per requested id, so a large account set
+    (or long opaque ids) overflows the request line. Each chunk is sized to
+    still fit a GET; the caller decides whether a chunk goes out as GET or
+    POST (POST is preferred once the set needs more than one request).
+    """
+    if not account_ids:
+        return [[]]
+    chunks: list[list[str]] = []
+    current: list[str] = []
+    for account_id in account_ids:
+        trial = current + [account_id]
+        if current and _request_url_length(
+            url, {**params, "account": trial}
+        ) > SIMPLEFIN_MAX_URL_LENGTH:
+            chunks.append(current)
+            current = [account_id]
+        else:
+            current = trial
+    if current:
+        chunks.append(current)
+    return chunks
+
+
+def _merge_account_sets(payloads: list[dict]) -> dict:
+    """Combine chunked /accounts responses back into one Account Set."""
+    if len(payloads) == 1:
+        return payloads[0]
+    merged: dict[str, Any] = {
+        "errlist": [],
+        "errors": [],
+        "connections": [],
+        "accounts": [],
+    }
+    seen_conn_ids: set[str] = set()
+    for payload in payloads:
+        merged["errlist"].extend(payload.get("errlist") or [])
+        merged["errors"].extend(payload.get("errors") or [])
+        merged["accounts"].extend(payload.get("accounts") or [])
+        for conn in payload.get("connections") or []:
+            conn_id = conn.get("conn_id")
+            if conn_id and str(conn_id) in seen_conn_ids:
+                continue
+            if conn_id:
+                seen_conn_ids.add(str(conn_id))
+            merged["connections"].append(conn)
+    return merged
 
 
 def _redact_userinfo(url: str) -> str:
@@ -162,6 +282,9 @@ def _surface_errors(
     still returning fresh account data for other institutions under the same
     Access URL. In that partial-success case, log the warning and keep the sync
     moving so one stale sub-connection does not block every healthy account.
+
+    Returns every error entry so callers can record them on the connection:
+    the sync status is where users see them.
     """
     if not errlist:
         return []
@@ -180,7 +303,7 @@ def _surface_errors(
             entry.get("code"),
             entry.get("msg") or entry.get("message"),
         )
-    return reauth
+    return errlist
 
 
 class SimpleFinProvider(BankProvider):
@@ -222,21 +345,47 @@ class SimpleFinProvider(BankProvider):
             },
         )
 
+    async def _detect_protocol_version(self, access_url: str) -> str:
+        """GET {access_url}/info and pick the protocol version to request.
+
+        Runs once at claim time; a server that cannot answer /info just
+        keeps the default version instead of failing the whole claim.
+        """
+        url, auth = _resource_url_and_auth(access_url, "info")
+        async with await self._client() as client:
+            resp = await client.get(url, auth=auth)
+        if resp.status_code >= 400:
+            return SIMPLEFIN_DEFAULT_VERSION
+        try:
+            data = resp.json() or {}
+        except ValueError:
+            return SIMPLEFIN_DEFAULT_VERSION
+        return _pick_protocol_version(data.get("versions"))
+
     async def _fetch_accounts(
         self,
         credentials: dict,
         *,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
-        account_id: Optional[str] = None,
+        account_ids: Optional[list[str]] = None,
         pending: bool = True,
+        balances_only: bool = False,
     ) -> dict:
         access_url = self._access_url(credentials)
         if not access_url:
             raise SessionExpiredError("SimpleFIN access URL is missing")
-        params: dict[str, Any] = {"version": "2"}
+        _require_tls_url(access_url, "access URL")
+        params: dict[str, Any] = {
+            "version": str(
+                (credentials or {}).get("protocol_version")
+                or SIMPLEFIN_DEFAULT_VERSION
+            )
+        }
         if pending:
             params["pending"] = "1"
+        if balances_only:
+            params["balances-only"] = "1"
         if start_date:
             params["start-date"] = str(int(datetime.combine(
                 start_date, datetime.min.time(), tzinfo=timezone.utc,
@@ -245,15 +394,68 @@ class SimpleFinProvider(BankProvider):
             params["end-date"] = str(int(datetime.combine(
                 end_date, datetime.min.time(), tzinfo=timezone.utc,
             ).timestamp()))
-        if account_id:
-            params["account"] = account_id
         url, auth = _accounts_url_and_auth(access_url)
+        # The spec repeats account= per requested id, so a large account set
+        # overflows the request line. When it does, the reads go out as
+        # chunked POSTs with the params in the form body, which has no
+        # request-line length limit.
+        ids = list(account_ids or [])
+        request_params: dict[str, Any] = dict(params)
+        if ids:
+            request_params["account"] = ids
+        use_get = _request_url_length(url, request_params) <= SIMPLEFIN_MAX_URL_LENGTH
+        chunks = [ids] if use_get else _account_id_chunks(url, params, ids)
         async with await self._client(credentials) as client:
-            resp = await client.get(url, params=params, auth=auth)
+            payloads = [
+                await self._request_accounts(
+                    client, url, auth, params, chunk, use_get=use_get
+                )
+                for chunk in chunks
+            ]
+        return _merge_account_sets(payloads)
+
+    @staticmethod
+    async def _request_accounts(
+        client: httpx.AsyncClient,
+        url: str,
+        auth: Optional[tuple[str, str]],
+        params: dict[str, Any],
+        account_ids: list[str],
+        *,
+        use_get: bool,
+    ) -> dict:
+        """One /accounts read for a chunk of account ids.
+
+        The spec's GET covers the common case. Oversized batches go out as
+        POSTs carrying the same parameters as a urlencoded body; each chunk
+        still fits the GET limit so a server that answers 405/501 simply
+        retries the same chunk the spec way.
+        """
+        request_params: dict[str, Any] = dict(params)
+        if account_ids:
+            request_params["account"] = account_ids
+        auth_or_default = auth if auth is not None else httpx.USE_CLIENT_DEFAULT
+        if use_get:
+            resp = await client.get(url, params=request_params, auth=auth_or_default)
+        else:
+            resp = await client.post(
+                url,
+                content=urlencode(request_params, doseq=True),
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                auth=auth_or_default,
+            )
+            if resp.status_code in (405, 501):
+                resp = await client.get(url, params=request_params, auth=auth_or_default)
         if resp.status_code in (401, 403):
             raise ProviderUserActionRequired(
                 f"SimpleFIN refused the request ({resp.status_code})",
                 code="credentials_invalid",
+                help_url="https://bridge.simplefin.org/",
+            )
+        if resp.status_code == 402:
+            raise ProviderUserActionRequired(
+                "SimpleFIN reports payment is required for this access token",
+                code="payment_required",
                 help_url="https://bridge.simplefin.org/",
             )
         resp.raise_for_status()
@@ -300,21 +502,33 @@ class SimpleFinProvider(BankProvider):
         access_url = (claim_resp.text or "").strip().strip('"')
         if not access_url.startswith(("http://", "https://")):
             raise RuntimeError("SimpleFIN claim did not return a URL")
+        # The Access URL is stored as the credential - it must be TLS too.
+        _require_tls_url(access_url, "access URL")
+
+        # Ask the server which protocol versions it speaks before the first
+        # read; an unreachable /info keeps the default version.
+        try:
+            protocol_version = await self._detect_protocol_version(access_url)
+        except httpx.HTTPError:
+            protocol_version = SIMPLEFIN_DEFAULT_VERSION
 
         credentials: dict[str, Any] = {
             "access_url_enc": encrypt(access_url) or access_url,
             "claimed_at": datetime.now(timezone.utc).isoformat(),
+            "protocol_version": protocol_version,
         }
 
         # Pull the account list once so we can return an institution name and
         # the initial AccountData list. Transactions are filtered out here;
         # they're fetched per-account by ``get_transactions``.
-        payload = await self._fetch_accounts(credentials, pending=False)
+        payload = await self._fetch_accounts(
+            credentials, pending=False, balances_only=True
+        )
         # A multi-institution bridge can carry a con.auth warning for one
         # institution while still returning usable accounts from the others;
         # in that case keep the claim moving instead of failing it outright.
         _surface_errors(
-            payload.get("errlist") or [],
+            _normalize_error_entries(payload),
             context="claim",
             has_usable_data=bool(payload.get("accounts") or []),
         )
@@ -352,7 +566,9 @@ class SimpleFinProvider(BankProvider):
         return None
 
     async def get_institution_logo(self, credentials: dict) -> Optional[str]:
-        payload = await self._fetch_accounts(credentials, pending=False)
+        payload = await self._fetch_accounts(
+            credentials, pending=False, balances_only=True
+        )
         return favicon_url_for(self._org_website(payload))
 
     @staticmethod
@@ -451,14 +667,26 @@ class SimpleFinProvider(BankProvider):
                     institution_external_id=inst_ext,
                     institution_name=inst_name,
                     institution_logo_url=inst_logo,
+                    available_balance=_to_decimal(raw.get("available-balance")),
+                    balance_date=_epoch_to_date(raw.get("balance-date")),
+                    # The extra object and any other unmodeled fields ride
+                    # along; the bulky nested arrays are already consumed by
+                    # their own parsers.
+                    raw_data={
+                        k: v
+                        for k, v in raw.items()
+                        if k not in ("transactions", "holdings")
+                    },
                 )
             )
         return institution_name or "SimpleFIN Connection", accounts
 
     async def get_accounts(self, credentials: dict) -> list[AccountData]:
-        payload = await self._fetch_accounts(credentials, pending=False)
+        payload = await self._fetch_accounts(
+            credentials, pending=False, balances_only=True
+        )
         warnings = _surface_errors(
-            payload.get("errlist") or [],
+            _normalize_error_entries(payload),
             context="get_accounts",
             has_usable_data=bool(payload.get("accounts") or []),
         )
@@ -501,7 +729,7 @@ class SimpleFinProvider(BankProvider):
                     credentials,
                     start_date=cursor,
                     end_date=chunk_end,
-                    account_id=account_external_id,
+                    account_ids=[account_external_id],
                     pending=True,
                 )
             except ProviderUserActionRequired as exc:
@@ -530,7 +758,7 @@ class SimpleFinProvider(BankProvider):
                 raw_acc for raw_acc in payload.get("accounts") or []
                 if str(raw_acc.get("id") or "") == account_external_id
             ]
-            errlist = payload.get("errlist") or []
+            errlist = _normalize_error_entries(payload)
             reauth = [
                 e for e in errlist
                 if (e.get("code") or "").lower() in _REAUTH_ERROR_CODES
@@ -625,7 +853,7 @@ class SimpleFinProvider(BankProvider):
     async def get_holdings(self, credentials: dict) -> list[HoldingData]:
         payload = await self._fetch_accounts(credentials, pending=False)
         warnings = _surface_errors(
-            payload.get("errlist") or [],
+            _normalize_error_entries(payload),
             context="get_holdings",
             has_usable_data=bool(payload.get("accounts") or []),
         )

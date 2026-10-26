@@ -23,6 +23,9 @@ interface TokenConnectDialogProps {
   provider: string
   supportsAssetSync?: boolean
   reconnectConnectionId?: string
+  // The provider's server-side connect URL from /connections/providers;
+  // wins over the static fallback map below when the backend sends one.
+  connectUrl?: string | null
 }
 
 const PROVIDER_BRIDGE_URLS: Record<string, string> = {
@@ -35,6 +38,7 @@ export function TokenConnectDialog({
   provider,
   supportsAssetSync = false,
   reconnectConnectionId,
+  connectUrl,
 }: TokenConnectDialogProps) {
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -51,7 +55,7 @@ export function TokenConnectDialog({
     }
   }, [open])
 
-  const bridgeUrl = PROVIDER_BRIDGE_URLS[provider]
+  const bridgeUrl = connectUrl || PROVIDER_BRIDGE_URLS[provider]
   const i18nKey = `accounts.tokenConnect.${provider}`
   const isReconnect = Boolean(reconnectConnectionId)
 

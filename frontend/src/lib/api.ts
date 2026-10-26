@@ -407,7 +407,7 @@ export const connections = {
     const { data } = await api.get('/connections')
     return data
   },
-  getProviders: async (): Promise<{ name: string; display_name: string; description: string; flow_type: string; configured: boolean; requires_institution_select?: boolean; supports_asset_sync?: boolean }[]> => {
+  getProviders: async (): Promise<{ name: string; display_name: string; description: string; flow_type: string; configured: boolean; requires_institution_select?: boolean; supports_asset_sync?: boolean; connect_url?: string | null }[]> => {
     const { data } = await api.get('/connections/providers')
     return data.providers
   },
@@ -1698,6 +1698,18 @@ export interface BackupS3TestRequest {
   storage_s3_secret_key?: string
 }
 
+// SimpleFIN provider configuration. Neither field is a secret, so the read
+// shape echoes both values back verbatim.
+export interface SimplefinSettings {
+  simplefin_enabled: boolean
+  simplefin_api_url: string
+}
+
+export interface SimplefinSettingsUpdate {
+  simplefin_enabled?: boolean
+  simplefin_api_url?: string
+}
+
 export interface BackupS3TestResult {
   success: boolean
   error: string | null
@@ -1777,6 +1789,14 @@ export const admin = {
   },
   runBackupNow: async (): Promise<BackupRunResult> => {
     const { data } = await api.post('/admin/backup/run')
+    return data
+  },
+  simplefinSettings: async (): Promise<SimplefinSettings> => {
+    const { data } = await api.get('/admin/simplefin-settings')
+    return data
+  },
+  updateSimplefinSettings: async (payload: SimplefinSettingsUpdate): Promise<SimplefinSettings> => {
+    const { data } = await api.put('/admin/simplefin-settings', payload)
     return data
   },
 }

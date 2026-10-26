@@ -94,16 +94,13 @@ def test_accounts_url_and_auth_strips_userinfo():
 async def test_handle_oauth_callback_claims_and_parses_accounts():
     """Token paste -> claim -> first /accounts -> ConnectionData."""
 
-    state = {"step": "claim"}
-
     def handler(request: httpx.Request) -> httpx.Response:
-        if state["step"] == "claim":
-            assert request.method == "POST"
+        if request.method == "POST":
             assert request.url.path.endswith("/simplefin/claim/demo")
-            state["step"] = "accounts"
             return httpx.Response(200, text="https://u:p@bridge.example/simplefin")
-        # /accounts request
         assert request.method == "GET"
+        if request.url.path == "/simplefin/info":
+            return httpx.Response(200, json={"versions": ["1", "2"]})
         assert request.url.path == "/simplefin/accounts"
         return httpx.Response(
             200,
@@ -136,6 +133,8 @@ async def test_handle_oauth_callback_claims_and_parses_accounts():
     assert "access_url_enc" in conn.credentials
     # The plaintext URL must never end up in credentials.
     assert "u:p@" not in str(conn.credentials.get("access_url_enc"))
+    # The /info answer negotiated the protocol version for later reads.
+    assert conn.credentials["protocol_version"] == "2"
     assert len(conn.accounts) == 1
     acc = conn.accounts[0]
     assert acc.external_id == "acc-1"
@@ -882,3 +881,271 @@ async def test_get_holdings_carries_the_owning_account():
     assert by_id["h-1"].account_name == "Employer 401(k)"
     assert by_id["h-2"].account_external_id == "acc-2"
     assert by_id["h-2"].account_name == "Rollover IRA"
+
+
+# ----- protocol compliance (v2 spec coverage) ---------------------------------
+
+
+def test_decode_setup_token_rejects_plain_http():
+    """The spec's checklist: apps only talk TLS. Plain http is rejected."""
+    with pytest.raises(ValueError):
+        _decode_setup_token(_encode_token("http://bridge.example/simplefin/claim/x"))
+
+
+def test_decode_setup_token_allows_loopback_http():
+    """Loopback stays exempt so a dev SimpleFIN server on localhost works."""
+    assert _decode_setup_token(
+        _encode_token("http://localhost:8000/simplefin/claim/x")
+    ).startswith("http://localhost:8000/")
+
+
+@pytest.mark.asyncio
+async def test_plain_http_access_url_is_rejected():
+    """A stored access URL must be TLS as well (it is the credential)."""
+    creds = {"access_url": "http://u:p@bridge.example/simplefin"}
+    with pytest.raises(ValueError):
+        await SimpleFinProvider().get_accounts(creds)
+
+
+@pytest.mark.asyncio
+async def test_claim_negotiates_protocol_version_from_info():
+    """A v1-only server is still understood: /info wins over the default."""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "POST":
+            return httpx.Response(200, text="https://u:p@bridge.example/simplefin")
+        if request.url.path == "/simplefin/info":
+            return httpx.Response(200, json={"versions": ["1.0"]})
+        assert request.url.params["version"] == "1.0"
+        return httpx.Response(200, json={"errlist": [], "accounts": []})
+
+    token = _encode_token("https://bridge.example/simplefin/claim/demo")
+    with _patched_client(handler):
+        conn = await SimpleFinProvider().handle_oauth_callback(token)
+    assert conn.credentials["protocol_version"] == "1.0"
+
+
+@pytest.mark.asyncio
+async def test_info_failure_keeps_default_version():
+    """A server that cannot answer /info does not fail the claim."""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "POST":
+            return httpx.Response(200, text="https://u:p@bridge.example/simplefin")
+        if request.url.path == "/simplefin/info":
+            return httpx.Response(404)
+        assert request.url.params["version"] == "2"
+        return httpx.Response(200, json={"errlist": [], "accounts": []})
+
+    token = _encode_token("https://bridge.example/simplefin/claim/demo")
+    with _patched_client(handler):
+        conn = await SimpleFinProvider().handle_oauth_callback(token)
+    assert conn.credentials["protocol_version"] == "2"
+
+
+@pytest.mark.asyncio
+async def test_get_accounts_sends_balances_only():
+    """Balance reads ask for balances-only so no transaction work is done."""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.params["balances-only"] == "1"
+        assert request.url.params["version"] == "2"
+        return httpx.Response(200, json={"errlist": [], "accounts": []})
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    with _patched_client(handler):
+        await SimpleFinProvider().get_accounts(creds)
+
+
+@pytest.mark.asyncio
+async def test_402_maps_to_payment_required():
+    """Spec response 402 (payment required) surfaces as user action."""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(402, text="payment required")
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    with _patched_client(handler):
+        with pytest.raises(ProviderUserActionRequired) as exc:
+            await SimpleFinProvider().get_accounts(creds)
+    assert exc.value.code == "payment_required"
+
+
+@pytest.mark.asyncio
+async def test_deprecated_errors_array_is_surfaced():
+    """v1 servers report the string ``errors`` array; spec says show them.
+
+    They must reach the sync status, not just the log: the entries land on
+    action_required_warnings so the connection is flagged for the user.
+    """
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "errors": ["You must reauthenticate."],
+                "accounts": [
+                    {"id": "acc-1", "name": "Checking", "currency": "USD", "balance": "10.00"}
+                ],
+            },
+        )
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    provider = SimpleFinProvider()
+    with _patched_client(handler):
+        accounts = await provider.get_accounts(creds)
+
+    assert len(accounts) == 1
+    assert provider.action_required_warnings == [
+        {"code": "gen.", "msg": "You must reauthenticate."}
+    ]
+
+
+@pytest.mark.asyncio
+async def test_errlist_entries_reach_sync_status_warnings():
+    """Non-auth errlist entries (act.*, gen.api) are recorded for the user."""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "errlist": [
+                    {"code": "act.failed", "msg": "Try later", "account_id": "acc-1"}
+                ],
+                "accounts": [
+                    {"id": "acc-1", "name": "Checking", "currency": "USD", "balance": "10.00"}
+                ],
+            },
+        )
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    provider = SimpleFinProvider()
+    with _patched_client(handler):
+        await provider.get_accounts(creds)
+
+    assert [w["code"] for w in provider.action_required_warnings] == ["act.failed"]
+
+
+def test_parse_accounts_reads_balance_metadata_and_extra():
+    """available-balance, balance-date and extra all land on AccountData."""
+    payload = {
+        "accounts": [
+            {
+                "id": "a1",
+                "name": "Savings",
+                "currency": "USD",
+                "balance": "100.23",
+                "available-balance": "75.23",
+                "balance-date": 978366153,
+                "transactions": [{"id": "t1"}],
+                "extra": {"account-open-date": 978360153},
+            }
+        ]
+    }
+
+    _, accounts = SimpleFinProvider._parse_accounts(payload)
+    acc = accounts[0]
+    assert acc.balance == Decimal("100.23")
+    assert acc.available_balance == Decimal("75.23")
+    assert acc.balance_date == date(2001, 1, 1)
+    assert (acc.raw_data or {}).get("extra") == {"account-open-date": 978360153}
+    # The bulky nested arrays are consumed by their own parsers, not stored.
+    assert "transactions" not in (acc.raw_data or {})
+
+
+@pytest.mark.asyncio
+async def test_oversized_account_set_uses_chunked_posts():
+    """When account= params overflow the URL, reads go out as chunked POSTs
+    with the params in the form body, and the Account Sets merge."""
+    import app.providers.simplefin as simplefin_mod
+
+    posts: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "POST"
+        body = request.content.decode("utf-8")
+        posts.append(body)
+        ids = httpx.QueryParams(body).get_list("account")
+        return httpx.Response(
+            200,
+            json={
+                "errlist": [],
+                "connections": [
+                    {"conn_id": "CON-1", "name": "Demo Bank"},
+                    {"conn_id": "CON-1", "name": "Demo Bank"},
+                ],
+                "accounts": [
+                    {"id": aid, "name": aid, "currency": "USD", "balance": "1"}
+                    for aid in ids
+                ],
+            },
+        )
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    account_ids = [f"acc-{i:04d}" for i in range(30)]
+    provider = SimpleFinProvider()
+    with (
+        patch.object(simplefin_mod, "SIMPLEFIN_MAX_URL_LENGTH", 200),
+        _patched_client(handler),
+    ):
+        payload = await provider._fetch_accounts(creds, account_ids=account_ids)
+
+    assert len(posts) > 1
+    # Every requested account went out exactly once, all merged back.
+    returned = sorted(a["id"] for a in payload["accounts"])
+    assert returned == account_ids
+    # Duplicate connections entries collapse to one.
+    assert payload["connections"] == [{"conn_id": "CON-1", "name": "Demo Bank"}]
+    for body in posts:
+        assert "account=" in body
+
+
+@pytest.mark.asyncio
+async def test_post_chunk_falls_back_to_get_on_405():
+    """A server that does not understand POST /accounts retries via GET."""
+    import app.providers.simplefin as simplefin_mod
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "POST":
+            return httpx.Response(405)
+        assert request.method == "GET"
+        ids = request.url.params.get_list("account")
+        return httpx.Response(
+            200,
+            json={
+                "errlist": [],
+                "accounts": [
+                    {"id": aid, "currency": "USD", "balance": "1"} for aid in ids
+                ],
+            },
+        )
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    account_ids = [f"acc-{i:04d}" for i in range(30)]
+    provider = SimpleFinProvider()
+    with (
+        patch.object(simplefin_mod, "SIMPLEFIN_MAX_URL_LENGTH", 200),
+        _patched_client(handler),
+    ):
+        payload = await provider._fetch_accounts(creds, account_ids=account_ids)
+
+    returned = sorted(a["id"] for a in payload["accounts"])
+    assert returned == account_ids
+
+
+@pytest.mark.asyncio
+async def test_small_account_set_stays_a_single_get():
+    """A single account (the routine sync path) is one spec GET."""
+    calls: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        assert request.method == "GET"
+        return httpx.Response(200, json={"errlist": [], "accounts": []})
+
+    creds = {"access_url": "https://u:p@bridge.example/simplefin"}
+    with _patched_client(handler):
+        await SimpleFinProvider()._fetch_accounts(creds, account_ids=["acc-1"])
+
+    assert len(calls) == 1
+    assert calls[0].url.params.get_list("account") == ["acc-1"]

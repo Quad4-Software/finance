@@ -9,7 +9,7 @@ from app.core.workspace_context import (
     current_workspace,
     current_writable_workspace,
 )
-from app.providers import all_known_providers
+from app.providers import all_known_providers, refresh_provider_flags
 from app.providers.base import (
     ProviderNotConfiguredError,
     ProviderUserActionRequired,
@@ -34,8 +34,12 @@ router = APIRouter(prefix="/api/connections", tags=["connections"])
 
 
 @router.get("/providers")
-async def get_available_providers():
+async def get_available_providers(
+    session: AsyncSession = Depends(get_async_session),
+):
     """List all known open finance providers with configuration status."""
+    # Admin-saved settings override the import-time env registration.
+    await refresh_provider_flags(session)
     return {"providers": all_known_providers()}
 
 

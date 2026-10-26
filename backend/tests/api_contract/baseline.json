@@ -55,6 +55,7 @@
   "GET /api/admin/number-format": 401,
   "GET /api/admin/registration-status": 200,
   "GET /api/admin/settings/{key}": 401,
+  "GET /api/admin/simplefin-settings": 401,
   "GET /api/admin/timezone": 401,
   "GET /api/admin/users": 401,
   "GET /api/admin/users/{user_id}": 401,
@@ -321,6 +322,7 @@
   "POST /api/workspaces/{workspace_id}/archive": 401,
   "POST /api/workspaces/{workspace_id}/members": 401,
   "PUT /api/admin/backup-settings": 401,
+  "PUT /api/admin/simplefin-settings": 401,
   "PUT /api/agents/{agent_id}/tools": 401,
   "PUT /api/reconciliation/rules/{node}/order": 401
  },
@@ -448,6 +450,7 @@
   "GET /api/admin/number-format": 200,
   "GET /api/admin/registration-status": 200,
   "GET /api/admin/settings/{key}": 404,
+  "GET /api/admin/simplefin-settings": 200,
   "GET /api/admin/timezone": 200,
   "GET /api/admin/users": 200,
   "GET /api/admin/users/{user_id}": 200,
@@ -712,6 +715,7 @@
   "POST /api/workspaces/{workspace_id}/archive": 400,
   "POST /api/workspaces/{workspace_id}/members": 400,
   "PUT /api/admin/backup-settings": 200,
+  "PUT /api/admin/simplefin-settings": 200,
   "PUT /api/agents/{agent_id}/tools": 200,
   "PUT /api/reconciliation/rules/{node}/order": 400
  },

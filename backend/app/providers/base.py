@@ -89,6 +89,15 @@ class AccountData:
     institution_external_id: Optional[str] = None
     institution_name: Optional[str] = None
     institution_logo_url: Optional[str] = None
+    # Provider-reported available balance and the timestamp `balance` was
+    # current at (SimpleFIN available-balance / balance-date). Optional:
+    # most providers expose neither, and the sync falls back to treating
+    # `balance` as the available balance as of now.
+    available_balance: Optional[Decimal] = None
+    balance_date: Optional[date] = None
+    # Unmodeled provider fields (SimpleFIN extra, org metadata) kept for
+    # consumers that need more than the normalized shape.
+    raw_data: Optional[dict] = None
     # Part of `balance` that the bank has auto-applied to an investment which
     # the provider also reports as a holding (issue #843). Zero when unknown.
     # The sync subtracts it only when a live holding is counted for this

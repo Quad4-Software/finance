@@ -2521,7 +2521,13 @@
       "backupTestSuccess": "कनेक्शन सफल",
       "backupTestFailed": "कनेक्शन विफल",
       "backupRunNow": "अभी बैकअप चलाएँ",
-      "backupRunQueued": "बैकअप कार्य कतार में"
+      "backupRunQueued": "बैकअप कार्य कतार में",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "SimpleFIN प्रोटोकॉल और सेटअप टोकन जारी करने वाले ब्रिज सर्वर के माध्यम से बैंक कनेक्शन।",
+      "simplefinEnabled": "SimpleFIN सक्षम करें",
+      "simplefinEnabledHint": "उपयोगकर्ताओं को सेटअप टोकन चिपकाकर बैंक कनेक्ट करने दें।",
+      "simplefinApiUrl": "ब्रिज URL",
+      "simplefinApiUrlHint": "सेटअप टोकन बनाने और दावा करने के लिए उपयोग किया जाने वाला SimpleFIN सर्वर।"
     }
   },
   "onboarding": {

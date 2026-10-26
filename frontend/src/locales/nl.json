@@ -2523,7 +2523,13 @@
       "backupTestSuccess": "Verbinding gelukt",
       "backupTestFailed": "Verbinding mislukt",
       "backupRunNow": "Back-up nu uitvoeren",
-      "backupRunQueued": "Back-uptaak in wachtrij"
+      "backupRunQueued": "Back-uptaak in wachtrij",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Bankkoppelingen via het SimpleFIN-protocol en de bridge-server die setup-tokens uitgeeft.",
+      "simplefinEnabled": "SimpleFIN inschakelen",
+      "simplefinEnabledHint": "Laat gebruikers banken koppelen door een setup-token te plakken.",
+      "simplefinApiUrl": "Bridge-URL",
+      "simplefinApiUrlHint": "De SimpleFIN-server die wordt gebruikt om setup-tokens aan te maken en te claimen."
     }
   },
   "onboarding": {

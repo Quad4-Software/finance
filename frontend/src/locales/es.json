@@ -2525,7 +2525,13 @@
       "backupTestSuccess": "Conexión correcta",
       "backupTestFailed": "Conexión fallida",
       "backupRunNow": "Ejecutar copia ahora",
-      "backupRunQueued": "Copia en cola"
+      "backupRunQueued": "Copia en cola",
+      "simplefinTitle": "SimpleFIN",
+      "simplefinSubtitle": "Conexiones bancarias mediante el protocolo SimpleFIN y el servidor bridge que emite tokens de configuración.",
+      "simplefinEnabled": "Activar SimpleFIN",
+      "simplefinEnabledHint": "Permitir que los usuarios conecten bancos pegando un token de configuración.",
+      "simplefinApiUrl": "URL del bridge",
+      "simplefinApiUrlHint": "El servidor SimpleFIN usado para crear y reclamar tokens de configuración."
     }
   },
   "onboarding": {

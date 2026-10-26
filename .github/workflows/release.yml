@@ -12,6 +12,9 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ghcr.io/quad4-software
+  # Top-level env so the tag is never expanded inside a run block
+  # (template injection).
+  RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
 
 permissions:
   contents: read
@@ -141,7 +144,7 @@ jobs:
           provenance: mode=max
           sbom: true
           build-args: |
-            VITE_APP_VERSION=${{ inputs.tag || github.event.release.tag_name }}
+            VITE_APP_VERSION=${{ env.RELEASE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -190,7 +193,7 @@ jobs:
         run: |
           # Strip the 'v' prefix from the release tag if it exists, as helm
           # chart version needs to be semver without v.
-          VERSION="${{ inputs.tag || github.event.release.tag_name }}"
+          VERSION="$RELEASE_TAG"
           VERSION="${VERSION#v}"
 
           echo "Injecting version $VERSION into values.yaml"

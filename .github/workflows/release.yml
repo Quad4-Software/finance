@@ -213,6 +213,6 @@ jobs:
           sed -i "s|tag: latest|tag: ${VERSION}|g" charts/quad4/values.yaml
 
           echo "Packaging chart version $VERSION"
-          helm package charts/quad4 --version "$VERSION" -app-version "$VERSION"
+          helm package charts/quad4 --version "$VERSION" --app-version "$VERSION"
 
-          helm push quad4-$VERSION.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
+          helm push quad4-$VERSION.tgz oci://ghcr.io/quad4-software/charts

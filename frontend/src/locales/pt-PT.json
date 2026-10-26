@@ -1302,9 +1302,6 @@
       "reconnect": "Reconectar"
     },
     "providers": {
-      "pluggy": {
-        "description": "Fornecedor Open Finance para bancos brasileiros"
-      },
       "enable_banking": {
         "description": "Bancos europeus via PSD2 Open Banking"
       },

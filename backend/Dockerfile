@@ -1,31 +1,59 @@
-FROM python:3.14-slim
+# syntax=docker/dockerfile:1
+# Quad4 Finance backend - multi-stage Chainguard build, rootless runtime.
+#
+# Build stage uses the dev variant (shell, pip, uv) to resolve the locked
+# dependency set into a virtualenv. The runtime stage is the minimal
+# cgr.dev/chainguard/python image: no shell, no package manager, running as
+# the nonroot user (uid 65532). Landlock and seccomp are applied by the app
+# itself at startup (app/core/sandbox.py) and need no extra privileges.
+
+FROM cgr.dev/chainguard/python:latest-dev AS build
 
 WORKDIR /app
 
-# Install system deps for asyncpg
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Dependencies come from uv.lock (the source of truth — see scripts/lock.sh).
+# Dependencies come from uv.lock (the source of truth - see scripts/lock.sh).
 # The export never touches the lock (--frozen); pip then installs with hash
-# checking, so the image only ever contains the exact audited versions. uv is
-# removed afterwards — it is a build tool, not a runtime dependency.
+# checking, so the image only ever contains the exact audited versions.
 # This layer is cached until pyproject.toml or uv.lock change.
 COPY pyproject.toml uv.lock ./
-# renovate: datasource=pypi depName=uv
-RUN pip install --no-cache-dir uv==0.13.0 \
-    && uv export --frozen --no-emit-project -o /tmp/requirements.txt \
+# venv lives outside /app so a dev-mode source bind mount over /app does not
+# shadow the installed dependencies.
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN uv export --frozen --no-emit-project -o /tmp/requirements.txt \
     && pip install --no-cache-dir --require-hashes -r /tmp/requirements.txt \
-    && pip uninstall -y uv \
     && rm /tmp/requirements.txt
 
 COPY . .
 # The project itself: deps are already satisfied above, so --no-deps keeps
 # this layer from re-resolving anything outside the lock.
-RUN pip install --no-cache-dir --no-deps -e .
+RUN pip install --no-cache-dir --no-deps . \
+    && mkdir -p /app/data-skel/attachments /app/data-skel/backups \
+       /app/data-skel/agent_knowledge /app/data-skel/embedding_models
+
+FROM cgr.dev/chainguard/python:latest
+
+WORKDIR /app
+
+COPY --from=build /opt/venv /opt/venv
+# Runtime needs the package source (migrations, MCP server, CLI entry), not
+# the whole build context - and never the venv twice.
+COPY --from=build /app/app /app/app
+COPY --from=build /app/alembic /app/alembic
+COPY --from=build /app/alembic.ini /app/pyproject.toml ./
+COPY --from=build /app/mcp_server /app/mcp_server
+# Empty writable roots: named volumes initialized from these paths inherit
+# the nonroot ownership, so the runtime user can write without any chown.
+COPY --from=build --chown=65532:65532 /app/data-skel /app/data
+
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1 \
+    STORAGE_LOCAL_PATH=/app/data/attachments \
+    BACKUP_LOCAL_PATH=/app/data/backups \
+    AGENTS_KNOWLEDGE_STORAGE_PATH=/app/data/agent_knowledge
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# The image entrypoint is /usr/bin/python; compose services override
+# entrypoint+command for celery, beat and the migration job.
+CMD ["-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

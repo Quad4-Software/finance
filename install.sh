@@ -265,13 +265,21 @@ generate_env() {
     SECRET_KEY=$(head -c 32 /dev/urandom | xxd -p | tr -d '\n')
   fi
 
+  if command -v openssl &> /dev/null; then
+    POSTGRES_PASSWORD=$(openssl rand -hex 24)
+    BACKUP_ENCRYPTION_KEY=$(openssl rand -hex 32)
+  else
+    POSTGRES_PASSWORD=$(head -c 24 /dev/urandom | xxd -p | tr -d '\n')
+    BACKUP_ENCRYPTION_KEY=$(head -c 32 /dev/urandom | xxd -p | tr -d '\n')
+  fi
+
   cat > .env <<EOF
 SECRET_KEY=$SECRET_KEY
-PLUGGY_CLIENT_ID=
-PLUGGY_CLIENT_SECRET=
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+BACKUP_ENCRYPTION_KEY=$BACKUP_ENCRYPTION_KEY
 EOF
 
-  success ".env file created with a random SECRET_KEY"
+  success ".env file created with random secrets"
 }
 
 # ── Start Services ───────────────────────────────────────────────────────────
@@ -308,9 +316,7 @@ wait_for_health() {
 # ── Main ─────────────────────────────────────────────────────────────────────
 main() {
   echo ""
-  echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
-  echo -e "${BOLD}║         Quad4 Finance Installer             ║${NC}"
-  echo -e "${BOLD}╚══════════════════════════════════════╝${NC}"
+  echo -e "${BOLD}Quad4 Finance installer${NC}"
   echo ""
 
   detect_os

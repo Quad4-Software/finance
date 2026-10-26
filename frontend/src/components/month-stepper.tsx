@@ -21,7 +21,7 @@ interface MonthStepperProps {
  * given month and emits onChange. Wiring (URL/date-range/query) lives in the
  * parent so the stepper stays a single source of truth on top of existing filters.
  */
-export function MonthStepper({ value, onChange, locale = 'pt-BR', prevLabel, nextLabel }: MonthStepperProps) {
+export function MonthStepper({ value, onChange, locale = 'en-US', prevLabel, nextLabel }: MonthStepperProps) {
   const [open, setOpen] = useState(false)
   const label = monthLabel(value, locale).replace(/^\w/, (c) => c.toUpperCase())
   const [year, month] = value.split('-').map(Number)

@@ -1299,9 +1299,6 @@
       "reconnect": "Maak opnieuw verbinding"
     },
     "providers": {
-      "pluggy": {
-        "description": "Open financieringsaanbieder voor Braziliaanse banken"
-      },
       "enable_banking": {
         "description": "Europese banken via PSD2 open banking"
       },

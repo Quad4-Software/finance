@@ -44,16 +44,14 @@ import { formatCurrency } from '@/lib/format'
  *   { "type":"pie", "data":[{"name":"Food","value":500},{"name":"Rent","value":1200}] }
  */
 
-// Same palette as reports.tsx so chats look like the rest of the app.
+// Same single-hue ramp as the --chart-* tokens so chats look like the rest
+// of the app in both themes. Series can still override with explicit colors.
 const PALETTE = [
-  '#6366F1', // indigo
-  '#10B981', // emerald
-  '#F59E0B', // amber
-  '#F43F5E', // rose
-  '#8B5CF6', // violet
-  '#06B6D4', // cyan
-  '#EC4899', // pink
-  '#84CC16', // lime
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
 ]
 
 type ChartType = 'line' | 'bar' | 'area' | 'pie'

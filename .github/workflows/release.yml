@@ -10,20 +10,34 @@ env:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   build-backend:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: audit
+
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -31,18 +45,16 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.IMAGE_PREFIX }}/quad4-backend
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-
       - name: Build and push backend image
-        uses: docker/build-push-action@v7
+        id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: ./backend
           file: ./backend/Dockerfile
@@ -50,20 +62,53 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # BuildKit emits SLSA provenance and an SBOM attestations alongside
+          # the image manifest.
+          provenance: mode=max
+          sbom: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign backend image
+        run: |
+          cosign sign --yes "${{ env.IMAGE_PREFIX }}/quad4-backend@${{ steps.build.outputs.digest }}"
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE_PREFIX }}/quad4-backend
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
   build-frontend:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: audit
+
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -71,18 +116,16 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.IMAGE_PREFIX }}/quad4-frontend
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-
       - name: Build and push frontend image
-        uses: docker/build-push-action@v7
+        id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
@@ -90,25 +133,49 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          provenance: mode=max
+          sbom: true
           build-args: |
             VITE_APP_VERSION=${{ github.event.release.tag_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign frontend image
+        run: |
+          cosign sign --yes "${{ env.IMAGE_PREFIX }}/quad4-frontend@${{ steps.build.outputs.digest }}"
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE_PREFIX }}/quad4-frontend
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
   build-helm:
     needs: [build-backend, build-frontend]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: audit
+
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Helm
-        uses: azure/setup-helm@v5
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
         with:
           version: v4.3.0
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -116,13 +183,10 @@ jobs:
 
       - name: Package and Push Helm Chart
         run: |
-          # Strip the 'v' prefix from the release tag if it exists, as helm chart version needs to be semver without v.
+          # Strip the 'v' prefix from the release tag if it exists, as helm
+          # chart version needs to be semver without v.
           VERSION="${{ github.event.release.tag_name }}"
           VERSION="${VERSION#v}"
-
-          echo "Injecting version $VERSION into artifacthub.io/images annotation"
-          sed -i "s|ghcr.io/quad4-software/quad4-backend:latest|ghcr.io/quad4-software/quad4-backend:${VERSION}|g" charts/quad4/Chart.yaml
-          sed -i "s|ghcr.io/quad4-software/quad4-frontend:latest|ghcr.io/quad4-software/quad4-frontend:${VERSION}|g" charts/quad4/Chart.yaml
 
           echo "Injecting version $VERSION into values.yaml"
           sed -i "s|tag: latest|tag: ${VERSION}|g" charts/quad4/values.yaml
@@ -131,15 +195,3 @@ jobs:
           helm package charts/quad4 --version "$VERSION" --app-version "$VERSION"
 
           helm push quad4-$VERSION.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
-
-      - name: Set up ORAS
-        uses: oras-project/setup-oras@v1
-
-      - name: Push Artifact Hub Metadata
-        run: |
-          # Artifact Hub reads this from the chart's own path, not the parent
-          # namespace: `helm push ... /charts` publishes to /charts/quad4, so
-          # the metadata has to carry the same prefix or it is never found.
-          oras push ${{ env.REGISTRY }}/${{ github.repository_owner }}/charts/quad4:artifacthub.io \
-            --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml \
-            charts/quad4/artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml

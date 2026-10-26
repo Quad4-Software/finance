@@ -20,10 +20,22 @@ spec:
         {{- include "quad4.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: mcp-server
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: mcp-server
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.mcpServer.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           command:
             - uvicorn
             - mcp_server.main:app
@@ -57,6 +69,12 @@ spec:
                 name: {{ include "quad4.fullname" . }}-secrets
                 {{- end }}
           volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            {{- if .Values.persistence.backups.enabled }}
+            - name: backups
+              mountPath: /app/data/backups
+            {{- end }}
             {{- if .Values.persistence.attachments.enabled }}
             - name: attachments
               mountPath: /app/data/attachments
@@ -74,6 +92,13 @@ spec:
             {{- toYaml .Values.mcpServer.resources | nindent 12 }}
           {{- end }}
       volumes:
+        - name: tmp
+          emptyDir: {}
+        {{- if .Values.persistence.backups.enabled }}
+        - name: backups
+          persistentVolumeClaim:
+            claimName: {{ include "quad4.fullname" . }}-backups
+        {{- end }}
         {{- if .Values.persistence.attachments.enabled }}
         - name: attachments
           persistentVolumeClaim:

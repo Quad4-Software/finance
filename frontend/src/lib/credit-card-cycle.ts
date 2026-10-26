@@ -1,9 +1,10 @@
 import { format, parseISO } from 'date-fns'
 
 /** Derive a bill's cycle close date from the account's statement_close_day.
- * Pluggy doesn't expose the close date directly, but it's recoverable: the
- * close is the most recent occurrence of close_day on or before the bill's
- * due_date. Falls back to due_date when close_day is not configured. */
+ * Providers don't always expose the close date directly, but it's
+ * recoverable: the close is the most recent occurrence of close_day on or
+ * before the bill's due_date. Falls back to due_date when close_day is not
+ * configured. */
 export function closeDateForBill(billDueDate: string, closeDay: number | null | undefined): string {
   if (!closeDay) return billDueDate
   const due = parseISO(billDueDate + 'T00:00:00')

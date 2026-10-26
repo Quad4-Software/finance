@@ -1302,9 +1302,6 @@
       "reconnect": "Riconnetti"
     },
     "providers": {
-      "pluggy": {
-        "description": "Provider open finance per le banche brasiliane"
-      },
       "enable_banking": {
         "description": "Banche europee tramite open banking PSD2"
       },

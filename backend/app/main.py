@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -58,42 +57,30 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 
-async def _warm_tesouro_cache() -> None:
-    """Pre-load the Tesouro Direto price cache so the first bond search is
-    instant instead of waiting on the cold ~25s CSV download.
+def _warn_default_secret_key() -> None:
+    """Loudly flag a deployment still running on the built-in SECRET_KEY.
 
-    Gated to instances that actually serve Brazilian users (a workspace with
-    BRL as its default currency) so a non-Brazilian deployment never calls the
-    Brazilian government endpoint just because the feature ships on by default.
+    The default exists so a fresh checkout and the test suite boot without
+    configuration, but it signs JWTs for real deployments too. Log a warning
+    on every startup so a production install running on it is visible in the
+    logs instead of silently exposed.
     """
-    try:
-        if not get_settings().tesouro_direto_enabled:
-            return
-        from sqlalchemy import select
-
-        from app.core.app_clock import get_timezone, use_resolved_timezone
-        from app.core.database import async_session_maker
-        from app.models.workspace import Workspace
-
-        async with async_session_maker() as session:
-            has_brl = await session.scalar(
-                select(Workspace.id).where(Workspace.default_currency == "BRL").limit(1)
-            )
-            if not has_brl:
-                return
-            operation_timezone = await get_timezone(session)
-
-        from app.providers.tesouro_direto import get_tesouro_direto_provider
-
-        with use_resolved_timezone(operation_timezone):
-            await get_tesouro_direto_provider().get_available_bonds()
-            logger.info("Startup: warmed Tesouro Direto price cache")
-    except Exception:
-        logger.exception("Startup: Tesouro Direto cache warm failed")
+    if settings.secret_key.get_secret_value() == "change-me-in-production":
+        logger.warning(
+            "SECURITY: SECRET_KEY is set to the built-in development default. "
+            "Set a unique SECRET_KEY before exposing this instance."
+        )
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    _warn_default_secret_key()
+    # Apply kernel-level sandboxing (Landlock filesystem rules + a seccomp
+    # syscall denylist) before we start serving. Best-effort: unsupported
+    # kernels and non-Linux platforms just log and continue.
+    from app.core.sandbox import apply_sandbox
+
+    apply_sandbox()
     # Startup: dispatch sync for all stale bank connections
     try:
         from app.worker import celery_app  # noqa: F811
@@ -102,9 +89,6 @@ async def lifespan(app: FastAPI):
         logger.info("Startup: dispatched sync_all_connections task to Celery")
     except Exception:
         logger.exception("Startup: failed to dispatch sync task")
-    # Background pre-warm of the Tesouro cache (non-blocking; gated to BRL
-    # instances inside the helper). Kept on app.state so it isn't GC'd.
-    app.state.tesouro_warm_task = asyncio.create_task(_warm_tesouro_cache())
     yield
     # Shutdown
     await close_redis()

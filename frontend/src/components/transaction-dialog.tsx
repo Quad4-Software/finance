@@ -1256,7 +1256,7 @@ function TransactionForm({
       )}
 
       {/* Manual bill-cycle override (issue #92). CC accounts only. Empty
-          input = use auto bucketing (Pluggy bill_id when available, cycle
+          input = use auto bucketing (provider bill_id when available, cycle
           math otherwise). Setting the date forces this tx into the bill
           whose due_date matches. */}
       {(() => {

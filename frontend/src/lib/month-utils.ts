@@ -34,7 +34,7 @@ export function monthRange(yearMonth: string): { from: string; to: string } {
 }
 
 /** Localized label for a `"YYYY-MM"` month, e.g. "Maio de 2026" / "May 2026". */
-export function monthLabel(yearMonth: string, locale = 'pt-BR'): string {
+export function monthLabel(yearMonth: string, locale = 'en-US'): string {
   const [y, m] = yearMonth.split('-').map(Number)
   return new Date(y, m - 1, 2).toLocaleDateString(locale, { month: 'long', year: 'numeric' })
 }

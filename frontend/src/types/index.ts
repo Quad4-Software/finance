@@ -307,7 +307,7 @@ export interface Transaction {
   installment_series_id: string | null
   bill_id: string | null
   // Manual override for which credit-card bill cycle this tx belongs to
-  // (issue #92). Empty / null = use auto bucketing (Pluggy bill_id when
+  // (issue #92). Empty / null = use auto bucketing (provider bill_id when
   // available, cycle math otherwise). Setting it forces the tx into the
   // bill whose due_date matches.
   effective_bill_date: string | null

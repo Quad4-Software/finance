@@ -37,7 +37,7 @@ describe('waitForNewConnection', () => {
       .fn()
       .mockResolvedValueOnce([conn('old')])
       .mockRejectedValueOnce(new Error('504'))
-      .mockResolvedValueOnce([conn('old'), conn('other', 'pluggy'), conn('new')])
+      .mockResolvedValueOnce([conn('old'), conn('other', 'enable_banking'), conn('new')])
 
     const found = await waitForNewConnection('simplefin', new Set(['old']), 'me', {
       intervalMs: 1,
@@ -63,7 +63,7 @@ describe('waitForNewConnection', () => {
   })
 
   it('gives up with null when nothing new appears', async () => {
-    const list = vi.fn().mockResolvedValue([conn('old'), conn('other', 'pluggy')])
+    const list = vi.fn().mockResolvedValue([conn('old'), conn('other', 'enable_banking')])
 
     const found = await waitForNewConnection('simplefin', new Set(['old']), 'me', {
       intervalMs: 1,

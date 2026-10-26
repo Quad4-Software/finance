@@ -28,17 +28,6 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60 * 24  # 24 hours
 
-    # Pluggy
-    pluggy_client_id: str = ""
-    pluggy_client_secret: SecretStr = SecretStr("")
-    # Empty means "derive from FRONTEND_URL" (see BankProvider.redirect_uri).
-    # Set explicitly only when the URL registered in the provider dashboard
-    # differs from where the app is served.
-    pluggy_oauth_redirect_uri: str = ""
-    # Gates the BrasilAPI outbound lookup in _lookup_bank_info (pluggy.py).
-    # Off by default: no third-party call happens until a deploy opts in.
-    brasilapi_institution_lookup_enabled: bool = False
-
     # Enable Banking (European PSD2 banks)
     enable_banking_app_id: str = ""
     enable_banking_private_key: SecretStr = SecretStr("")  # raw PEM; supports \n-escaped envs
@@ -88,12 +77,45 @@ class Settings(BaseSettings):
     # of any of them.
     storage_max_attachments_per_invoice: int = 20
 
-    # S3 Storage (for future use)
+    # S3 Storage
     storage_s3_bucket: str = ""
     storage_s3_region: str = ""
     storage_s3_access_key: SecretStr = SecretStr("")
     storage_s3_secret_key: SecretStr = SecretStr("")
-    storage_s3_endpoint_url: str = ""  # for S3-compatible services (MinIO, DigitalOcean Spaces)
+    storage_s3_endpoint_url: str = ""  # for S3-compatible services (MinIO, R2, B2)
+
+    # Scheduled workspace backups (Celery beat, see app.tasks.backup_tasks).
+    # Hour the daily backup task runs, in UTC.
+    backup_schedule_hour: int = 3
+    # AES-256 key for scheduled backup archives. When unset, a key is derived
+    # from SECRET_KEY via PBKDF2-SHA256 (same pattern as agents crypto).
+    backup_encryption_key: SecretStr = SecretStr("")
+    # How many archives to keep per workspace; oldest beyond this are deleted.
+    backup_retention_count: int = 14
+    # Where scheduled backups land when STORAGE_PROVIDER=local. S3 backups are
+    # stored under a "backups/" key prefix in the configured bucket instead.
+    backup_local_path: str = "./data/backups"
+
+    # Kernel-level sandboxing (see app.core.sandbox). Best-effort by design:
+    # unsupported kernels and non-Linux platforms log a warning and continue.
+    # Set SANDBOX_ENABLED=false to disable both layers at once.
+    sandbox_enabled: bool = True
+    sandbox_landlock_enabled: bool = True
+    sandbox_seccomp_enabled: bool = True
+
+    @field_validator("backup_schedule_hour")
+    @classmethod
+    def _validate_backup_schedule_hour(cls, value: int) -> int:
+        if not 0 <= value <= 23:
+            raise ValueError("BACKUP_SCHEDULE_HOUR must be between 0 and 23")
+        return value
+
+    @field_validator("backup_retention_count")
+    @classmethod
+    def _validate_backup_retention_count(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("BACKUP_RETENTION_COUNT must be at least 1")
+        return value
 
     # Registration
     registration_enabled: bool = True
@@ -159,14 +181,6 @@ class Settings(BaseSettings):
     # key or third-party account is required. Defaults to 128×128 which
     # is what Google's favicon service caps at before upscaling.
     logo_size: int = 128
-
-    # Brazilian Treasury bond prices (official Tesouro Transparente CSV).
-    # On by default since most users are Brazilian; the official CSV is only
-    # fetched when someone actually searches a bond, and the UI pre-warm is
-    # gated to Brazilian users, so non-Brazilian installs pay ~zero cost.
-    # Set TESOURO_DIRETO_ENABLED=false to fully disable (e.g. to avoid the
-    # external dependency on the Brazilian government endpoint).
-    tesouro_direto_enabled: bool = True
 
     @property
     def oidc_login_available(self) -> bool:

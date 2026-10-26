@@ -1298,9 +1298,6 @@
       "reconnect": "फिर से कनेक्ट करें"
     },
     "providers": {
-      "pluggy": {
-        "description": "ब्राज़ीली बैंकों के लिए ओपन फ़ाइनेंस प्रदाता"
-      },
       "enable_banking": {
         "description": "PSD2 ओपन बैंकिंग के ज़रिए यूरोपीय बैंक"
       },

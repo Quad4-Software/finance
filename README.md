@@ -1,23 +1,11 @@
 <p align="center">
-  <img src="docs/logo.svg" width="200" alt="Quad4 Finance logo" />
-</p>
-<h1 align="center">Quad4 Finance</h1>
-<p align="center">
-  <a href="https://github.com/Quad4-Software/quad4-finance/actions/workflows/ci.yml?query=branch%3Amain"><img src="https://github.com/Quad4-Software/quad4-finance/actions/workflows/ci.yml/badge.svg?branch=main&amp;event=push" alt="CI" /></a>
-  <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/tassionoronha/ae627b744aaa2ba89d850ea541c311be/raw/coverage.json" alt="Coverage" />
-  <a href="https://github.com/Quad4-Software/quad4-finance/pkgs/container/quad4-frontend"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/tassionoronha/ae627b744aaa2ba89d850ea541c311be/raw/downloads.json" alt="Downloads" /></a>
-  <br />
-  <a href="https://artifacthub.io/packages/search?repo=quad4"><img src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/quad4" alt="Artifact Hub" /></a>
-  <a href="https://www.gnu.org/licenses/agpl-3.0"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="License: AGPL-3.0" /></a>
-  <a href="https://discord.gg/rUqTKtQ9S4"><img src="https://img.shields.io/badge/Discord-Join%20the%20community-5865F2?logo=discord&logoColor=white" alt="Join our Discord" /></a>
-  <br />
-  <a href="https://quad4.io/">Website</a> · <a href="https://quad4.io/">Demo</a> · <a href="https://quad4.io/roadmap">Roadmap</a> · <a href="https://github.com/Quad4-Software/quad4-finance/">Docs</a> · <a href="https://discord.gg/rUqTKtQ9S4">Discord</a> · <a href="https://cal.com/tassio/15min">Talk to the maintainer</a>
+  <img src="favicons/quad4-lockup-on-dark.png" width="360" alt="Quad4 Finance" />
 </p>
 
 <h3 align="center">Finance apps want your data. This one doesn't.</h3>
 
 <p align="center">
-We believe personal finance should actually be <em>personal</em>. No corporation should sit between you and your financial data. Quad4 Finance is an open-source finance manager that runs on your own infrastructure, giving you full visibility into your accounts, spending, and habits, without surrendering a single byte to third parties. Take back control.
+Quad4 Finance is a security-hardened fork of <a href="https://github.com/securo-finance/securo">Securo</a>: a self-hosted, open-source finance manager that keeps every byte of your financial data on your own infrastructure. This fork strips third-party bank widgets, removes Brazil-specific integrations, and rebuilds the deployment for extreme security and privacy: rootless Chainguard images, kernel-level sandboxing with Landlock and seccomp, and encrypted off-site backups.
 </p>
 
 ## Quick Start
@@ -25,21 +13,27 @@ We believe personal finance should actually be <em>personal</em>. No corporation
 **Linux & macOS** (uses Docker or Podman; installs Docker if neither is present):
 
 ```bash
-curl -fsSL https://quad4.io/install.sh | bash
+git clone https://github.com/Quad4-Software/quad4-finance.git && cd quad4-finance
+./install.sh
 ```
 
-**Windows:** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), then:
+Or manually:
 
 ```bash
-git clone https://github.com/Quad4-Software/quad4-finance.git && cd quad4
-docker compose up --build
+cp .env.example .env   # set SECRET_KEY and POSTGRES_PASSWORD
+docker compose -f docker-compose.prod.yml up -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and create an account. That's it.
+Open [http://localhost:3000](http://localhost:3000) and create an account.
 
-<p align="center">
-  <img src="docs/screenshot.png" width="800" alt="Quad4 Finance dashboard" />
-</p>
+## Security model
+
+- **Rootless, minimal images.** Both services build on Chainguard images (Wolfi-based, near-zero CVEs, nonroot by default). The production compose file adds `read_only` root filesystems, `cap_drop: ALL`, `no-new-privileges` and tmpfs-only scratch space.
+- **Kernel sandboxing.** The API, Celery worker and beat processes self-sandbox at startup: Landlock restricts filesystem access to the data and secrets directories, and a seccomp-BPF denylist blocks dangerous syscalls (mount, ptrace, kexec, bpf, key management, module loading, namespace escapes). No extra privileges required; both degrade gracefully on kernels without support. Toggle via `SANDBOX_*` env vars.
+- **Encrypted backups.** On-demand export produces AES-256 encrypted archives (pyzipper). A daily scheduled job writes encrypted per-workspace backups to local disk or S3-compatible object storage with retention. Set `BACKUP_ENCRYPTION_KEY` to keep backups decryptable independent of `SECRET_KEY` rotation.
+- **Secrets hygiene.** All secrets can come from files (`/run/secrets`, systemd `CREDENTIALS_DIRECTORY`) instead of environment variables. Bank credentials are stored encrypted at rest (Fernet over a PBKDF2-derived key).
+- **Hardened HTTP.** Security headers at both nginx (CSP, nosniff, frame-ancestors) and the API layer; strict rate limiting on auth endpoints; TOTP and WebAuthn/passkey support.
+- **Supply chain.** All GitHub Actions are pinned to commit SHAs with hardened runners and zizmor static analysis; images ship with SLSA provenance, SBOMs and keyless cosign signatures; Python deps install from a frozen lockfile with hash checking.
 
 ## Features
 
@@ -51,25 +45,16 @@ Open [http://localhost:3000](http://localhost:3000) and create an account. That'
 - Goals and savings targets with progress tracking
 - Asset management with valuation tracking and growth rules
 - Reports: Net Worth and Income vs Expenses with category sparklines
-- Bank sync via providers (Pluggy for Brazilian banks, Enable Banking for ~2500 European PSD2 banks, SimpleFIN for US and international banks, extensible)
+- Bank sync via Enable Banking (~2500 European PSD2 banks) and SimpleFIN (US and international); extensible provider layer
 - Multi-currency support with automatic FX conversion
 - Multi-user support with admin panel and registration controls
 - Two-factor authentication (TOTP) with brute-force protection
-- OIDC login support for Authentik, Pocket ID, and other standard providers
-- AI Agents (optional): self-hosted LLM chat with tool-use over your data, plus a per-agent RAG knowledge base
+- Passkeys (WebAuthn) and OIDC login (Authentik, Pocket ID, standard providers)
+- AI Agents (optional, off by default): self-hosted LLM chat with tool-use over your data, plus a per-agent RAG knowledge base
 
 ## Bank Sync (Optional)
 
-Add credentials for any of the supported providers to `.env`, then restart with `docker compose up`. Configure one or both — each provider auto-registers when its credentials are present.
-
-### Pluggy — Brazilian banks
-
-Sign up at [pluggy.ai](https://pluggy.ai) and add:
-
-```
-PLUGGY_CLIENT_ID=your-client-id
-PLUGGY_CLIENT_SECRET=your-client-secret
-```
+Add credentials for a supported provider to `.env`, then restart with `docker compose -f docker-compose.prod.yml up -d`. Each provider auto-registers when its credentials are present.
 
 See [automatic bank synchronization](docs/automatic-bank-sync.md) to configure the minimum polling interval (including PSD2 four-access-per-day limits).
 
@@ -172,6 +157,22 @@ FRONTEND_URL=https://quad4.example.com
 
 To pin passkeys to one domain, set `WEBAUTHN_RP_ID` (use the parent domain if you reach Quad4 Finance on several subdomains). Otherwise Quad4 Finance follows the browser, and requests from an unusable address get an explanation in the UI instead of a silent failure.
 
+## Backups and S3 (Optional)
+
+On-demand workspace exports are always available from Settings. For unattended backups, the daily scheduler writes an AES-256 encrypted archive per workspace to the configured storage provider and prunes everything older than `BACKUP_RETENTION_COUNT` archives.
+
+Local disk (default) stores under `BACKUP_LOCAL_PATH`. For off-site backups on S3-compatible storage:
+
+```
+STORAGE_PROVIDER=s3
+STORAGE_S3_BUCKET=my-backups
+STORAGE_S3_REGION=auto
+STORAGE_S3_ACCESS_KEY=...
+STORAGE_S3_SECRET_KEY=...
+STORAGE_S3_ENDPOINT_URL=https://<account>.r2.cloudflarestorage.com  # MinIO, R2, B2, ...
+BACKUP_ENCRYPTION_KEY=...   # keep stable; needed to decrypt archives
+```
+
 ## Exchange Rates (Optional)
 
 For automatic currency conversion, add a free [Open Exchange Rates](https://openexchangerates.org/) key to `.env`:
@@ -184,7 +185,7 @@ Rates are fetched on-demand when foreign-currency transactions are created. With
 
 ## Timezone
 
-Balances, budgets, due dates and recurring transactions turn over at midnight in the application timezone. Set it once in Admin Settings → Date and time; a workspace that keeps its books somewhere else can pick its own timezone in Workspace settings. Without a saved value the application follows `TZ` from the environment, then the host timezone, then UTC, so an existing installation keeps behaving as before until someone changes it.
+Balances, budgets, due dates and recurring transactions turn over at midnight in the application timezone. Set it once in Admin Settings → Date and time; a workspace that keeps its books somewhere else can pick its own timezone in Workspace settings. Without a saved value the application follows `TZ` from the environment, then the host timezone, then UTC.
 
 ## AI Agents (Optional)
 
@@ -197,14 +198,13 @@ AGENTS_ENABLED=true
 COMPOSE_PROFILES=agents
 ```
 
-Then `docker compose up -d`. Settings → AI Agents to add a provider connection. Off by default; zero cost when off.
+Then `docker compose -f docker-compose.prod.yml up -d`. Settings → AI Agents to add a provider connection. Off by default; zero cost when off.
 
 ### Without Docker
 
 `COMPOSE_PROFILES=agents` only tells Docker Compose to start the extra `mcp-server` container, so on a bare-metal or LXC install set `AGENTS_ENABLED=true` alone. The built-in MCP server is a plain uvicorn app in the same virtualenv; run it next to the API and point the backend at it:
 
 ```bash
-# alongside the API/worker/beat processes
 uvicorn mcp_server.main:app --host 127.0.0.1 --port 8765
 ```
 
@@ -223,12 +223,8 @@ Without that server the agents still chat, but they have no tools and cannot rea
 | Frontend | React, TypeScript, Vite, Tailwind CSS |
 | Database | PostgreSQL |
 | Queue | Redis + Celery |
-
-## AI-Assisted Development
-
-Parts of this codebase were built with help of AI. All code is human-reviewed and no data leaves your environment.
-
-Contributing with AI is welcome. We review the author, not the tool: whatever wrote the diff, you own its quality, its fit with where Quad4 Finance is going, and everything that happens after it merges. See [Using AI](CONTRIBUTING.md#using-ai).
+| Containers | Chainguard base images, rootless, multi-stage |
+| Sandbox | landlockpy + seccompy |
 
 ## Development
 
@@ -242,38 +238,10 @@ pytest
 docker compose up --build
 ```
 
-If you've [mise](https://mise.jdx.dev/) installed, you can install backend/frontend directly with it:
-
-```
-# Install the Python version specified in .python-version,
-# and create a project virtual environment using that Python.
-# Install all tools and dependencies (include Python with dedicated venv)
-mise //...:install
-
-# Install only backend tools/deps
-mise backend:install
-
-# Run backend tests
-mise backend:test
-
-# Install frontend dependencies
-mise frontend:install
-
-# Run frontend linting
-mise frontend:lint
-
-# Run frontend build
-mise frontend:build
-```
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Not sure where to start, or want to talk something through first? [Book 15 minutes](https://cal.com/tassio/15min) — no agenda needed. Something broken, an idea, or just what you think of Quad4 Finance, all welcome.
-
 ## License
 
-This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
-
-This means you can freely use, modify, and distribute this software, but any modifications — including when used as a network service (SaaS) — must also be released under the AGPL-3.0.
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE), inherited from upstream [Securo](https://github.com/securo-finance/securo). Any modifications — including when used as a network service — must also be released under the AGPL-3.0.

@@ -60,7 +60,7 @@ import type { Rule, Transaction } from '@/types'
 import { formatCurrency } from '@/lib/format'
 import { shouldShowPendingBadge } from '@/lib/transaction-status'
 
-function formatDate(dateStr: string, locale = 'pt-BR') {
+function formatDate(dateStr: string, locale = 'en-US') {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString(locale)
 }
 

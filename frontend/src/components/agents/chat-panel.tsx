@@ -465,8 +465,8 @@ function ChatEmptyState({ agent, onPick }: { agent: Agent; onPick: (text: string
 
   return (
     <div className="flex flex-col items-center justify-center text-center gap-5 py-12 min-h-[65vh]">
-      {/* Brand mark — uses the primary indigo so it reads as Quad4 Finance, not
-          as the agent's accent color. Transparent background. */}
+      {/* Brand mark — uses the primary accent so it reads as Quad4 Finance,
+          not as the agent's accent color. Transparent background. */}
       <ShellLogo size={56} className="text-primary opacity-90" />
       <div className="space-y-1 px-6">
         <div className="text-base font-semibold">{agent.name}</div>

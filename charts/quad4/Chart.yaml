@@ -1,10 +1,10 @@
 apiVersion: v2
 name: quad4
-description: A Helm chart for Quad4 Finance Finance, an open-source personal finance application.
+description: A Helm chart for Quad4 Finance, a security-hardened self-hosted personal finance application.
 type: application
 version: 0.16.5
 appVersion: "0.16.5"
-icon: https://raw.githubusercontent.com/Quad4-Software/quad4-finance/main/favicons/android-icon-192x192.png
+icon: https://quad4.io/favicon.svg
 home: https://github.com/Quad4-Software/quad4-finance
 sources:
   - https://github.com/Quad4-Software/quad4-finance
@@ -13,19 +13,4 @@ keywords:
   - accounting
   - quad4
 annotations:
-  # Artifact Hub only accepts ai-machine-learning, database,
-  # integration-delivery, monitoring-logging, networking, security, storage or
-  # streaming-messaging, and none of them describe a personal finance app. An
-  # invalid value fails the whole package, and omitting the field entirely lets
-  # Artifact Hub predict one from the keywords, which would be just as wrong,
-  # so opt out of the prediction instead.
-  artifacthub.io/category: skip-prediction
   artifacthub.io/license: "AGPL-3.0"
-  artifacthub.io/images: |
-    - name: quad4-backend
-      image: ghcr.io/quad4-software/quad4-backend:latest
-    - name: quad4-frontend
-      image: ghcr.io/quad4-software/quad4-frontend:latest
-  artifacthub.io/links: |
-    - name: Source
-      url: https://github.com/Quad4-Software/quad4-finance

@@ -1315,9 +1315,6 @@
       "reconnect": "Перепідключити"
     },
     "providers": {
-      "pluggy": {
-        "description": "Провайдер відкритих фінансів для бразильських банків"
-      },
       "enable_banking": {
         "description": "Європейські банки через PSD2 open banking"
       },

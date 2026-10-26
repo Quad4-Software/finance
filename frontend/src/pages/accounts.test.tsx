@@ -48,7 +48,6 @@ vi.mock('@/lib/invalidate-queries', () => ({
   invalidateFinancialQueries: vi.fn(),
 }))
 
-vi.mock('@/components/bank-connect-dialog', () => ({ BankConnectDialog: () => null }))
 vi.mock('@/components/connector-select-dialog', () => ({ ConnectorSelectDialog: () => null }))
 vi.mock('@/components/oauth-connect-dialog', () => ({ OAuthConnectDialog: () => null }))
 vi.mock('@/components/token-connect-dialog', () => ({ TokenConnectDialog: () => null }))

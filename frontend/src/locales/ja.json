@@ -1298,9 +1298,6 @@
       "reconnect": "再接続"
     },
     "providers": {
-      "pluggy": {
-        "description": "ブラジルの銀行に対応したオープンファイナンスプロバイダー"
-      },
       "enable_banking": {
         "description": "PSD2オープンバンキング経由のヨーロッパの銀行"
       },

@@ -1366,9 +1366,6 @@
       "reconnect": "Znovu prepojiť"
     },
     "providers": {
-      "pluggy": {
-        "description": "Poskytovateľ open finance pre brazílske banky"
-      },
       "enable_banking": {
         "description": "Európske banky cez PSD2 open banking"
       },

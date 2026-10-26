@@ -19,10 +19,6 @@ secret:
   # If postgresql.enabled is false, you must provide your external database URL here or in existingSecret.
   databaseUrl: 'postgresql+asyncpg://postgres:postgres@{{ include "quad4.fullname" . }}-postgresql:5432/quad4'
 
-  # Pluggy
-  pluggyClientId: ""
-  pluggyClientSecret: ""
-
   # Enable Banking
   enableBankingAppId: ""
   enableBankingPrivateKey: "" # Content of the PEM file
@@ -33,6 +29,14 @@ secret:
 
   # OpenExchangeRates
   openexchangeratesAppId: ""
+
+  # S3 storage (optional; used when config.storageProvider is "s3")
+  storageS3AccessKey: ""
+  storageS3SecretKey: ""
+
+  # Key for the AES-256 scheduled backup archives. Empty derives one from
+  # secretKey; set a stable dedicated key to survive SECRET_KEY rotation.
+  backupEncryptionKey: ""
 
   # Agents (LLM)
   agentsMcpJwtSecret: "dev-mcp-secret-change-in-production"
@@ -45,8 +49,6 @@ config:
   debug: "false"
   # Set false only when oidc.enabled, oidc.clientId, and oidc.discoveryUrl are configured.
   localAuthEnabled: "true"
-  # Leave empty to auto-compute from global.domain (e.g. http://quad4.local/oauth/callback)
-  pluggyOauthRedirectUri: ""
   enableBankingApiUrl: "https://api.enablebanking.com"
   # Leave empty to auto-compute from global.domain
   enableBankingOauthRedirectUri: ""
@@ -66,7 +68,22 @@ config:
   oidcAdminRoles: ""
   oidcWorkspaceRoleMap: ""
   fxSyncMode: "on_demand"
-  tesouroDiretoEnabled: "true"
+
+  # Kernel sandboxing (Landlock + seccomp). No-op on kernels without support.
+  sandboxEnabled: "true"
+  sandboxLandlockEnabled: "true"
+  sandboxSeccompEnabled: "true"
+
+  # Storage: "local" or "s3". S3 credentials live under secret.storageS3*.
+  storageProvider: "local"
+  storageS3Bucket: ""
+  storageS3Region: ""
+  storageS3EndpointUrl: ""
+
+  # Scheduled encrypted backups
+  backupLocalPath: "/app/data/backups"
+  backupRetentionCount: "14"
+  backupScheduleHour: "3"
 
   # Redis configuration
   # If redis.enabled is true, the internal redis will be deployed.
@@ -181,6 +198,13 @@ persistence:
   attachments:
     enabled: true
     size: 5Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  # Holds the scheduled AES-256 encrypted backup archives when
+  # config.storageProvider is "local".
+  backups:
+    enabled: true
+    size: 2Gi
     storageClass: ""
     accessMode: ReadWriteOnce
   # Both agent volumes are created only when config.agentsEnabled is true,

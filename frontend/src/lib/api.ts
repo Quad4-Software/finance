@@ -411,7 +411,7 @@ export const connections = {
     const { data } = await api.get('/connections/providers')
     return data.providers
   },
-  getConnectToken: async (provider = 'pluggy'): Promise<string> => {
+  getConnectToken: async (provider: string): Promise<string> => {
     const { data } = await api.post('/connections/connect-token', { provider }, readOnly)
     return data.access_token
   },
@@ -1751,7 +1751,7 @@ export const search = {
 
 // App-level feature flags (whether optional modules like agents are mounted)
 export interface AppInfo {
-  features: { agents: boolean; tesouro_direto?: boolean }
+  features: { agents: boolean }
 }
 
 export const info = {

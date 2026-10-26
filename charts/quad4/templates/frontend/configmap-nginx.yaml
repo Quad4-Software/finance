@@ -6,36 +6,33 @@ metadata:
     {{- include "quad4.labels" . | nindent 4 }}
     app.kubernetes.io/component: frontend
 data:
-  default.conf.template: |
+  default.conf: |
+    # Chainguard nginx reads server blocks from /etc/nginx/conf.d. The
+    # upstream is the backend Service ClusterIP, which stays valid across
+    # pod churn, so no resolver directive is needed.
     server {
         listen 8080;
         root /usr/share/nginx/html;
         index index.html;
+        server_tokens off;
 
-        # API proxy to backend.
-        # Resolve the backend hostname at request time instead of caching the IP
-        # at startup. Without this, Nginx pins the upstream IP when the config
-        # loads and returns 502s after the backend pod is recreated with a new
-        # IP. Using a variable in proxy_pass forces re-resolution; NGINX_RESOLVER
-        # is derived from the pod's own /etc/resolv.conf (cluster DNS) by the
-        # image's docker-entrypoint.d/19-resolver.envsh.
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Cross-Origin-Opener-Policy "same-origin" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
+
         location /api/ {
-            resolver ${NGINX_RESOLVER} valid=5s;
-            set $upstream ${BACKEND_URL};
-            proxy_pass $upstream;
+            proxy_pass {{ default (printf "http://%s-backend.%s.svc.cluster.local:%v" (include "quad4.fullname" .) .Release.Namespace .Values.backend.service.port) .Values.frontend.backendUrl }};
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # Connecting a bank imports its whole history in this one request,
-        # which can outlast nginx's default 60s read timeout (issue #1148).
-        # Mirrors frontend/default.conf.template.
         location = /api/connections/oauth/callback {
-            resolver ${NGINX_RESOLVER} valid=5s;
-            set $upstream ${BACKEND_URL};
-            proxy_pass $upstream;
+            proxy_pass {{ default (printf "http://%s-backend.%s.svc.cluster.local:%v" (include "quad4.fullname" .) .Release.Namespace .Values.backend.service.port) .Values.frontend.backendUrl }};
             proxy_read_timeout 300s;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -43,13 +40,16 @@ data:
             proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # Never cache index.html so new deployments are always picked up immediately
         location = /index.html {
             add_header Cache-Control "no-store, no-cache, must-revalidate";
             try_files $uri =404;
         }
 
-        # SPA fallback — serve index.html for all non-file routes
+        location /assets/ {
+            add_header Cache-Control "public, max-age=31536000, immutable";
+            try_files $uri =404;
+        }
+
         location / {
             try_files $uri $uri/ /index.html;
         }

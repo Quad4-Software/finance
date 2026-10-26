@@ -31,7 +31,6 @@ import { AccountPageActions } from '@/components/account-page-actions'
 import { AccountRowActions } from '@/components/account-row-actions'
 import { PageHeader } from '@/components/page-header'
 import { PageRefreshButton } from '@/components/page-refresh-button'
-import { BankConnectDialog } from '@/components/bank-connect-dialog'
 import { ConnectorSelectDialog, type Provider } from '@/components/connector-select-dialog'
 import { OAuthConnectDialog } from '@/components/oauth-connect-dialog'
 import { TokenConnectDialog } from '@/components/token-connect-dialog'
@@ -86,8 +85,6 @@ export default function AccountsPage() {
   const [settingsConnection, setSettingsConnection] = useState<BankConnection | null>(null)
   const [disconnectingConnection, setDisconnectingConnection] = useState<BankConnection | null>(null)
   const [closingAccountId, setClosingAccountId] = useState<string | null>(null)
-  const [reconnectConnId, setReconnectConnId] = useState<string | null>(null)
-  const [reconnectItemId, setReconnectItemId] = useState<string | null>(null)
   const [tokenReconnectConnection, setTokenReconnectConnection] = useState<BankConnection | null>(null)
 
   const { data: accountsList, isLoading: accountsLoading, isFetching: accountsFetching } = useQuery({
@@ -128,9 +125,8 @@ export default function AccountsPage() {
       setTokenReconnectConnection(conn)
       return
     }
-    // Widget flow (Pluggy): re-open the widget with the existing item_id.
-    setReconnectConnId(conn.id)
-    setReconnectItemId(conn.external_id)
+    // Unknown flow type — nothing client-side can re-auth it.
+    toast.error(t('accounts.connectError'))
   }
 
   const { data: closedAccountsList } = useQuery({
@@ -632,14 +628,6 @@ export default function AccountsPage() {
         onSelect={(provider) => setSelectedProvider(provider)}
       />
 
-      {/* Bank Connect Dialog — widget-based (Pluggy) */}
-      <BankConnectDialog
-        open={!!selectedProvider && selectedProvider.flow_type === 'widget'}
-        onClose={() => setSelectedProvider(null)}
-        provider={selectedProvider?.name}
-        supportsAssetSync={selectedProvider?.supports_asset_sync ?? false}
-      />
-
       {/* OAuth Connect Dialog — institution-pickers (Enable Banking) */}
       <OAuthConnectDialog
         open={!!selectedProvider && selectedProvider.flow_type === 'oauth'}
@@ -654,14 +642,6 @@ export default function AccountsPage() {
         onClose={() => setSelectedProvider(null)}
         provider={selectedProvider?.name ?? ''}
         supportsAssetSync={selectedProvider?.supports_asset_sync ?? false}
-      />
-
-      {/* Reconnect Dialog — widget-based (Pluggy) */}
-      <BankConnectDialog
-        open={!!reconnectConnId}
-        onClose={() => { setReconnectConnId(null); setReconnectItemId(null) }}
-        reconnectConnectionId={reconnectConnId ?? undefined}
-        updateItemId={reconnectItemId ?? undefined}
       />
 
       {/* Reconnect Dialog — paste-a-token flow (SimpleFIN) */}

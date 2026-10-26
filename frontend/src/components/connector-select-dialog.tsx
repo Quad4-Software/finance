@@ -38,7 +38,9 @@ function ConnectorSelectSession({ open, onClose, onSelect }: ConnectorSelectDial
     let cancelled = false
     connections.getProviders().then((data) => {
       if (cancelled) return
-      setProviders(data)
+      // Only flow types with a mounted dialog can actually connect; a stale
+      // backend may still list retired providers, so filter them out.
+      setProviders(data.filter((p) => p.flow_type === 'oauth' || p.flow_type === 'token'))
       setLoading(false)
     }).catch(() => {
       if (cancelled) return

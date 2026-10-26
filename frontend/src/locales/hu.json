@@ -1298,9 +1298,6 @@
       "reconnect": "Újracsatlakozás"
     },
     "providers": {
-      "pluggy": {
-        "description": "Open finance szolgáltató brazil bankokhoz"
-      },
       "enable_banking": {
         "description": "Európai bankok PSD2 open bankingen keresztül"
       },

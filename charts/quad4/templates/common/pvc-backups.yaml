@@ -1,0 +1,17 @@
+{{- if .Values.persistence.backups.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "quad4.fullname" . }}-backups
+  labels:
+    {{- include "quad4.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.backups.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.backups.size | default "1Gi" }}
+  {{- if .Values.persistence.backups.storageClass }}
+  storageClassName: {{ .Values.persistence.backups.storageClass }}
+  {{- end }}
+{{- end }}

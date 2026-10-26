@@ -27,7 +27,6 @@ Good ways to align first:
 
 - Open a [feature request](.github/ISSUE_TEMPLATE/feature_request.md) describing what you'd like to build.
 - Comment on the related issue if one already exists.
-- Chat with us on [Discord](https://discord.gg/rUqTKtQ9S4).
 
 Once there's a shared understanding, go ahead and build. Large PRs that arrive without any prior discussion are harder to review and sometimes don't align with where the project is heading, so a quick conversation up front is the best way to make your contribution count.
 

@@ -60,8 +60,8 @@ export default function AdminSettingsPage() {
 
   const [lastSyncedLight, setLastSyncedLight] = useState<string | undefined>()
   const [lastSyncedDark, setLastSyncedDark] = useState<string | undefined>()
-  const [localLight, setLocalLight] = useState<string>('#6366F1')
-  const [localDark, setLocalDark] = useState<string>('#818CF8')
+  const [localLight, setLocalLight] = useState<string>('#0A0A0B')
+  const [localDark, setLocalDark] = useState<string>('#F4F4F5')
 
   const { data: usersData, isLoading: usersLoading } = useQuery({
     queryKey: ['admin', 'users', search],

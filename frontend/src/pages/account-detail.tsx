@@ -228,7 +228,7 @@ function creditCardCycleBoundaries(
   }
 }
 
-function formatDateStr(dateStr: string, locale = 'pt-BR') {
+function formatDateStr(dateStr: string, locale = 'en-US') {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString(locale)
 }
 
@@ -458,7 +458,7 @@ export default function AccountDetailPage() {
   })
 
   // Last 6 cycles (oldest → newest) for the bill timeline strip.
-  // When we have a bills feed (Pluggy Regulado, etc.) the strip is driven
+  // When we have a bills feed from a provider the strip is driven
   // directly by bills — total comes from bill.total_amount, label from the
   // bill's actual due_date — so the bars match the bank statement-for-statement
   // even when the close day shifts month to month (issue #92). Otherwise we
@@ -502,7 +502,7 @@ export default function AccountDetailPage() {
   const timelineQueries = useQueries({
     queries: timelineCycles.map(c => ({
       // Bill-anchored cycles send bill_id AND the cycle window so the
-      // backend includes both Pluggy-linked txs and any unlinked txs
+      // backend includes both provider-linked txs and any unlinked txs
       // (manual / recurring) the user placed in this cycle. The trailing
       // in-progress cycle (no bill) sets unbilled_only so prior-bill txs
       // that fall in the window aren't double-counted in the bar.
@@ -525,8 +525,8 @@ export default function AccountDetailPage() {
     queryFn: async () => {
       const params = {
         account_id: id,
-        // When the active cycle is a real bill, prefer bill_id (Pluggy's
-        // truth: picks up charges the bank rolled outside the nominal date
+        // When the active cycle is a real bill, prefer bill_id (the
+        // provider's truth: picks up charges the bank rolled outside the nominal date
         // range) AND keep from/to so manual / non-bill-linked txs (recurring
         // fills, CSV imports) bucketed into this cycle still show up.
         bill_id: activeBill?.id,
@@ -788,7 +788,7 @@ export default function AccountDetailPage() {
         byDay.set(tx.date, (byDay.get(tx.date) ?? 0) + amt)
       }
       // Chart span: when a real bill is active, derive the range from the
-      // actual debit dates so charges Pluggy bucketed outside our nominal
+      // actual debit dates so charges the provider bucketed outside our nominal
       // [prev_due+1, this_due] window (e.g. a 03/02 charge rolled into the
       // March bill) still show up. Otherwise use the cycle-math range.
       let rangeStart: string | null = null

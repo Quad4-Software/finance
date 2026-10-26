@@ -36,7 +36,7 @@ def mask_last4(value: Optional[str]) -> Optional[str]:
     """Reduce a bank-assigned account identifier to its last four characters.
 
     Providers expose different identifiers for the same purpose: an IBAN
-    (Enable Banking), a branch/account number (Pluggy), a card number. They all
+    (Enable Banking), a branch/account number, a card number. They all
     serve one job here, telling two same-named accounts apart, so we normalize
     them to a single shape and deliberately keep only the tail. Storing the full
     identifier would put a payable bank reference in the database for no gain.
@@ -90,8 +90,7 @@ class AccountData:
     institution_name: Optional[str] = None
     institution_logo_url: Optional[str] = None
     # Part of `balance` that the bank has auto-applied to an investment which
-    # the provider also reports as a holding (Pluggy
-    # `bankData.automaticallyInvestedBalance`, issue #843). Zero when unknown.
+    # the provider also reports as a holding (issue #843). Zero when unknown.
     # The sync subtracts it only when a live holding is counted for this
     # account (see connection_service._auto_invested_deductions), so the
     # money is counted once: as the asset when one mirrors it, as cash
@@ -108,11 +107,10 @@ class TransactionData:
     type: str  # debit, credit
     currency: Optional[str] = None  # ISO currency code (e.g. BRL, USD)
     amount_in_account_currency: Optional[Decimal] = None  # Bank-provided conversion for intl txns
-    pluggy_category: Optional[str] = None
     status: str = "posted"  # posted, pending
     payee: Optional[str] = None
     raw_data: Optional[dict] = None
-    # Installment metadata (parcelamento) — populated by CC providers that expose it.
+    # Installment metadata, populated by CC providers that expose it.
     installment_number: Optional[int] = None
     total_installments: Optional[int] = None
     installment_total_amount: Optional[Decimal] = None
@@ -129,8 +127,8 @@ class ConnectionData:
     credentials: dict
     accounts: list[AccountData]
     # Fully-formed institution logo URL when the provider exposes one
-    # (Pluggy connector.imageUrl, Enable Banking ASPSP logo). None for
-    # providers/institutions without a logo (e.g. SimpleFin).
+    # (e.g. Enable Banking ASPSP logo). None for providers/institutions
+    # without a logo (e.g. SimpleFin).
     logo_url: Optional[str] = None
 
 
@@ -141,7 +139,7 @@ class ConnectTokenData:
 
 @dataclass
 class BillData:
-    """A normalized credit-card bill (fatura), provider-agnostic.
+    """A normalized credit-card bill (statement), provider-agnostic.
 
     Only the fields universal to a credit-card statement are promoted. Anything
     a specific integration provides on top (finance charges, recorded payments,
@@ -152,7 +150,7 @@ class BillData:
     external_id: str
     due_date: date
     total_amount: Decimal
-    currency: str = "BRL"
+    currency: str = "USD"
     minimum_payment: Optional[Decimal] = None
     raw_data: Optional[dict] = None
 
@@ -276,14 +274,14 @@ class FxRateProvider(ABC):
 class BankProvider(ABC):
     """Abstract interface for open finance integrations.
 
-    Implement this for each provider (Pluggy, Belvo, etc.)
-    to enable bank account syncing via OAuth or widget flow.
+    Implement this for each provider (Enable Banking, SimpleFIN, etc.)
+    to enable bank account syncing via OAuth or token flow.
     """
 
     @property
     @abstractmethod
     def name(self) -> str:
-        """Unique provider identifier (e.g. 'pluggy', 'belvo')."""
+        """Unique provider identifier (e.g. 'enable_banking', 'simplefin')."""
         ...
 
     @property
@@ -295,16 +293,13 @@ class BankProvider(ABC):
     def redirect_uri(self) -> str:
         """Provider-specific OAuth redirect URI.
 
-        Each provider reads its own env var (e.g.
-        ``PLUGGY_OAUTH_REDIRECT_URI``, ``ENABLE_BANKING_OAUTH_REDIRECT_URI``)
-        so different providers can register different URLs in their
-        respective dashboards. When unset the URL is derived from
-        ``FRONTEND_URL`` so a non-default port or domain works out of the box.
+        Providers may override this to read their own env var (e.g.
+        ``ENABLE_BANKING_OAUTH_REDIRECT_URI``) so different providers can
+        register different URLs in their respective dashboards. When unset
+        the URL is derived from ``FRONTEND_URL`` so a non-default port or
+        domain works out of the box.
         """
-        from app.core.config import get_settings
-
-        settings = get_settings()
-        return settings.pluggy_oauth_redirect_uri or default_oauth_redirect_uri()
+        return default_oauth_redirect_uri()
 
     async def create_connect_token(
         self, client_user_id: str, item_id: str | None = None
@@ -316,7 +311,7 @@ class BankProvider(ABC):
         self, country: Optional[str] = None
     ) -> "InstitutionListData":
         """List supported institutions (banks). Empty by default for providers
-        that don't surface a selection step (Pluggy uses its own widget).
+        that don't surface a selection step.
         """
         return InstitutionListData(countries=[], institutions=[])
 
@@ -404,10 +399,9 @@ class BankProvider(ABC):
         return []
 
     async def get_bills(self, credentials: dict, account_external_id: str) -> list[BillData]:
-        """Fetch credit-card bills (faturas) for an account.
+        """Fetch credit-card bills for an account.
 
-        Providers without a bills endpoint, or non-regulated Pluggy
-        connections that don't expose /bills, return the default empty list.
+        Providers without a bills endpoint return the default empty list.
         The sync layer falls back to locally-computed cycle math in that case
         (see app.services.credit_card_service).
         """

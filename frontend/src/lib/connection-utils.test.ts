@@ -54,9 +54,9 @@ describe('getConnectionName', () => {
     ).toBe('First Bank')
   })
 
-  it('no institutions falls back to the connection label (Pluggy/Enable)', () => {
+  it('no institutions falls back to the connection label', () => {
     expect(
-      getConnectionName({ provider: 'pluggy', institution_name: 'Nubank', institutions: [] }, t),
+      getConnectionName({ provider: 'enable_banking', institution_name: 'Nubank', institutions: [] }, t),
     ).toBe('Nubank')
     expect(getConnectionName({ institution_name: 'Nubank' }, t)).toBe('Nubank')
   })

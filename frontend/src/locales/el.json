@@ -1026,9 +1026,6 @@
       "reconnect": "Επανασύνδεση"
     },
     "providers": {
-      "pluggy": {
-        "description": "Πάροχος open finance για τράπεζες Βραζιλίας"
-      },
       "enable_banking": {
         "description": "Ευρωπαϊκές τράπεζες μέσω PSD2 open banking"
       },

@@ -1,7 +1,6 @@
 // Provider proper names — product names, not translated.
 const PROVIDER_LABELS: Record<string, string> = {
   simplefin: 'SimpleFIN',
-  pluggy: 'Pluggy',
   enable_banking: 'Enable Banking',
 }
 

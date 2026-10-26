@@ -18,14 +18,6 @@ _PROVIDERS: dict[str, type[BankProvider]] = {}
 # All known providers the system supports (extensible for future connectors).
 KNOWN_PROVIDERS = [
     {
-        "name": "pluggy",
-        "display_name": "Pluggy",
-        "description": "Open finance provider for Brazilian banks",
-        "flow_type": "widget",
-        "requires_institution_select": False,
-        "supports_asset_sync": True,
-    },
-    {
         "name": "enable_banking",
         "display_name": "Enable Banking",
         "description": "European banks via PSD2 open banking",
@@ -79,10 +71,6 @@ def _auto_register_providers() -> None:
     from app.core.config import get_settings
     settings = get_settings()
 
-    if settings.pluggy_client_id and settings.pluggy_client_secret:
-        from app.providers.pluggy import PluggyProvider
-        register_provider("pluggy", PluggyProvider)
-
     eb_has_key = bool(
         settings.enable_banking_private_key or settings.enable_banking_private_key_file
     )
@@ -112,10 +100,14 @@ def get_storage_provider():
             from app.providers.local_storage import LocalStorageProvider
 
             _storage_provider = LocalStorageProvider()
+        elif settings.storage_provider == "s3":
+            from app.providers.s3_storage import S3StorageProvider
+
+            _storage_provider = S3StorageProvider()
         else:
             raise NotImplementedError(
-                f"Storage provider '{settings.storage_provider}' is not yet implemented. "
-                "Supported: 'local'"
+                f"Storage provider '{settings.storage_provider}' is not implemented. "
+                "Supported: 'local', 's3'"
             )
     return _storage_provider
 

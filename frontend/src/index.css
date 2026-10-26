@@ -1,79 +1,124 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  --background: #F8F9FB;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --card-foreground: #0F172A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
-  --primary: #6366F1;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F1F5F9;
-  --secondary-foreground: #0F172A;
-  --muted: #F1F5F9;
-  --muted-foreground: #64748B;
-  --accent: #EEF2FF;
-  --accent-foreground: #4F46E5;
-  --destructive: #F43F5E;
-  --destructive-foreground: #FFFFFF;
-  --border: #E8ECF1;
-  --input: #E8ECF1;
-  --ring: #6366F1;
-  --radius: 0.625rem;
-  --chart-1: #6366F1;
-  --chart-2: #8B5CF6;
-  --chart-3: #10B981;
-  --chart-4: #F59E0B;
-  --chart-5: #F43F5E;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #0F172A;
-  --sidebar-primary: #6366F1;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F1F5F9;
-  --sidebar-accent-foreground: #4F46E5;
-  --sidebar-border: #E8ECF1;
-  --sidebar-ring: #6366F1;
-  --sidebar-muted: #64748B;
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/space-mono-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-mono-latin-700-normal.woff2') format('woff2');
 }
 
+/* Light theme: the paper scale. Neutral grays with an inverted near-black
+   accent. The accent stays monochrome on purpose, it is the brand rule. */
+:root {
+  --background: #FAFAFA;
+  --foreground: #18181B;
+  --card: #FFFFFF;
+  --card-foreground: #18181B;
+  --popover: #FFFFFF;
+  --popover-foreground: #18181B;
+  --primary: #0A0A0B;
+  --primary-foreground: #FAFAFA;
+  --secondary: #F4F4F5;
+  --secondary-foreground: #18181B;
+  --muted: #F4F4F5;
+  --muted-foreground: #71717A;
+  --accent: #F4F4F5;
+  --accent-foreground: #18181B;
+  --destructive: #DC2626;
+  --destructive-foreground: #FAFAFA;
+  --border: #E9E9EC;
+  --input: #E9E9EC;
+  --ring: #A1A1AA;
+  --radius: 0.375rem;
+  --chart-1: #18181B;
+  --chart-2: #3F3F46;
+  --chart-3: #71717A;
+  --chart-4: #A1A1AA;
+  --chart-5: #D9D9DE;
+  --sidebar: #F4F4F5;
+  --sidebar-foreground: #18181B;
+  --sidebar-primary: #0A0A0B;
+  --sidebar-primary-foreground: #FAFAFA;
+  --sidebar-accent: #E9E9EC;
+  --sidebar-accent-foreground: #18181B;
+  --sidebar-border: #E9E9EC;
+  --sidebar-ring: #A1A1AA;
+  --sidebar-muted: #71717A;
+}
+
+/* Dark theme: the void scale. Near-black canvas, hairline borders, and an
+   inverted near-white accent so the UI stays strictly monochrome. */
 .dark {
-  --background: #0C0D12;
-  --foreground: #F0F0F5;
-  --card: #16171F;
-  --card-foreground: #F0F0F5;
-  --popover: #16171F;
-  --popover-foreground: #F0F0F5;
-  --primary: #818CF8;
-  --primary-foreground: #FFFFFF;
-  --secondary: #252836;
-  --secondary-foreground: #F0F0F5;
-  --muted: #252836;
-  --muted-foreground: #8A8F9E;
-  --accent: #1E1B4B;
-  --accent-foreground: #A5B4FC;
-  --destructive: #FB7185;
-  --destructive-foreground: #0C0D12;
-  --border: #2A2D3A;
-  --input: #2A2D3A;
-  --ring: #818CF8;
-  --sidebar: #16171F;
-  --sidebar-foreground: #F0F0F5;
-  --sidebar-primary: #818CF8;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #252836;
-  --sidebar-accent-foreground: #A5B4FC;
-  --sidebar-border: #2A2D3A;
-  --sidebar-ring: #818CF8;
-  --sidebar-muted: #8A8F9E;
+  --background: #0A0A0B;
+  --foreground: #D9D9DE;
+  --card: #16161A;
+  --card-foreground: #E9E9EC;
+  --popover: #16161A;
+  --popover-foreground: #E9E9EC;
+  --primary: #F4F4F5;
+  --primary-foreground: #0A0A0B;
+  --secondary: #1F1F24;
+  --secondary-foreground: #D9D9DE;
+  --muted: #101013;
+  --muted-foreground: #71717A;
+  --accent: #101013;
+  --accent-foreground: #E9E9EC;
+  --destructive: #F87171;
+  --destructive-foreground: #0A0A0B;
+  --border: #1F1F24;
+  --input: #2A2A31;
+  --ring: #3F3F46;
+  --chart-1: #E9E9EC;
+  --chart-2: #A1A1AA;
+  --chart-3: #71717A;
+  --chart-4: #4B4B52;
+  --chart-5: #D9D9DE;
+  --sidebar: #0D0D10;
+  --sidebar-foreground: #D9D9DE;
+  --sidebar-primary: #F4F4F5;
+  --sidebar-primary-foreground: #0A0A0B;
+  --sidebar-accent: #16161A;
+  --sidebar-accent-foreground: #D9D9DE;
+  --sidebar-border: #1F1F24;
+  --sidebar-ring: #3F3F46;
+  --sidebar-muted: #71717A;
 }
 
 @theme inline {
+  --font-mono: 'Space Mono', ui-monospace, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -121,18 +166,17 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
-    font-feature-settings: "cv02","cv03","cv04","cv11";
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3 {
-    letter-spacing: -0.035em;
+    letter-spacing: -0.02em;
   }
 }
 
 /* Recharts focuses its wrapper/surface on click; on macOS this draws a
-   browser focus ring around the whole chart. Suppress it — the chart conveys
+   browser focus ring around the whole chart. Suppress it, the chart conveys
    selection via bar opacity, not a focus outline. */
 .recharts-wrapper:focus,
 .recharts-wrapper:focus-visible,
@@ -143,18 +187,21 @@
   outline: none;
 }
 
+/* Brief, subtle lightening of a row to draw the eye after an update. The
+   accent is monochrome, so this reads as a soft lift rather than a color
+   flash in both themes. */
 @keyframes quad4-highlight-flash {
   0% {
-    background-color: color-mix(in srgb, var(--primary) 22%, transparent);
-    box-shadow: inset 3px 0 0 var(--primary);
+    background-color: color-mix(in srgb, var(--primary) 16%, transparent);
+    box-shadow: inset 2px 0 0 var(--primary);
   }
   60% {
-    background-color: color-mix(in srgb, var(--primary) 14%, transparent);
-    box-shadow: inset 3px 0 0 var(--primary);
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+    box-shadow: inset 2px 0 0 var(--primary);
   }
   100% {
     background-color: transparent;
-    box-shadow: inset 3px 0 0 transparent;
+    box-shadow: inset 2px 0 0 transparent;
   }
 }
 
@@ -162,58 +209,46 @@
   animation: quad4-highlight-flash 2.4s ease-out;
 }
 
-/* Soft ambient aurora for the auth brand panel. Drifting, blurred purple
-   blobs over a deep indigo base — slow enough to feel alive, not busy.
-   Only transform/opacity animate, never layout. */
-@keyframes quad4-aurora-1 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(7%, 10%, 0) scale(1.18); }
-}
-@keyframes quad4-aurora-2 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.12); }
-  50% { transform: translate3d(-9%, -7%, 0) scale(1); }
-}
-@keyframes quad4-aurora-3 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(6%, -11%, 0) scale(1.22); }
-}
-
-.quad4-aurora {
+/* Static starfield for the auth brand panel: a few overlapping 1px dot
+   grids at low white alpha over the near-black panel. Nothing animates, so
+   prefers-reduced-motion is honored by construction. Fill it inside a
+   relative, overflow-hidden container. */
+.quad4-starfield {
   position: absolute;
-  border-radius: 9999px;
-  filter: blur(72px);
-  will-change: transform;
-}
-.quad4-aurora-1 {
-  top: -12%;
-  left: -8%;
-  width: 62%;
-  height: 62%;
-  opacity: 0.55;
-  background: radial-gradient(circle at center, #818cf8 0%, transparent 70%);
-  animation: quad4-aurora-1 24s ease-in-out infinite;
-}
-.quad4-aurora-2 {
-  right: -12%;
-  bottom: -18%;
-  width: 68%;
-  height: 68%;
-  opacity: 0.5;
-  background: radial-gradient(circle at center, #a78bfa 0%, transparent 70%);
-  animation: quad4-aurora-2 29s ease-in-out infinite;
-}
-.quad4-aurora-3 {
-  top: 28%;
-  left: 22%;
-  width: 46%;
-  height: 46%;
-  opacity: 0.4;
-  background: radial-gradient(circle at center, #c4b5fd 0%, transparent 70%);
-  animation: quad4-aurora-3 33s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .quad4-aurora {
-    animation: none;
-  }
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    radial-gradient(1.5px 1.5px at 18% 22%, rgba(255, 255, 255, 0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 76% 12%, rgba(255, 255, 255, 0.45), transparent 100%),
+    radial-gradient(1.5px 1.5px at 62% 68%, rgba(255, 255, 255, 0.4), transparent 100%),
+    radial-gradient(1px 1px at 34% 82%, rgba(255, 255, 255, 0.45), transparent 100%),
+    radial-gradient(1px 1px at 88% 44%, rgba(255, 255, 255, 0.4), transparent 100%),
+    radial-gradient(1px 1px at 8% 58%, rgba(255, 255, 255, 0.35), transparent 100%),
+    radial-gradient(1px 1px at 46% 36%, rgba(255, 255, 255, 0.4), transparent 100%);
+  background-size:
+    118px 118px,
+    181px 181px,
+    263px 263px,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    0 0,
+    41px 73px,
+    97px 29px,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+  background-repeat: repeat;
 }

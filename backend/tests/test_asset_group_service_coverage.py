@@ -134,7 +134,7 @@ async def test_get_groups_includes_institution_name(session: AsyncSession, test_
     conn = BankConnection(
         id=uuid.uuid4(),
         user_id=test_user.id,
-        provider="pluggy",
+        provider="simplefin",
         external_id="item-x",
         institution_name="Nubank",
         credentials={"t": "x"},
@@ -148,7 +148,7 @@ async def test_get_groups_includes_institution_name(session: AsyncSession, test_
         user_id=test_user.id,
         workspace_id=test_workspace.id,
         name="Synced",
-        source="pluggy",
+        source="simplefin",
         connection_id=conn.id,
     )
     session.add(g)
@@ -208,30 +208,30 @@ async def test_delete_group(session: AsyncSession, test_user, test_workspace):
 async def test_ensure_group_for_connection_creates_then_relinks(session: AsyncSession, test_user):
     conn_id = uuid.uuid4()
     g = await svc.ensure_group_for_connection(
-        session, test_user.id, conn_id, "pluggy", "ext-1", "MeuPluggy"
+        session, test_user.id, conn_id, "simplefin", "ext-1", "MyBank"
     )
-    assert g.name == "MeuPluggy"
+    assert g.name == "MyBank"
     assert g.connection_id == conn_id
-    assert g.source == "pluggy"
+    assert g.source == "simplefin"
 
     # Same external_id, new connection -> relink, keep name.
     new_conn = uuid.uuid4()
     g2 = await svc.ensure_group_for_connection(
-        session, test_user.id, new_conn, "pluggy", "ext-1", "Renamed"
+        session, test_user.id, new_conn, "simplefin", "ext-1", "Renamed"
     )
     assert g2.id == g.id
     assert g2.connection_id == new_conn
-    assert g2.name == "MeuPluggy"
+    assert g2.name == "MyBank"
 
 
 @pytest.mark.asyncio
 async def test_ensure_group_for_connection_matches_by_connection_id(session: AsyncSession, test_user):
     conn_id = uuid.uuid4()
     g = await svc.ensure_group_for_connection(
-        session, test_user.id, conn_id, "pluggy", None, "NoExtId"
+        session, test_user.id, conn_id, "simplefin", None, "NoExtId"
     )
     g2 = await svc.ensure_group_for_connection(
-        session, test_user.id, conn_id, "pluggy", None, "Other"
+        session, test_user.id, conn_id, "simplefin", None, "Other"
     )
     assert g2.id == g.id
 
@@ -240,14 +240,14 @@ async def test_ensure_group_for_connection_matches_by_connection_id(session: Asy
 async def test_ensure_group_for_connection_disambiguates_name(session: AsyncSession, test_user):
     # Two distinct external ids, same default name -> " 2" suffix.
     g1 = await svc.ensure_group_for_connection(
-        session, test_user.id, uuid.uuid4(), "pluggy", "ext-a", "MeuPluggy"
+        session, test_user.id, uuid.uuid4(), "simplefin", "ext-a", "MyBank"
     )
     g2 = await svc.ensure_group_for_connection(
-        session, test_user.id, uuid.uuid4(), "pluggy", "ext-b", "MeuPluggy"
+        session, test_user.id, uuid.uuid4(), "simplefin", "ext-b", "MyBank"
     )
     g3 = await svc.ensure_group_for_connection(
-        session, test_user.id, uuid.uuid4(), "pluggy", "ext-c", "MeuPluggy"
+        session, test_user.id, uuid.uuid4(), "simplefin", "ext-c", "MyBank"
     )
-    assert g1.name == "MeuPluggy"
-    assert g2.name == "MeuPluggy 2"
-    assert g3.name == "MeuPluggy 3"
+    assert g1.name == "MyBank"
+    assert g2.name == "MyBank 2"
+    assert g3.name == "MyBank 3"

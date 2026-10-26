@@ -51,6 +51,7 @@ from app.core.auth_policy import require_local_auth_enabled
 from app.core.config import get_settings
 from app.core.rate_limit import login_rate_limit, register_rate_limit, password_reset_rate_limit
 from app.core.redis import close_redis
+from app.core.security_headers import SecurityHeadersMiddleware
 from app.schemas.user import UserCreate, UserRead, UserUpdate
 
 logger = logging.getLogger(__name__)
@@ -101,6 +102,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_url],

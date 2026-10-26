@@ -121,7 +121,7 @@ async def test_get_groups_ordered_by_position(session: AsyncSession, test_user, 
 
 @pytest.mark.asyncio
 async def test_get_groups_loads_categories(session: AsyncSession, test_user, test_workspace):
-    groups_map = await create_default_groups(session, test_user.id)
+    groups_map = await create_default_groups(session, test_user.id, lang="pt-BR")
     await session.commit()
 
     # Add a category to one group

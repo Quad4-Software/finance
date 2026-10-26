@@ -247,7 +247,7 @@ async def test_connecting_the_bank_succeeds_on_the_callback_itself(
          patch("app.services.connection_service.stamp_primary_amount", new_callable=AsyncMock), \
          patch("app.services.connection_service.apply_rules_to_transaction", new_callable=AsyncMock):
         connection = await handle_oauth_callback(
-            session, other.id, test_user.id, "code", "pluggy", sync_assets=False,
+            session, other.id, test_user.id, "code", "simplefin", sync_assets=False,
         )
 
     assert connection is not None

@@ -4,6 +4,7 @@ These are the tests that keep adding a country cheap. Each one fails loudly on
 the mistake it describes, so a new pack is a two-line TOML file and not an
 archaeology exercise.
 """
+
 import pytest
 
 from app.fiscal.registry import (
@@ -25,10 +26,13 @@ def test_every_kind_has_a_spec():
 
 def test_every_kind_is_offered_by_some_pack():
     """A kind no pack lists is unreachable in the picker, so it is dead code
-    that still shows up in the API response."""
+    that still shows up in the API response.
+
+    The BR pack was removed, but its kinds stay defined so stored payee
+    documents keep validating. They are the only tolerated orphans."""
     offered = {kind for code in ALL_JURISDICTIONS for kind in pack_for(code).kinds}
-    orphans = [k.value for k in TaxIdKind if k not in offered]
-    assert orphans == []
+    orphans = {k.value for k in TaxIdKind if k not in offered}
+    assert orphans == {"cnpj", "cpf", "ie", "im"}
 
 
 @pytest.mark.parametrize("code", ALL_JURISDICTIONS)
@@ -99,12 +103,39 @@ def test_the_currencies_the_product_supports_have_a_pack():
     # the dollar are shared by many, so they are covered by their members'
     # own packs rather than mapped here.
     country_of = {
-        "AZN": "AZ", "BRL": "BR", "GBP": "GB", "JPY": "JP", "CAD": "CA", "AUD": "AU",
-        "CHF": "CH", "CNY": "CN", "ARS": "AR", "MXN": "MX", "CLP": "CL",
-        "COP": "CO", "PEN": "PE", "UYU": "UY", "INR": "IN", "SEK": "SE",
-        "DKK": "DK", "NOK": "NO", "PLN": "PL", "CZK": "CZ", "HUF": "HU",
-        "RON": "RO", "CRC": "CR", "IDR": "ID", "DOP": "DO", "KZT": "KZ", "RUB": "RU",
-        "GTQ": "GT", "PHP": "PH", "UAH": "UA", "NZD": "NZ", "VND": "VN", "SGD": "SG", "USD": "US",
+        "AZN": "AZ",
+        "GBP": "GB",
+        "JPY": "JP",
+        "CAD": "CA",
+        "AUD": "AU",
+        "CHF": "CH",
+        "CNY": "CN",
+        "ARS": "AR",
+        "MXN": "MX",
+        "CLP": "CL",
+        "COP": "CO",
+        "PEN": "PE",
+        "UYU": "UY",
+        "INR": "IN",
+        "SEK": "SE",
+        "DKK": "DK",
+        "NOK": "NO",
+        "PLN": "PL",
+        "CZK": "CZ",
+        "HUF": "HU",
+        "RON": "RO",
+        "CRC": "CR",
+        "IDR": "ID",
+        "DOP": "DO",
+        "KZT": "KZ",
+        "RUB": "RU",
+        "GTQ": "GT",
+        "PHP": "PH",
+        "UAH": "UA",
+        "NZD": "NZ",
+        "VND": "VN",
+        "SGD": "SG",
+        "USD": "US",
     }
     uncovered = [
         code

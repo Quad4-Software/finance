@@ -88,6 +88,7 @@ def test_all_known_providers():
 
 def test_get_storage_provider_local():
     import app.providers as providers_mod
+
     original = providers_mod._storage_provider
     providers_mod._storage_provider = None
     try:
@@ -102,12 +103,13 @@ def test_get_storage_provider_local():
 
 def test_get_storage_provider_unsupported():
     import app.providers as providers_mod
+
     original = providers_mod._storage_provider
     providers_mod._storage_provider = None
     try:
         with patch("app.core.config.get_settings") as mock_settings:
-            mock_settings.return_value.storage_provider = "s3"
-            with pytest.raises(NotImplementedError, match="s3"):
+            mock_settings.return_value.storage_provider = "gcs"
+            with pytest.raises(NotImplementedError, match="gcs"):
                 get_storage_provider()
     finally:
         providers_mod._storage_provider = original
@@ -124,7 +126,6 @@ class TestOAuthRedirectDefaults:
     def _settings(self, **overrides) -> Settings:
         return Settings(
             frontend_url="http://localhost:3000",
-            pluggy_oauth_redirect_uri="",
             enable_banking_oauth_redirect_uri="",
         ).model_copy(update=overrides)
 
@@ -145,8 +146,10 @@ class TestOAuthRedirectDefaults:
         from app.providers.enable_banking import EnableBankingProvider
 
         settings = self._settings(frontend_url="http://localhost:3132")
-        with patch("app.core.config.get_settings", return_value=settings), \
-             patch("app.providers.enable_banking.get_settings", return_value=settings):
+        with (
+            patch("app.core.config.get_settings", return_value=settings),
+            patch("app.providers.enable_banking.get_settings", return_value=settings),
+        ):
             assert EnableBankingProvider().redirect_uri == "http://localhost:3132/oauth/callback"
 
     def test_explicit_value_still_wins(self):
@@ -156,6 +159,8 @@ class TestOAuthRedirectDefaults:
             frontend_url="http://localhost:3000",
             enable_banking_oauth_redirect_uri="https://registered.example.com/cb",
         )
-        with patch("app.core.config.get_settings", return_value=settings), \
-             patch("app.providers.enable_banking.get_settings", return_value=settings):
+        with (
+            patch("app.core.config.get_settings", return_value=settings),
+            patch("app.providers.enable_banking.get_settings", return_value=settings),
+        ):
             assert EnableBankingProvider().redirect_uri == "https://registered.example.com/cb"

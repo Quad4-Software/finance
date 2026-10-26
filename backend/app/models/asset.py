@@ -62,7 +62,7 @@ class Asset(Base):
     position: Mapped[int] = mapped_column(Integer, default=0)
 
     # Provider-agnostic sync fields. `source` tags where the asset came from
-    # ("manual", "pluggy", ...). `external_id` is the source's stable ID for
+    # ("manual", "simplefin", ...). `external_id` is the source's stable ID for
     # the same logical holding across syncs. `connection_id` links back to the
     # provider connection when the source requires authentication.
     connection_id: Mapped[Optional[uuid.UUID]] = mapped_column(

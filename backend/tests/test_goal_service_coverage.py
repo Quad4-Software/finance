@@ -471,7 +471,7 @@ async def test_resolve_net_worth_counts_shared_credit_line_once(session, test_us
     acc = await _make_account(session, test_user.id, test_workspace.id, currency="BRL")
     await _add_txn(session, test_user.id, acc.id, test_workspace.id, 2000, "credit", date.today())
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=test_user.id, provider="pluggy",
+        id=uuid.uuid4(), user_id=test_user.id, provider="simplefin",
         external_id="ext-goal-shared", institution_name="Shared line",
         credentials={}, status="active", created_at=datetime.now(timezone.utc),
     )

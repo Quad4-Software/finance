@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
@@ -304,6 +304,34 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/58/23/b12ac0bcdfb7360d664f40a00b1bda139cbbbced012c34e375506dbd0143/billiard-4.2.4.tar.gz", hash = "sha256:55f542c371209e03cd5862299b74e52e4fbcba8250ba611ad94276b369b6a85f", size = 156537, upload-time = "2025-11-30T13:28:48.52Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cb/87/8bab77b323f16d67be364031220069f79159117dd5e43eeb4be2fef1ac9b/billiard-4.2.4-py3-none-any.whl", hash = "sha256:525b42bdec68d2b983347ac312f892db930858495db601b5836ac24e6477cde5", size = 87070, upload-time = "2025-11-30T13:28:47.016Z" },
+]
+
+[[package]]
+name = "boto3"
+version = "1.43.118"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "botocore" },
+    { name = "jmespath" },
+    { name = "s3transfer" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/96/8b/5694c8433b5202f34a82def4edee274f7df1eba2919c66d9d389d2202ec8/boto3-1.43.118.tar.gz", hash = "sha256:c0620f799e0f0c222ba42c337b65cdbcd3da38a3121187f634d8926cbbb28a9c", size = 112649, upload-time = "2026-10-22T19:22:09.629Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bb/a3/65bb3d64928f3c2da17640b92044084150317f02adf22442cb0c52af2a8b/boto3-1.43.118-py3-none-any.whl", hash = "sha256:ab8f3d2c622ef039338b4f228d97ea55f1abd573d84bb9b9a5ee8cb6780c0ccd", size = 140045, upload-time = "2026-10-22T19:22:08.353Z" },
+]
+
+[[package]]
+name = "botocore"
+version = "1.43.118"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jmespath" },
+    { name = "python-dateutil" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d4/b8/3e55154ddaf1a6d1d4ddda85c0e5983205a3b7657edacd8ebba8c6fd774c/botocore-1.43.118.tar.gz", hash = "sha256:7f3f9d88cc9e847587690f82a42e3c3c292c3026c92c1e60d68a9310018e003f", size = 16420126, upload-time = "2026-10-22T19:22:04.81Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/ce/61b39a8e7a69af5ea43c1c3e1b0065a4866b42ccddf107e16686a3143614/botocore-1.43.118-py3-none-any.whl", hash = "sha256:a45d7ae570674161e4a3542d8c68633bf7503f92d1de781ef7361b79488eda6f", size = 16122016, upload-time = "2026-10-22T19:22:00.414Z" },
 ]
 
 [[package]]
@@ -1228,6 +1256,15 @@ wheels = [
 ]
 
 [[package]]
+name = "jmespath"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/59/322338183ecda247fb5d1763a6cbe46eff7222eaeebafd9fa65d4bf5cb11/jmespath-1.1.0.tar.gz", hash = "sha256:472c87d80f36026ae83c6ddd0f1d05d4e510134ed462851fd5f754c8c3cbb88d", size = 27377, upload-time = "2026-01-22T16:35:26.279Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/2f/967ba146e6d58cf6a652da73885f52fc68001525b4197effc174321d70b4/jmespath-1.1.0-py3-none-any.whl", hash = "sha256:a5663118de4908c91729bea0acadca56526eb2698e83de10cd116ae0f4e97c64", size = 20419, upload-time = "2026-01-22T16:35:24.919Z" },
+]
+
+[[package]]
 name = "kombu"
 version = "5.6.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1245,6 +1282,15 @@ wheels = [
 [package.optional-dependencies]
 redis = [
     { name = "redis" },
+]
+
+[[package]]
+name = "landlockpy"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/4d/68125d88aaf547726daad59ff7b17d33e9ffeee3083ba95eb29d21a9c25a/landlockpy-0.2.0.tar.gz", hash = "sha256:2a915db59a2c1970d181f9c2bff786d6040d8f9105380da64390f5fe61b4148d", size = 117226, upload-time = "2026-09-26T21:15:59.08Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d3/64/86b6ffd07b6359d51f1cedca35846998fd90df92aa027d661fa181715fba/landlockpy-0.2.0-py3-none-any.whl", hash = "sha256:c61b7fe84ead14ff6b091baa2e5f52c7b81e509571ebe5e707e92f1aaf90f2c9", size = 12731, upload-time = "2026-09-26T21:15:57.53Z" },
 ]
 
 [[package]]
@@ -2524,6 +2570,96 @@ wheels = [
 ]
 
 [[package]]
+name = "quad4-backend"
+version = "0.16.5"
+source = { virtual = "." }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "alembic" },
+    { name = "asyncpg" },
+    { name = "boto3" },
+    { name = "celery", extra = ["redis"] },
+    { name = "cryptography" },
+    { name = "fastapi" },
+    { name = "fastapi-users", extra = ["sqlalchemy"] },
+    { name = "fastembed" },
+    { name = "httpx" },
+    { name = "landlockpy" },
+    { name = "ofxparse" },
+    { name = "passlib", extra = ["bcrypt"] },
+    { name = "pgvector" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "pyotp" },
+    { name = "pypdf" },
+    { name = "python-jose", extra = ["cryptography"] },
+    { name = "python-multipart" },
+    { name = "pyzipper" },
+    { name = "redis", extra = ["hiredis"] },
+    { name = "reportlab" },
+    { name = "seccompy" },
+    { name = "sqlalchemy" },
+    { name = "tzlocal" },
+    { name = "uvicorn", extra = ["standard"] },
+    { name = "webauthn" },
+    { name = "yfinance" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "aiosqlite" },
+    { name = "httpx" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-xdist" },
+    { name = "ruff" },
+    { name = "ty" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiofiles", specifier = ">=24.0" },
+    { name = "aiosqlite", marker = "extra == 'dev'", specifier = ">=0.19.0" },
+    { name = "alembic", specifier = ">=1.13.0" },
+    { name = "asyncpg", specifier = ">=0.29.0" },
+    { name = "boto3", specifier = ">=1.40" },
+    { name = "celery", extras = ["redis"], specifier = ">=5.3.0" },
+    { name = "cryptography", specifier = "==46.0.7" },
+    { name = "fastapi", specifier = ">=0.109.0" },
+    { name = "fastapi-users", extras = ["sqlalchemy"], specifier = ">=13.0.0" },
+    { name = "fastembed", specifier = ">=0.4.0" },
+    { name = "httpx", specifier = ">=0.26.0" },
+    { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.26.0" },
+    { name = "landlockpy", specifier = ">=0.2.0" },
+    { name = "ofxparse", specifier = ">=0.21" },
+    { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
+    { name = "pgvector", specifier = ">=0.3.0" },
+    { name = "pydantic", specifier = ">=2.5.0" },
+    { name = "pydantic-settings", specifier = ">=2.5.0" },
+    { name = "pyotp", specifier = ">=2.9.0" },
+    { name = "pypdf", specifier = ">=5.0.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=1.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
+    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.6.1" },
+    { name = "python-jose", extras = ["cryptography"], specifier = ">=3.3.0" },
+    { name = "python-multipart", specifier = ">=0.0.6" },
+    { name = "pyzipper", specifier = ">=0.4.0" },
+    { name = "redis", extras = ["hiredis"], specifier = ">=5.0.0" },
+    { name = "reportlab", specifier = ">=4.2.0" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.17,<0.18" },
+    { name = "seccompy", specifier = ">=0.2.0" },
+    { name = "sqlalchemy", specifier = ">=2.0.0" },
+    { name = "ty", marker = "extra == 'dev'", specifier = "==0.0.86" },
+    { name = "tzlocal", specifier = ">=5.0.0" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.27.0" },
+    { name = "webauthn", specifier = ">=2.8.0" },
+    { name = "yfinance", specifier = ">=1.3.0" },
+]
+provides-extras = ["dev"]
+
+[[package]]
 name = "redis"
 version = "6.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2606,88 +2742,25 @@ wheels = [
 ]
 
 [[package]]
-name = "quad4-backend"
-version = "0.16.5"
-source = { virtual = "." }
+name = "s3transfer"
+version = "0.19.3"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "aiofiles" },
-    { name = "alembic" },
-    { name = "asyncpg" },
-    { name = "celery", extra = ["redis"] },
-    { name = "cryptography" },
-    { name = "fastapi" },
-    { name = "fastapi-users", extra = ["sqlalchemy"] },
-    { name = "fastembed" },
-    { name = "httpx" },
-    { name = "ofxparse" },
-    { name = "passlib", extra = ["bcrypt"] },
-    { name = "pgvector" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "pyotp" },
-    { name = "pypdf" },
-    { name = "python-jose", extra = ["cryptography"] },
-    { name = "python-multipart" },
-    { name = "pyzipper" },
-    { name = "redis", extra = ["hiredis"] },
-    { name = "reportlab" },
-    { name = "sqlalchemy" },
-    { name = "tzlocal" },
-    { name = "uvicorn", extra = ["standard"] },
-    { name = "webauthn" },
-    { name = "yfinance" },
+    { name = "botocore" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/49/c5/0a5ce655109cb96b8dfad36908a4e108d15f5dc2eff8fbc3146c4312e704/s3transfer-0.19.3.tar.gz", hash = "sha256:8326acc3d056d7f7b8a37110c7d2aea41f67e83f6ae79cd3b5fbcca34c726406", size = 166087, upload-time = "2026-10-19T19:19:49.751Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e2/a4/88f9e10498759121060b8050a1554753dfc04df39bbbcc7aad9ecc8d9440/s3transfer-0.19.3-py3-none-any.whl", hash = "sha256:24eb7535804306355e31c952a90022bf5b2f9d760f9a11062c7493a217c08553", size = 90252, upload-time = "2026-10-19T19:19:48.309Z" },
 ]
 
-[package.optional-dependencies]
-dev = [
-    { name = "aiosqlite" },
-    { name = "httpx" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-    { name = "pytest-xdist" },
-    { name = "ruff" },
-    { name = "ty" },
+[[package]]
+name = "seccompy"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/a9/eaab3f46648170644d6ff0fcb8fe70fc1b782f693ae13b8fb301877360f1/seccompy-0.2.0.tar.gz", hash = "sha256:9663248a433bb78cfb7cfdbb6fe498ddae23ff2bdc1b4cd9d2777ee1148924d9", size = 115748, upload-time = "2026-09-28T23:48:23.346Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/01/04453465374492bbceb941317c44e55c27465218754a8a79a319fa643b9e/seccompy-0.2.0-py3-none-any.whl", hash = "sha256:993e14f0175c8c05c11b44e6333a3e40e5e0924b4d7c53154322b1797db7a375", size = 25951, upload-time = "2026-09-28T23:48:22.007Z" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiofiles", specifier = ">=24.0" },
-    { name = "aiosqlite", marker = "extra == 'dev'", specifier = ">=0.19.0" },
-    { name = "alembic", specifier = ">=1.13.0" },
-    { name = "asyncpg", specifier = ">=0.29.0" },
-    { name = "celery", extras = ["redis"], specifier = ">=5.3.0" },
-    { name = "cryptography", specifier = "==46.0.7" },
-    { name = "fastapi", specifier = ">=0.109.0" },
-    { name = "fastapi-users", extras = ["sqlalchemy"], specifier = ">=13.0.0" },
-    { name = "fastembed", specifier = ">=0.4.0" },
-    { name = "httpx", specifier = ">=0.26.0" },
-    { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.26.0" },
-    { name = "ofxparse", specifier = ">=0.21" },
-    { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
-    { name = "pgvector", specifier = ">=0.3.0" },
-    { name = "pydantic", specifier = ">=2.5.0" },
-    { name = "pydantic-settings", specifier = ">=2.5.0" },
-    { name = "pyotp", specifier = ">=2.9.0" },
-    { name = "pypdf", specifier = ">=5.0.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.0" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
-    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.6.1" },
-    { name = "python-jose", extras = ["cryptography"], specifier = ">=3.3.0" },
-    { name = "python-multipart", specifier = ">=0.0.6" },
-    { name = "pyzipper", specifier = ">=0.4.0" },
-    { name = "redis", extras = ["hiredis"], specifier = ">=5.0.0" },
-    { name = "reportlab", specifier = ">=4.2.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.17,<0.18" },
-    { name = "sqlalchemy", specifier = ">=2.0.0" },
-    { name = "ty", marker = "extra == 'dev'", specifier = "==0.0.86" },
-    { name = "tzlocal", specifier = ">=5.0.0" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.27.0" },
-    { name = "webauthn", specifier = ">=2.8.0" },
-    { name = "yfinance", specifier = ">=1.3.0" },
-]
-provides-extras = ["dev"]
 
 [[package]]
 name = "six"

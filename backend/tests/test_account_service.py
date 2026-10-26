@@ -1354,9 +1354,9 @@ def test_simplefin_to_internal_balance_checking_unchanged():
 
 
 def test_simplefin_to_internal_balance_other_provider_unchanged():
-    """Pluggy/Enable already use positive-for-debt — never flip their cards."""
+    """Other providers already use positive-for-debt — never flip their cards."""
     assert _simplefin_to_internal_balance(
-        "pluggy", "credit_card", Decimal("500.00")
+        "other_provider", "credit_card", Decimal("500.00")
     ) == Decimal("500.00")
     assert _simplefin_to_internal_balance(
         "enable_banking", "credit_card", Decimal("500.00")
@@ -1383,7 +1383,7 @@ async def test_update_simplefin_account_to_credit_card_flips_balance(
     )
     assert updated is not None
     assert updated.type == "credit_card"
-    # Stored balance flips to positive-for-debt (matches Pluggy/Enable).
+    # Stored balance flips to positive-for-debt (non-SimpleFIN convention).
     assert updated.balance == Decimal("500.00")
     # Resolved/serialized balance is negative = the user owes 500.
     payload = serialize_account(updated, None, None)
@@ -1412,14 +1412,14 @@ async def test_update_simplefin_account_away_from_credit_card_flips_back(
 
 
 @pytest.mark.asyncio
-async def test_update_pluggy_account_to_credit_card_does_not_flip(
+async def test_update_other_provider_account_to_credit_card_does_not_flip(
     session: AsyncSession, test_user, test_workspace,
 ):
-    """No double-count for non-SimpleFIN providers: a Pluggy account already
+    """No double-count for non-SimpleFIN providers: such an account already
     uses positive-for-debt, so a type edit must NOT touch the stored balance."""
-    conn_id = await _make_provider_connection(session, test_user.id, "pluggy")
+    conn_id = await _make_provider_connection(session, test_user.id, "other_provider")
     account = await _make_account(
-        session, test_user.id, "Pluggy Card", acc_type="checking",
+        session, test_user.id, "Other Card", acc_type="checking",
         balance="500.00", connection_id=conn_id, external_id="pl-card-1",
     )
 
@@ -1428,7 +1428,7 @@ async def test_update_pluggy_account_to_credit_card_does_not_flip(
     )
     assert updated is not None
     assert updated.type == "credit_card"
-    # Untouched — Pluggy was already positive-for-debt.
+    # Untouched — the provider was already positive-for-debt.
     assert updated.balance == Decimal("500.00")
     payload = serialize_account(updated, None, None)
     assert payload["current_balance"] == pytest.approx(-500.0)
@@ -1485,7 +1485,7 @@ def _mem_multi_connection(**overrides):
 
 
 def test_institution_falls_back_to_connection_when_account_has_none():
-    """Pluggy/Enable accounts have no institution row — connection wins."""
+    """Accounts without an institution row — connection wins."""
     from app.services.account_service import _institution
 
     acc = Account(name="Checking", type="checking")

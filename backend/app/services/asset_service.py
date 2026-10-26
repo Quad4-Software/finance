@@ -452,11 +452,7 @@ async def create_asset(
                 detail=f"Could not fetch quote for {data.ticker}",
             )
 
-    source = (
-        "tesouro_direto"
-        if quote and quote.exchange == "Tesouro Direto"
-        else ("yfinance" if data.valuation_method == "market_price" else "manual")
-    )
+    source = "yfinance" if data.valuation_method == "market_price" else "manual"
     if data.external_id is not None:
         existing_result = await session.execute(
             select(Asset).where(

@@ -822,7 +822,7 @@ async def test_update_transaction_effective_bill_date_no_match(session, test_use
     assert updated.effective_date == date(2099, 1, 1)
 
 
-async def test_update_transaction_clear_bill_override_recovers_pluggy(session, test_user, test_workspace, cc_account):
+async def test_update_transaction_clear_bill_override_recovers_provider_linkage(session, test_user, test_workspace, cc_account):
     bill = CreditCardBill(
         id=uuid.uuid4(), user_id=test_user.id, workspace_id=test_workspace.id,
         account_id=cc_account.id, external_id="ext-bill-99",
@@ -835,7 +835,7 @@ async def test_update_transaction_clear_bill_override_recovers_pluggy(session, t
         effective_bill_date=date(2025, 5, 20), bill_id=bill.id,
         raw_data={"creditCardMetadata": {"billId": "ext-bill-99"}},
     )
-    # Clear the override -> should recover the original Pluggy bill linkage.
+    # Clear the override -> should recover the original the provider bill linkage.
     updated = await update_transaction(
         session, txn.id, test_workspace.id, test_user.id,
         TransactionUpdate(effective_bill_date=None),

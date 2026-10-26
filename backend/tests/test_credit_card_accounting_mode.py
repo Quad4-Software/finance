@@ -157,7 +157,7 @@ class TestApplyEffectiveDate:
         assert tx.effective_date == date(2026, 4, 16)
 
     def test_manual_effective_bill_date_override_wins(self):
-        """User-set effective_bill_date beats both Pluggy bill_due_date and
+        """User-set effective_bill_date beats both the provider bill_due_date and
         cycle math (issue #92, LucasFidelis manual override)."""
         tx = Transaction(
             user_id=uuid.uuid4(),
@@ -178,7 +178,7 @@ class TestApplyEffectiveDate:
             statement_close_day=11,
             payment_due_day=16,
         )
-        # Even when sync passes a Pluggy bill_due_date, override still wins.
+        # Even when sync passes a the provider bill_due_date, override still wins.
         apply_effective_date(tx, account, bill_due_date=date(2026, 5, 16))
         assert tx.effective_date == date(2026, 6, 16)
 
@@ -862,7 +862,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """When a tx is NOT linked to the bill via bill_id (e.g. a manual
-        recurring entry the user added to compensate for a tx Pluggy failed
+        recurring entry the user added to compensate for a tx the provider failed
         to fetch — abdalanervoso's Wellhub on Bradesco case), it should
         still count toward the bill's cycle if its date falls in the
         cycle window."""
@@ -870,7 +870,7 @@ class TestEffectiveBillDateFiltersList:
         from app.models.credit_card_bill import CreditCardBill
         from datetime import datetime, timezone
 
-        # Pluggy bill due Apr 16
+        # the provider bill due Apr 16
         bill = CreditCardBill(
             user_id=test_user.id, account_id=cc_account.id,
             external_id="bill-x", due_date=date(2026, 4, 16),
@@ -881,7 +881,7 @@ class TestEffectiveBillDateFiltersList:
         session.add(bill)
         await session.flush()
 
-        # Linked tx (the real one Pluggy returned)
+        # Linked tx (the real one the provider returned)
         linked = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 5), Decimal("50"),
@@ -1263,7 +1263,7 @@ class TestEffectiveBillDateFiltersList:
         self, session, test_user, test_workspace, cc_account
     ):
         """The pending-sync exclusion only applies when bill_id IS NULL.
-        A pending tx that Pluggy already tagged with a billId is still
+        A pending tx that the provider already tagged with a billId is still
         bank-truth and must count — otherwise we'd lose pending charges
         that the bank has already classified."""
         from app.services.transaction_service import get_transactions
@@ -1280,7 +1280,7 @@ class TestEffectiveBillDateFiltersList:
         session.add(bill)
         await session.flush()
 
-        # Pluggy tagged a pending tx — bill_id is set even though status is pending
+        # the provider tagged a pending tx — bill_id is set even though status is pending
         tx = await _make_tx(
             session, test_user.id, cc_account.id,
             date(2026, 4, 8), Decimal("50"),

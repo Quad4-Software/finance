@@ -22,11 +22,11 @@ class BankConnection(Base):
     workspace_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("workspaces.id", ondelete="CASCADE"), index=True
     )
-    provider: Mapped[str] = mapped_column(String(50))  # "pluggy", "belvo", etc.
+    provider: Mapped[str] = mapped_column(String(50))  # "enable_banking", "simplefin", etc.
     external_id: Mapped[str] = mapped_column(String(255))  # Provider's item ID
     institution_name: Mapped[str] = mapped_column(String(255))
     display_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    # Fully-formed institution logo URL captured from the provider (Pluggy
+    # Fully-formed institution logo URL captured from the provider (e.g.
     # connector.imageUrl, Enable Banking ASPSP logo). Null = no logo; the
     # frontend falls back to the account-type icon. Mirrors assets.logo_url.
     logo_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)

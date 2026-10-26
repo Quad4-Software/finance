@@ -59,7 +59,7 @@ router = APIRouter(prefix="/api/assets", tags=["assets"])
 @router.get("/market/search", response_model=list[MarketSymbolMatch])
 async def market_search(
     q: str = Query(..., min_length=1, max_length=64, description="Ticker or company name"),
-    # Upper bound is generous so the Tesouro Direto dropdown can list every
+    # Upper bound is generous so a search dropdown can list every
     # open bond (~60 and growing); ticker autocomplete still requests ~15.
     limit: int = Query(15, ge=1, le=300),
     _: User = Depends(current_active_user),

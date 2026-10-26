@@ -53,7 +53,7 @@ def _simplefin_to_internal_balance(provider: str, account_type: str, balance: De
 
     SimpleFIN reports a credit card's balance as negative debt and exposes no
     account type, so the provider stores it raw and labels every account
-    "checking". Pluggy/Enable report card debt as a positive number, which is
+    "checking". Most providers report card debt as a positive number, which is
     the convention every downstream site (serialize_account, _account_balance_at,
     sync_opening_balance_for_connected_account, ...) assumes. Flip SimpleFIN card
     balances to match so those sites stay provider-agnostic.
@@ -666,7 +666,7 @@ async def sync_opening_balance_for_connected_account(
 ) -> None:
     """Reconcile the opening_balance transaction so SUM(all txs) = account.balance.
 
-    Providers (Pluggy etc.) typically only return ~1 year of history, so the sum
+    Providers typically only return ~1 year of history, so the sum
     of imported transactions rarely equals the account's true current balance.
     This helper computes the missing opening balance and upserts a synthetic
     `source='opening_balance'` transaction that closes the gap. After this runs,
@@ -998,7 +998,7 @@ async def get_account_summary(
         )
 
     # Bill-driven filter (issue #92): when the caller passes bill_id, include
-    #   (a) txs linked to this bill via Pluggy's billId mapping, AND
+    #   (a) txs linked to this bill via the provider's bill id mapping, AND
     #   (b) txs with NO bill_id (manual entries, OFX/CSV imports, recurring
     #       fills) whose bucketing date is in the cycle window — without (b)
     #       we'd drop user-added compensations for missing provider txs.

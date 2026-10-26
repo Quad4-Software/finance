@@ -22,7 +22,7 @@
       },
       "aliases": ["Alojamiento"],
       "icon": "house",
-      "color": "#8B5CF6",
+      "color": "#71717A",
       "position": 0
     },
     "food": {
@@ -170,7 +170,7 @@
       },
       "group": "housing",
       "icon": "house",
-      "color": "#8B5CF6"
+      "color": "#71717A"
     },
     "food": {
       "names": {
@@ -314,7 +314,7 @@
       },
       "group": "other",
       "icon": "smartphone",
-      "color": "#6366F1"
+      "color": "#A1A1AA"
     },
     "education": {
       "names": {

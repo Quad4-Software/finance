@@ -40,7 +40,7 @@ from app.services.connection_service import _sync_holdings
 
 
 # ---------------------------------------------------------------------------
-# Mock provider — deterministic replacement for Pluggy/Belvo in tests.
+# Mock provider — deterministic replacement for a real provider in tests.
 # ---------------------------------------------------------------------------
 
 
@@ -364,32 +364,33 @@ async def test_withdrawal_status_with_positive_balance_keeps_asset_active(
 ):
     """Issue #819: the provider can deliver a contradictory payload whose
     raw status says TOTAL_WITHDRAWAL while the position still reports a
-    positive balance and quantity. The payload goes through the real
-    provider mapping and then the sync, which must keep the asset active
-    and keep recording today's value, with the raw status preserved in
+    positive balance and quantity. The sync must keep the asset active and
+    keep recording today's value, with the raw status preserved in
     metadata."""
-    from app.providers.pluggy import _build_holding_data
 
-    def _raw(status: str, balance: float) -> dict:
-        return {
-            "id": "h-1",
-            "name": "Fixed income fund",
-            "type": "FIXED_INCOME",
-            "currencyCode": "BRL",
-            "status": status,
-            "balance": balance,
-            "quantity": 10,
-            "value": balance / 10,
-        }
+    def _raw_holding(status: str, balance: Decimal) -> HoldingData:
+        # Mirror of the provider-side mapping: a withdrawn flag is only set
+        # when the status says so AND the position carries no value.
+        position_has_value = balance != 0
+        return HoldingData(
+            external_id="h-1",
+            name="Fixed income fund",
+            currency="BRL",
+            current_value=balance,
+            quantity=Decimal("10"),
+            unit_price=balance / 10,
+            is_withdrawn=status == "TOTAL_WITHDRAWAL" and not position_has_value,
+            metadata={"type": "FIXED_INCOME", "status": status},
+        )
 
-    _MockProvider._holdings = [_build_holding_data(_raw("ACTIVE", 500))]
+    _MockProvider._holdings = [_raw_holding("ACTIVE", Decimal("500"))]
     assert mock_connection.credentials is not None
     await _sync_holdings(session, test_user.id, mock_connection, mock_connection.credentials)
     await session.commit()
     [asset] = await _assets_for(session, test_user)
     assert asset.sell_date is None
 
-    _MockProvider._holdings = [_build_holding_data(_raw("TOTAL_WITHDRAWAL", 510))]
+    _MockProvider._holdings = [_raw_holding("TOTAL_WITHDRAWAL", Decimal("510"))]
     await _sync_holdings(session, test_user.id, mock_connection, mock_connection.credentials)
     await session.commit()
     await session.refresh(asset)
@@ -467,7 +468,7 @@ async def test_same_day_resync_updates_asset_value_in_place(
 async def test_sparse_fields_are_preserved_on_later_sync(
     session: AsyncSession, test_user: User, mock_connection: BankConnection
 ):
-    """Pluggy returns purchase_price/purchase_date/units on some syncs and
+    """Providers return purchase_price/purchase_date/units on some syncs and
     null on others. Earlier non-null values must not be clobbered by later
     nulls — otherwise the user loses provenance data permanently."""
     _MockProvider._holdings = [

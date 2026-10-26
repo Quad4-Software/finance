@@ -18,7 +18,7 @@ class AssetGroup(Base):
 
     Groups can be manually created (the user picks a name like "US Stocks"
     or "Long-term fixed income") or auto-created when a provider syncs:
-    each Pluggy item becomes one group so brokerage positions collapse
+    each provider connection becomes one group so brokerage positions collapse
     into a single expandable row instead of 20 sibling cards.
 
     Assets link via nullable `group_id` — deleting a group leaves its

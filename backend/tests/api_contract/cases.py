@@ -11,6 +11,7 @@ One operation (METHOD + path template) fans out into variants:
 Expected statuses are not written here: they live in baseline.json, so a
 behaviour change shows up as a diff of that file.
 """
+
 import uuid
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -47,9 +48,9 @@ PARAM_WORLD_KEYS_BY_PREFIX = {
 
 # Path parameters that are not ids.
 STATIC_PARAMS = {
-    "pack_code": "BR",
+    "pack_code": "US",
     "node": reconciliation_policy.MATCH_RECURRING["node"],
-    "provider": "pluggy",
+    "provider": "simplefin",
     "key": "registration_enabled",
 }
 
@@ -64,23 +65,35 @@ _INVOICE_LINES = [{"description": "Consulting", "quantity": 2, "unit_price": "10
 # owner can't leave): that answer is the contract, and the baseline pins it.
 BODY_OVERRIDES: dict[tuple[str, str], Callable[[dict], Any]] = {
     ("POST", "/api/budgets"): lambda w: {
-        "category_id": w["second_category_id"], "amount": 300, "month": "2026-05-01",
+        "category_id": w["second_category_id"],
+        "amount": 300,
+        "month": "2026-05-01",
     },
     ("POST", "/api/payees/merge"): lambda w: {
-        "source_ids": [w["second_payee_id"]], "target_id": w["payee_id"],
+        "source_ids": [w["second_payee_id"]],
+        "target_id": w["payee_id"],
     },
     ("POST", "/api/assets/{asset_id}/transactions"): lambda w: {
-        "kind": "buy", "quantity": 1, "price": 100, "date": "2026-04-28",
+        "kind": "buy",
+        "quantity": 1,
+        "price": 100,
+        "date": "2026-04-28",
     },
     ("POST", "/api/agents/connections"): lambda w: {
-        "name": "Second LLM", "kind": "ollama", "base_url": "http://ollama:11434",
+        "name": "Second LLM",
+        "kind": "ollama",
+        "base_url": "http://ollama:11434",
     },
     ("PUT", "/api/agents/{agent_id}/tools"): lambda w: [],
     ("POST", "/api/invoices"): lambda w: {
-        "payee_id": w["payee_id"], "currency": "USD", "lines": _INVOICE_LINES,
+        "payee_id": w["payee_id"],
+        "currency": "USD",
+        "lines": _INVOICE_LINES,
     },
     ("POST", "/api/invoice-schedules"): lambda w: {
-        "name": "Second retainer", "frequency": "monthly", "payee_id": w["payee_id"],
+        "name": "Second retainer",
+        "frequency": "monthly",
+        "payee_id": w["payee_id"],
         "lines": _INVOICE_LINES,
     },
     ("PATCH", "/api/admin/settings/{key}"): lambda w: {"value": "true"},
@@ -104,6 +117,7 @@ PARAM_WORLD_KEYS_BY_OPERATION: dict[tuple[str, str], dict[str, str]] = {
     )
 }
 
+
 @dataclass(frozen=True)
 class KnownBug:
     """A bug on the baseline branch: what the route *should* answer, and why it doesn't."""
@@ -125,8 +139,10 @@ KNOWN_BUGS: dict[tuple[str, str, str], KnownBug] = {
 # Routes that answer 500 on purpose, by an explicit HTTPException. The 500
 # guard skips these; each one is a design choice worth revisiting, not a crash.
 DELIBERATE_500: dict[tuple[str, str], str] = {
-    ("GET", "/api/auth/oidc/login"):
-        "raises HTTPException(500) when OIDC_CLIENT_ID is unset (server misconfiguration)",
+    (
+        "GET",
+        "/api/auth/oidc/login",
+    ): "raises HTTPException(500) when OIDC_CLIENT_ID is unset (server misconfiguration)",
 }
 
 # Routes whose SQL only runs on Postgres. The SQLite sweep skips them; the
@@ -229,7 +245,9 @@ def query_for(op: Operation, world: dict) -> dict:
     query = {}
     for param in op.params:
         if param["in"] == "query" and param.get("required"):
-            query[param["name"]] = value_for(param["name"], param.get("schema", {}), COMPONENTS, world)
+            query[param["name"]] = value_for(
+                param["name"], param.get("schema", {}), COMPONENTS, world
+            )
     return query
 
 

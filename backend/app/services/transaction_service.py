@@ -307,7 +307,7 @@ async def get_transactions(
     if account_types:
         base_query = base_query.where(Account.type.in_(account_types))
     # Bill-driven filter: when the caller passes bill_id, include
-    #   (a) txs linked to this bill via Pluggy's billId mapping (handles
+    #   (a) txs linked to this bill via the provider's bill id mapping (handles
     #       charges the bank rolled into a bill whose nominal range doesn't
     #       contain them — e.g. a 30/03 charge in the May statement), AND
     #   (b) txs with NO bill_id (manual / OFX / CSV / recurring fills) whose
@@ -323,7 +323,7 @@ async def get_transactions(
         if from_date or to_date:
             from sqlalchemy import and_ as _and, not_ as _not
             # Resolve the active bill's due_date once so we can trust
-            # cycle-math classification when Pluggy hasn't tagged a tx yet.
+            # cycle-math classification when the provider hasn't tagged a tx yet.
             active_due_subq = (
                 select(CreditCardBill.due_date)
                 .where(CreditCardBill.id == bill_id)
@@ -1395,7 +1395,7 @@ async def _resync_bill_link_from_override(
     - Override SET to a date matching an existing bill's due_date → link to it.
     - Override SET to a date with no matching bill → keep bill_id null (the
       override still sets effective_date directly).
-    - Override CLEARED → fall back to whatever Pluggy originally tagged via
+    - Override CLEARED → fall back to whatever the provider originally tagged via
       `creditCardMetadata.billId` in raw_data, if recoverable; else null.
     """
     from app.models.credit_card_bill import CreditCardBill  # local: avoid circular
@@ -1413,7 +1413,7 @@ async def _resync_bill_link_from_override(
         ).scalar_one_or_none()
         transaction.bill_id = bill.id if bill is not None else None
         return
-    # Override cleared: try to recover the original Pluggy linkage.
+    # Override cleared: try to recover the original provider linkage.
     raw_bill_id = None
     if isinstance(transaction.raw_data, dict):
         meta = transaction.raw_data.get("creditCardMetadata") or {}

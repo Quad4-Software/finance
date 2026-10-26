@@ -25,7 +25,7 @@ describe('ShellLogo', () => {
     const { container } = renderWithProviders(<ShellLogo size={120} />)
 
     const svg = container.querySelector('svg')!
-    expect(svg).toHaveAttribute('viewBox', '0 0 460 460')
+    expect(svg).toHaveAttribute('viewBox', '-1.16 -1.16 2.32 2.32')
     expect(svg).toHaveAttribute('preserveAspectRatio', 'xMidYMid meet')
   })
 

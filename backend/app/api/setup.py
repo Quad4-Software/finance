@@ -23,7 +23,7 @@ class CreateAdminRequest(BaseModel):
     password: str
     currency: str = "USD"
     name: str = ""
-    language: str = "pt-BR"
+    language: str = "en-US"
 
 
 @router.get("/status", response_model=SetupStatus)

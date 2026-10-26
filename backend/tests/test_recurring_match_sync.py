@@ -11,6 +11,7 @@ before the sync are expired afterwards. We capture primitive ids up front and
 re-fetch rows after the sync rather than touching expired attributes (which
 would trigger a synchronous lazy-load).
 """
+
 import uuid
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -42,17 +43,27 @@ from app.services.rule_service import create_rule
 @pytest_asyncio.fixture
 async def conn_account(session: AsyncSession, test_user, test_workspace):
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=test_user.id, provider="test",
+        id=uuid.uuid4(),
+        user_id=test_user.id,
+        provider="test",
         external_id=f"ext-{uuid.uuid4().hex[:8]}",
-        institution_name="Sync Bank", credentials={"token": "fake"},
-        status="active", last_sync_at=datetime.now(timezone.utc),
+        institution_name="Sync Bank",
+        credentials={"token": "fake"},
+        status="active",
+        last_sync_at=datetime.now(timezone.utc),
         created_at=datetime.now(timezone.utc),
     )
     session.add(conn)
     account = Account(
-        id=uuid.uuid4(), user_id=test_user.id, connection_id=conn.id,
-        workspace_id=test_workspace.id, name="Checking", type="checking",
-        external_id="acc-ext-1", balance=Decimal("0"), currency="BRL",
+        id=uuid.uuid4(),
+        user_id=test_user.id,
+        connection_id=conn.id,
+        workspace_id=test_workspace.id,
+        name="Checking",
+        type="checking",
+        external_id="acc-ext-1",
+        balance=Decimal("0"),
+        currency="BRL",
     )
     session.add(account)
     await session.commit()
@@ -63,18 +74,27 @@ async def conn_account(session: AsyncSession, test_user, test_workspace):
 
 def _provider(transactions, account_ext="acc-ext-1"):
     from app.providers.base import AccountData
+
     p = AsyncMock()
     p.refresh_credentials = AsyncMock(return_value={"token": "t"})
-    p.get_accounts = AsyncMock(return_value=[
-        AccountData(external_id=account_ext, name="Checking",
-                    type="checking", balance=Decimal("0"), currency="BRL"),
-    ])
+    p.get_accounts = AsyncMock(
+        return_value=[
+            AccountData(
+                external_id=account_ext,
+                name="Checking",
+                type="checking",
+                balance=Decimal("0"),
+                currency="BRL",
+            ),
+        ]
+    )
     p.get_transactions = AsyncMock(return_value=transactions)
     return p
 
 
 def _tx(**kw):
     from app.providers.base import TransactionData
+
     kw.setdefault("currency", "BRL")
     kw.setdefault("type", "debit")
     kw.setdefault("status", "posted")
@@ -112,12 +132,8 @@ async def _run_sync(
     with patches[0], patches[1], patches[2]:
         if mock_rules:
             with patches[3]:
-                return await sync_connection(
-                    session, conn_id, test_workspace.id, test_user.id
-                )
-        return await sync_connection(
-            session, conn_id, test_workspace.id, test_user.id
-        )
+                return await sync_connection(session, conn_id, test_workspace.id, test_user.id)
+        return await sync_connection(session, conn_id, test_workspace.id, test_user.id)
 
 
 async def _make_bill(session, test_workspace, test_user, account, **ov):
@@ -128,7 +144,8 @@ async def _make_bill(session, test_workspace, test_user, account, **ov):
         type=ov.pop("type", "debit"),
         frequency=ov.pop("frequency", "monthly"),
         start_date=ov.pop("start_date", date(2025, 1, 10)),
-        account_id=account.id, **ov,
+        account_id=account.id,
+        **ov,
     )
     return await create_recurring_transaction(session, test_workspace.id, test_user.id, data)
 
@@ -147,11 +164,18 @@ async def _all_txs(session, account_id):
 
 async def _usd_placeholder(session, test_workspace, test_user, account, bill_id):
     placeholder = Transaction(
-        user_id=test_user.id, workspace_id=test_workspace.id,
-        account_id=account.id, description="Netflix Subscription",
-        amount=Decimal("18.43"), currency="USD", date=date(2025, 1, 10),
-        amount_primary=Decimal("90.00"), fx_rate_used=Decimal("4.8833"),
-        type="debit", source="recurring", status="posted",
+        user_id=test_user.id,
+        workspace_id=test_workspace.id,
+        account_id=account.id,
+        description="Netflix Subscription",
+        amount=Decimal("18.43"),
+        currency="USD",
+        date=date(2025, 1, 10),
+        amount_primary=Decimal("90.00"),
+        fx_rate_used=Decimal("4.8833"),
+        type="debit",
+        source="recurring",
+        status="posted",
         recurring_transaction_id=bill_id,
     )
     session.add(placeholder)
@@ -168,11 +192,20 @@ async def _usd_placeholder(session, test_workspace, test_user, account, bill_id)
 async def test_sync_links_and_advances_bill(session, test_user, test_workspace, conn_account):
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session, test_workspace, test_user, account, start_date=date(2025, 1, 10)
+    )
     bill_id = bill.id
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("39.90"), date=date(2025, 1, 12))])
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("39.90"),
+                date=date(2025, 1, 12),
+            )
+        ]
+    )
 
     await _run_sync(session, conn_id, test_workspace, test_user, provider)
 
@@ -210,13 +243,10 @@ async def test_sync_normalizes_before_active_recurring_match(
         test_user.id,
         RuleCreate(
             name="Normalize synced Amazon",
-            conditions=[
-                RuleCondition(
-                    field="description", op="contains", value="AMZNPrime DE"
-                )
-            ],
+            conditions=[RuleCondition(field="description", op="contains", value="AMZNPrime DE")],
             actions=[
                 RuleAction(op="set_description", value="Amazon Prime"),
+                RuleAction(op="set_category", value=str(test_categories[0].id)),
                 RuleAction(op="append_notes", value="#subscription"),
             ],
             apply_to_existing=False,
@@ -231,7 +261,6 @@ async def test_sync_normalizes_before_active_recurring_match(
                 description=raw_description,
                 amount=Decimal("19.90"),
                 date=date(2025, 1, 11),
-                pluggy_category="Eating out",
             )
         ]
     )
@@ -309,9 +338,7 @@ async def test_sync_placeholder_provider_category_precedence(
         source="recurring",
         status="pending",
         recurring_transaction_id=bill.id,
-        category_id=(
-            test_categories[1].id if placeholder_has_category else None
-        ),
+        category_id=(test_categories[1].id if placeholder_has_category else None),
         notes="#planned",
     )
     session.add(placeholder)
@@ -325,13 +352,10 @@ async def test_sync_placeholder_provider_category_precedence(
         test_user.id,
         RuleCreate(
             name=f"Normalize sync placeholder {placeholder_has_category}",
-            conditions=[
-                RuleCondition(
-                    field="description", op="contains", value="f|ood Club"
-                )
-            ],
+            conditions=[RuleCondition(field="description", op="contains", value="f|ood Club")],
             actions=[
                 RuleAction(op="set_description", value="iFood"),
+                RuleAction(op="set_category", value=str(test_categories[0].id)),
                 RuleAction(op="set_payee", value=str(rule_payee_id)),
                 RuleAction(op="append_notes", value="#delivery"),
                 RuleAction(op="ignore", value=True),
@@ -347,7 +371,6 @@ async def test_sync_placeholder_provider_category_precedence(
                 payee="IFOOD.COM AGÊNCIA DE RESTAURANTES ONLINE S.A.",
                 amount=Decimal("49.90"),
                 date=date(2025, 1, 11),
-                pluggy_category="Eating out",
                 raw_data={"merchant": {"name": "IFOOD.COM"}},
             )
         ]
@@ -367,9 +390,7 @@ async def test_sync_placeholder_provider_category_precedence(
     assert txs[0].id == placeholder_id
     assert txs[0].recurring_transaction_id == bill.id
     assert txs[0].category_id == (
-        test_categories[1].id
-        if placeholder_has_category
-        else test_categories[0].id
+        test_categories[1].id if placeholder_has_category else test_categories[0].id
     )
     # The placeholder keeps the recurring definition's own wording, so the
     # description was never rule-managed even though the rule matched and
@@ -536,9 +557,7 @@ async def test_sync_placeholder_keeps_the_payee_the_user_already_chose(
         test_user.id,
         RuleCreate(
             name="Normalize iFood from the raw counterparty",
-            conditions=[
-                RuleCondition(field="payee", op="contains", value="IFOOD.COM")
-            ],
+            conditions=[RuleCondition(field="payee", op="contains", value="IFOOD.COM")],
             actions=[
                 RuleAction(op="set_description", value="iFood"),
                 RuleAction(op="append_notes", value="#delivery"),
@@ -559,9 +578,7 @@ async def test_sync_placeholder_keeps_the_payee_the_user_already_chose(
         ]
     )
 
-    await _run_sync(
-        session, conn_id, test_workspace, test_user, provider, mock_rules=False
-    )
+    await _run_sync(session, conn_id, test_workspace, test_user, provider, mock_rules=False)
 
     txs = await _all_txs(session, account_id)
     assert len(txs) == 1
@@ -586,20 +603,29 @@ async def test_sync_promotes_pending_placeholder_to_posted(
 ):
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session, test_workspace, test_user, account, start_date=date(2025, 1, 10)
+    )
     bill_id = bill.id
     assert await generate_pending(session, test_user.id, up_to=date(2025, 1, 10)) == 1
-    placeholder = (await session.execute(
-        select(Transaction).where(Transaction.source == "recurring")
-    )).scalar_one()
+    placeholder = (
+        await session.execute(select(Transaction).where(Transaction.source == "recurring"))
+    ).scalar_one()
     placeholder_id = placeholder.id
     # Synced account: the placeholder is held pending until a real
     # charge confirms it, so a missed match never inflates the balance.
     assert placeholder.status == "pending"
 
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("39.90"), date=date(2025, 1, 11))])
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("39.90"),
+                date=date(2025, 1, 11),
+            )
+        ]
+    )
     await _run_sync(session, conn_id, test_workspace, test_user, provider)
 
     txs = await _all_txs(session, account_id)
@@ -630,12 +656,21 @@ async def test_sync_early_charge_advances_and_no_duplicate(
 
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session, test_workspace, test_user, account, start_date=date(2025, 1, 10)
+    )
     bill_id = bill.id
     # Posts 2 days early, inside the before-window of the Jan 10 occurrence.
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("39.90"), date=date(2025, 1, 8))])
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("39.90"),
+                date=date(2025, 1, 8),
+            )
+        ]
+    )
     await _run_sync(session, conn_id, test_workspace, test_user, provider)
 
     refreshed = await session.get(RecurringTransaction, bill_id)
@@ -652,11 +687,25 @@ async def test_sync_early_charge_advances_and_no_duplicate(
 async def test_sync_amount_mismatch_not_linked(session, test_user, test_workspace, conn_account):
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("39.90"), start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("39.90"),
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("50.00"), date=date(2025, 1, 10))])
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("50.00"),
+                date=date(2025, 1, 10),
+            )
+        ]
+    )
     await _run_sync(session, conn_id, test_workspace, test_user, provider)
 
     txs = await _all_txs(session, account_id)
@@ -677,15 +726,31 @@ async def test_sync_two_charges_same_occurrence_links_one(
 ):
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("39.90"), start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("39.90"),
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
-    provider = _provider([
-        _tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-            amount=Decimal("39.90"), date=date(2025, 1, 10)),
-        _tx(external_id="s2", description="NETFLIX SUBSCRIPTION",
-            amount=Decimal("39.90"), date=date(2025, 1, 11)),
-    ])
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("39.90"),
+                date=date(2025, 1, 10),
+            ),
+            _tx(
+                external_id="s2",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("39.90"),
+                date=date(2025, 1, 11),
+            ),
+        ]
+    )
     await _run_sync(session, conn_id, test_workspace, test_user, provider)
 
     txs = await _all_txs(session, account_id)
@@ -705,13 +770,25 @@ async def test_sync_two_charges_same_occurrence_links_one(
 async def test_resync_is_idempotent(session, test_user, test_workspace, conn_account):
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("39.90"), start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("39.90"),
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
 
     def txns():
-        return [_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                    amount=Decimal("39.90"), date=date(2025, 1, 10))]
+        return [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("39.90"),
+                date=date(2025, 1, 10),
+            )
+        ]
 
     await _run_sync(session, conn_id, test_workspace, test_user, _provider(txns()))
     await _run_sync(session, conn_id, test_workspace, test_user, _provider(txns()))
@@ -733,34 +810,55 @@ async def test_sync_merges_a_tolerated_amount_into_placeholder(
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
     await reconciliation_rule_service.upsert_override(
-        session, test_workspace.id, test_user.id,
-        reconciliation_policy.MATCH_RECURRING["node"], "same_account_exact",
-        {"when": {"amount": {"match": "tolerance", "percent": "5"},
-                  "unique_candidate": True}},
+        session,
+        test_workspace.id,
+        test_user.id,
+        reconciliation_policy.MATCH_RECURRING["node"],
+        "same_account_exact",
+        {"when": {"amount": {"match": "tolerance", "percent": "5"}, "unique_candidate": True}},
     )
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("18.43"), start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("18.43"),
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
     bill.next_occurrence = date(2025, 2, 10)
     placeholder = Transaction(
-        user_id=test_user.id, workspace_id=test_workspace.id,
-        account_id=account_id, description="Netflix Subscription",
-        amount=Decimal("18.43"), currency="BRL", date=date(2025, 1, 10),
-        type="debit", source="recurring", status="posted",
+        user_id=test_user.id,
+        workspace_id=test_workspace.id,
+        account_id=account_id,
+        description="Netflix Subscription",
+        amount=Decimal("18.43"),
+        currency="BRL",
+        date=date(2025, 1, 10),
+        type="debit",
+        source="recurring",
+        status="posted",
         recurring_transaction_id=bill_id,
-        amount_primary=Decimal("18.43"), fx_rate_used=Decimal("1"),
+        amount_primary=Decimal("18.43"),
+        fx_rate_used=Decimal("1"),
     )
     session.add(placeholder)
     await session.commit()
     placeholder_id = placeholder.id
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("18.71"), date=date(2025, 1, 11))])
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("18.71"),
+                date=date(2025, 1, 11),
+            )
+        ]
+    )
 
     stamp = AsyncMock(wraps=stamp_primary_amount)
 
-    await _run_sync(
-        session, conn_id, test_workspace, test_user, provider, stamp=stamp
-    )
+    await _run_sync(session, conn_id, test_workspace, test_user, provider, stamp=stamp)
 
     txs = await _all_txs(session, account_id)
     assert len(txs) == 1
@@ -782,24 +880,34 @@ async def test_sync_placeholder_keeps_the_banks_conversion(
     figure for the charge, not the estimate made when it was generated."""
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("18.43"), currency="USD",
-                            start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("18.43"),
+        currency="USD",
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
     bill.next_occurrence = date(2025, 2, 10)
-    placeholder_id = await _usd_placeholder(
-        session, test_workspace, test_user, account, bill_id
+    placeholder_id = await _usd_placeholder(session, test_workspace, test_user, account, bill_id)
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("18.43"),
+                currency="USD",
+                amount_in_account_currency=Decimal("97.30"),
+                date=date(2025, 1, 11),
+            )
+        ]
     )
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("18.43"), currency="USD",
-                              amount_in_account_currency=Decimal("97.30"),
-                              date=date(2025, 1, 11))])
 
     stamp = AsyncMock()
 
-    await _run_sync(
-        session, conn_id, test_workspace, test_user, provider, stamp=stamp
-    )
+    await _run_sync(session, conn_id, test_workspace, test_user, provider, stamp=stamp)
 
     txs = await _all_txs(session, account_id)
     assert len(txs) == 1
@@ -819,29 +927,41 @@ async def test_sync_tolerated_placeholder_keeps_the_banks_conversion(
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
     await reconciliation_rule_service.upsert_override(
-        session, test_workspace.id, test_user.id,
-        reconciliation_policy.MATCH_RECURRING["node"], "same_account_exact",
-        {"when": {"amount": {"match": "tolerance", "percent": "5"},
-                  "unique_candidate": True}},
+        session,
+        test_workspace.id,
+        test_user.id,
+        reconciliation_policy.MATCH_RECURRING["node"],
+        "same_account_exact",
+        {"when": {"amount": {"match": "tolerance", "percent": "5"}, "unique_candidate": True}},
     )
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("18.43"), currency="USD",
-                            start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("18.43"),
+        currency="USD",
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
     bill.next_occurrence = date(2025, 2, 10)
-    placeholder_id = await _usd_placeholder(
-        session, test_workspace, test_user, account, bill_id
+    placeholder_id = await _usd_placeholder(session, test_workspace, test_user, account, bill_id)
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("18.71"),
+                currency="USD",
+                amount_in_account_currency=Decimal("97.30"),
+                date=date(2025, 1, 11),
+            )
+        ]
     )
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("18.71"), currency="USD",
-                              amount_in_account_currency=Decimal("97.30"),
-                              date=date(2025, 1, 11))])
 
     stamp = AsyncMock()
 
-    await _run_sync(
-        session, conn_id, test_workspace, test_user, provider, stamp=stamp
-    )
+    await _run_sync(session, conn_id, test_workspace, test_user, provider, stamp=stamp)
 
     txs = await _all_txs(session, account_id)
     assert len(txs) == 1
@@ -860,23 +980,33 @@ async def test_sync_placeholder_without_a_conversion_is_not_restamped(
     stamped primary amount is left alone."""
     conn, account = conn_account
     conn_id, account_id = conn.id, account.id
-    bill = await _make_bill(session, test_workspace, test_user, account,
-                            amount=Decimal("18.43"), currency="USD",
-                            start_date=date(2025, 1, 10))
+    bill = await _make_bill(
+        session,
+        test_workspace,
+        test_user,
+        account,
+        amount=Decimal("18.43"),
+        currency="USD",
+        start_date=date(2025, 1, 10),
+    )
     bill_id = bill.id
     bill.next_occurrence = date(2025, 2, 10)
-    placeholder_id = await _usd_placeholder(
-        session, test_workspace, test_user, account, bill_id
+    placeholder_id = await _usd_placeholder(session, test_workspace, test_user, account, bill_id)
+    provider = _provider(
+        [
+            _tx(
+                external_id="s1",
+                description="NETFLIX SUBSCRIPTION",
+                amount=Decimal("18.43"),
+                currency="USD",
+                date=date(2025, 1, 11),
+            )
+        ]
     )
-    provider = _provider([_tx(external_id="s1", description="NETFLIX SUBSCRIPTION",
-                              amount=Decimal("18.43"), currency="USD",
-                              date=date(2025, 1, 11))])
 
     stamp = AsyncMock()
 
-    await _run_sync(
-        session, conn_id, test_workspace, test_user, provider, stamp=stamp
-    )
+    await _run_sync(session, conn_id, test_workspace, test_user, provider, stamp=stamp)
 
     txs = await _all_txs(session, account_id)
     assert len(txs) == 1

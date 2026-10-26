@@ -20,7 +20,7 @@ async def test_get_groups_hides_empty_synced_wallets(
     active_connection = BankConnection(
         id=uuid.uuid4(),
         user_id=test_user.id,
-        provider="pluggy",
+        provider="simplefin",
         external_id="item-active",
         institution_name="Active Bank",
         credentials={"token": "x"},
@@ -38,15 +38,15 @@ async def test_get_groups_hides_empty_synced_wallets(
     orphan_synced_group = AssetGroup(
         id=uuid.uuid4(),
         user_id=test_user.id,
-        name="MeuPluggy",
-        source="pluggy",
+        name="MyBank",
+        source="simplefin",
         connection_id=None,
     )
     active_synced_group = AssetGroup(
         id=uuid.uuid4(),
         user_id=test_user.id,
         name="Connected Wallet",
-        source="pluggy",
+        source="simplefin",
         connection_id=active_connection.id,
     )
     session.add_all([manual_group, orphan_synced_group, active_synced_group])
@@ -57,7 +57,7 @@ async def test_get_groups_hides_empty_synced_wallets(
 
     assert "Manual Wallet" in names
     assert "Connected Wallet" not in names
-    assert "MeuPluggy" not in names
+    assert "MyBank" not in names
 
 
 @pytest.mark.asyncio

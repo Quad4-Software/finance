@@ -48,6 +48,14 @@ dependencies = [
     "fastembed>=0.4.0",
     # Resolve the host's IANA timezone when no app setting or TZ override exists.
     "tzlocal>=5.0.0",
+    # Kernel-level self-sandboxing for the API and Celery processes
+    # (app.core.sandbox). Both are pure-Python, no system libraries needed,
+    # and no-ops on non-Linux platforms.
+    "landlockpy>=0.2.0",
+    "seccompy>=0.2.0",
+    # S3-compatible object storage backend (STORAGE_PROVIDER=s3) and the
+    # destination for scheduled backups.
+    "boto3>=1.40",
 ]
 
 [project.optional-dependencies]
@@ -95,7 +103,6 @@ omit = [
     "app/cli.py",
     "app/worker.py",
     "app/tasks/*",
-    "app/providers/pluggy.py",
     "app/providers/enable_banking.py",
     "app/providers/simplefin.py",
     "app/providers/market_price.py",

@@ -39,7 +39,7 @@ class BankConnectionRead(BankConnectionBase):
 
 
 class OAuthUrlRequest(BaseModel):
-    provider: str = "pluggy"
+    provider: str = "enable_banking"
     flow_params: Optional[dict] = None
 
 
@@ -76,7 +76,7 @@ class InstitutionListResponse(BaseModel):
 
 
 class ConnectTokenRequest(BaseModel):
-    provider: str = "pluggy"
+    provider: str = "simplefin"
 
 
 class ConnectTokenResponse(BaseModel):

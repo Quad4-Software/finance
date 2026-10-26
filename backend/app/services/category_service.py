@@ -38,7 +38,7 @@ class CategoryTransferError(ValueError):
 async def create_default_categories(
     session: AsyncSession,
     user_id: uuid.UUID,
-    lang: str = "pt-BR",
+    lang: str = "en",
     workspace_id: Optional[uuid.UUID] = None,
 ) -> list[Category]:
     # Guard against double-creation. Scope the check to the workspace

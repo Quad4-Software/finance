@@ -76,7 +76,7 @@ class Collection(Base):
     )
     name: Mapped[str] = mapped_column(String(100))
     icon: Mapped[str] = mapped_column(String(50), default="folder")
-    color: Mapped[str] = mapped_column(String(7), default="#6366F1")
+    color: Mapped[str] = mapped_column(String(7), default="#A1A1AA")
     position: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 

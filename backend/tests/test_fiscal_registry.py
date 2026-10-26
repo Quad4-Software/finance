@@ -5,6 +5,7 @@ if someone erodes it: a pack orders and labels but never forbids, and a
 workspace with no jurisdiction is a working configuration rather than a
 broken one.
 """
+
 import pytest
 
 from app.fiscal.registry import (
@@ -30,7 +31,7 @@ def test_initial_jurisdictions_are_available():
     the pack format exists to remove. What matters is that the packs that
     shipped first are still there."""
     available = available_jurisdictions()
-    for code in ("BR", "DE", "ES", "FR", "GB", "IT", "PT", "US"):
+    for code in ("DE", "ES", "FR", "GB", "IT", "PT", "US"):
         assert code in available
     # And the list stays sorted, since the settings selector reads it in order.
     assert available == sorted(available)
@@ -67,7 +68,6 @@ def test_every_pack_offers_other_last():
 
 
 def test_pack_order_drives_the_default():
-    assert pack_for("BR").kinds[0] is TaxIdKind.CNPJ
     assert pack_for("US").kinds[0] is TaxIdKind.EIN
     assert pack_for("DE").kinds[0] is TaxIdKind.VAT
 
@@ -78,7 +78,7 @@ def test_a_pack_cannot_change_what_a_document_is():
     jurisdiction is holding it. An earlier version let packs carry their own
     normaliser and a German VAT number came out spaced differently depending
     on the workspace."""
-    for jurisdiction in ("BR", "DE", "GB", "ZZ", None):
+    for jurisdiction in ("US", "DE", "GB", "ZZ", None):
         stored, error = normalise_and_validate(TaxIdKind.VAT, "de 123 456 789")
         assert (stored, error) == ("DE123456789", None), jurisdiction
 
@@ -108,10 +108,10 @@ def test_a_country_without_a_pack_can_still_hold_its_document():
 # a pack suggests, it never restricts
 # ---------------------------------------------------------------------------
 def test_a_kind_outside_the_pack_is_still_storable():
-    """A BR workspace billing a Berlin client needs `vat`, and the BR pack
+    """A US workspace billing a Berlin client needs `vat`, and the US pack
     must not be able to forbid it. This is the test that keeps the product
     usable across borders."""
-    assert TaxIdKind.VAT not in pack_for("BR").kinds
+    assert TaxIdKind.VAT not in pack_for("US").kinds
     stored, error = normalise_and_validate(TaxIdKind.VAT, "DE 123 456 789")
     assert error is None
     assert stored == "DE123456789"

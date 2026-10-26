@@ -201,18 +201,15 @@ class YFinanceProvider(MarketPriceProvider):
             # that actually need it (*.L and *.JO suffixes) to keep the extra
             # round-trips minimal.
             candidates = [
-                s for s, p in chunk_prices.items()
+                s
+                for s, p in chunk_prices.items()
                 if p is not None and (s.endswith(".L") or s.endswith(".JO"))
             ]
             if candidates:
                 try:
-                    currencies = await asyncio.to_thread(
-                        self._get_currencies_sync, candidates
-                    )
+                    currencies = await asyncio.to_thread(self._get_currencies_sync, candidates)
                 except Exception as e:  # pragma: no cover (upstream flakiness, not logic)
-                    logger.warning(
-                        "minor-unit currency check failed for %s: %s", candidates, e
-                    )
+                    logger.warning("minor-unit currency check failed for %s: %s", candidates, e)
                     currencies = {}
                 for sym in candidates:
                     currency = currencies.get(sym)
@@ -356,7 +353,9 @@ class YFinanceProvider(MarketPriceProvider):
                 sym_df = df[sym]
             except KeyError:
                 continue
-            close_series = sym_df.get("Close") if "Close" in getattr(sym_df, "columns", []) else None
+            close_series = (
+                sym_df.get("Close") if "Close" in getattr(sym_df, "columns", []) else None
+            )
             out[sym] = _last_decimal_close(close_series)
         return out
 
@@ -405,9 +404,7 @@ class YFinanceProvider(MarketPriceProvider):
                 "website": info.get("website") or None,
             }
         except _rate_limit_exception_types():
-            raise MarketPriceRateLimitedError(
-                f"Yahoo Finance rate-limited while quoting {symbol}"
-            )
+            raise MarketPriceRateLimitedError(f"Yahoo Finance rate-limited while quoting {symbol}")
         except Exception as e:  # pragma: no cover
             logger.warning("yfinance quote failed for %s: %s", symbol, e)
             return None

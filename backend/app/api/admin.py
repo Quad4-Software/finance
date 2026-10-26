@@ -32,7 +32,6 @@ router = APIRouter(prefix="/api/admin", tags=["admin"])
 ALLOWED_SETTINGS = {
     "registration_enabled",
     "credit_card_accounting_mode",
-    "use_provider_categories",
     "theme_color_light",
     "theme_color_dark",
     "number_format",
@@ -148,7 +147,6 @@ async def update_setting(
     SETTING_VALIDATORS = {
         "registration_enabled": {"true", "false"},
         "credit_card_accounting_mode": {"cash", "accrual"},
-        "use_provider_categories": {"true", "false"},
         "number_format": {"auto", "comma_dot", "dot_comma", "space_comma"},
         "date_format": {"auto", "dmy", "mdy", "ymd"},
     }

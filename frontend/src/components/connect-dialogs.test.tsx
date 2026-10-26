@@ -13,13 +13,13 @@ beforeEach(() => { vi.resetAllMocks() })
 it('ignores provider responses from a closed session when reopened', async () => {
   let finish!: (data: unknown) => void
   api.getProviders.mockImplementationOnce(() => new Promise((resolve) => { finish = resolve }))
-    .mockResolvedValueOnce([{ name: 'new', display_name: 'New provider', description: 'Synthetic', configured: true }])
+    .mockResolvedValueOnce([{ name: 'new', display_name: 'New provider', description: 'Synthetic', flow_type: 'oauth', configured: true }])
   const props = { onClose: vi.fn(), onSelect: vi.fn() }
   const { rerender } = renderWithProviders(<ConnectorSelectDialog open {...props} />)
   rerender(<ConnectorSelectDialog open={false} {...props} />)
   rerender(<ConnectorSelectDialog open {...props} />)
   await screen.findByText('New provider')
-  await act(async () => { finish([{ name: 'old', display_name: 'Old provider', configured: true }]) })
+  await act(async () => { finish([{ name: 'old', display_name: 'Old provider', flow_type: 'oauth', configured: true }]) })
   expect(screen.queryByText('Old provider')).not.toBeInTheDocument()
   expect(screen.getByText('New provider')).toBeInTheDocument()
 })

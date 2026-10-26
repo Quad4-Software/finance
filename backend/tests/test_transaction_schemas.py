@@ -88,7 +88,7 @@ class TestTransactionReadInstallmentFields:
             "amount": "120.50",
             "date": "2026-04-10",
             "type": "debit",
-            "source": "pluggy",
+            "source": "simplefin",
         }
         data.update(overrides)
         return data

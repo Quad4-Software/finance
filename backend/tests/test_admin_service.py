@@ -32,7 +32,6 @@ from app.services.admin_service import (
     list_users,
     set_app_setting,
     update_user,
-    use_provider_categories,
 )
 from app.schemas.admin import AdminUserUpdate
 
@@ -43,6 +42,7 @@ pytestmark = pytest.mark.asyncio
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 async def _make_user(session: AsyncSession, email: str, is_superuser: bool = False) -> User:
     import bcrypt as _bcrypt
@@ -81,9 +81,13 @@ async def _populate_user_data(session: AsyncSession, user: User):
 
     # Connection
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=user.id, provider="test",
-        external_id="ext-1", institution_name="Test Bank",
-        credentials={}, status="active",
+        id=uuid.uuid4(),
+        user_id=user.id,
+        provider="test",
+        external_id="ext-1",
+        institution_name="Test Bank",
+        credentials={},
+        status="active",
         last_sync_at=datetime.now(timezone.utc),
         created_at=datetime.now(timezone.utc),
     )
@@ -91,8 +95,12 @@ async def _populate_user_data(session: AsyncSession, user: User):
 
     # Account
     acct = Account(
-        id=uuid.uuid4(), user_id=user.id, name="Acct",
-        type="checking", balance=Decimal("100"), currency="BRL",
+        id=uuid.uuid4(),
+        user_id=user.id,
+        name="Acct",
+        type="checking",
+        balance=Decimal("100"),
+        currency="BRL",
     )
     session.add(acct)
 
@@ -101,21 +109,31 @@ async def _populate_user_data(session: AsyncSession, user: User):
     session.add(payee)
     await session.flush()
     mapping = PayeeMapping(
-        id=uuid.uuid4(), user_id=user.id, target_id=payee.id,
+        id=uuid.uuid4(),
+        user_id=user.id,
+        target_id=payee.id,
     )
     session.add(mapping)
 
     # Rule
     rule = Rule(
-        id=uuid.uuid4(), user_id=user.id, name="R",
-        conditions_op="and", conditions=[], actions=[], priority=1,
+        id=uuid.uuid4(),
+        user_id=user.id,
+        name="R",
+        conditions_op="and",
+        conditions=[],
+        actions=[],
+        priority=1,
     )
     session.add(rule)
 
     # Asset + value
     asset = Asset(
-        id=uuid.uuid4(), user_id=user.id, name="House",
-        type="real_estate", currency="BRL",
+        id=uuid.uuid4(),
+        user_id=user.id,
+        name="House",
+        type="real_estate",
+        currency="BRL",
     )
     session.add(asset)
     await session.flush()
@@ -124,38 +142,63 @@ async def _populate_user_data(session: AsyncSession, user: User):
 
     # Transaction + attachment
     txn = Transaction(
-        id=uuid.uuid4(), user_id=user.id, account_id=acct.id,
-        description="Test txn", amount=Decimal("50"), date=date.today(),
-        type="debit", source="manual", currency="BRL",
+        id=uuid.uuid4(),
+        user_id=user.id,
+        account_id=acct.id,
+        description="Test txn",
+        amount=Decimal("50"),
+        date=date.today(),
+        type="debit",
+        source="manual",
+        currency="BRL",
         created_at=datetime.now(timezone.utc),
     )
     session.add(txn)
     await session.flush()
     att = TransactionAttachment(
-        id=uuid.uuid4(), user_id=user.id, transaction_id=txn.id,
-        filename="receipt.pdf", storage_key="k", content_type="application/pdf", size=100,
+        id=uuid.uuid4(),
+        user_id=user.id,
+        transaction_id=txn.id,
+        filename="receipt.pdf",
+        storage_key="k",
+        content_type="application/pdf",
+        size=100,
     )
     session.add(att)
 
     # Budget
     budget = Budget(
-        id=uuid.uuid4(), user_id=user.id, category_id=cat.id,
-        amount=Decimal("500"), month=date.today().replace(day=1), currency="BRL",
+        id=uuid.uuid4(),
+        user_id=user.id,
+        category_id=cat.id,
+        amount=Decimal("500"),
+        month=date.today().replace(day=1),
+        currency="BRL",
     )
     session.add(budget)
 
     # Recurring transaction
     rec = RecurringTransaction(
-        id=uuid.uuid4(), user_id=user.id, description="Rent",
-        amount=Decimal("2000"), type="debit", frequency="monthly",
-        start_date=date.today(), next_occurrence=date.today(), currency="BRL",
+        id=uuid.uuid4(),
+        user_id=user.id,
+        description="Rent",
+        amount=Decimal("2000"),
+        type="debit",
+        frequency="monthly",
+        start_date=date.today(),
+        next_occurrence=date.today(),
+        currency="BRL",
     )
     session.add(rec)
 
     # Import log
     imp = ImportLog(
-        id=uuid.uuid4(), user_id=user.id, account_id=acct.id,
-        filename="test.ofx", format="ofx", transaction_count=1,
+        id=uuid.uuid4(),
+        user_id=user.id,
+        account_id=acct.id,
+        filename="test.ofx",
+        format="ofx",
+        transaction_count=1,
     )
     session.add(imp)
 
@@ -165,6 +208,7 @@ async def _populate_user_data(session: AsyncSession, user: User):
 # ---------------------------------------------------------------------------
 # list_users
 # ---------------------------------------------------------------------------
+
 
 async def test_list_users_basic(session: AsyncSession, clean_db):
     await _make_user(session, "alpha@test.com")
@@ -196,6 +240,7 @@ async def test_list_users_pagination(session: AsyncSession, clean_db):
 # get_user
 # ---------------------------------------------------------------------------
 
+
 async def test_get_user_found(session: AsyncSession, clean_db):
     u = await _make_user(session, "found@test.com")
     result = await get_user(session, u.id)
@@ -211,6 +256,7 @@ async def test_get_user_not_found(session: AsyncSession, clean_db):
 # ---------------------------------------------------------------------------
 # update_user
 # ---------------------------------------------------------------------------
+
 
 async def test_update_user_email(session: AsyncSession, clean_db):
     admin = await _make_user(session, "admin_upd@test.com", is_superuser=True)
@@ -291,6 +337,7 @@ async def test_update_user_is_active_and_superuser(session: AsyncSession, clean_
 # delete_user — cascade
 # ---------------------------------------------------------------------------
 
+
 async def test_delete_user_cascade(session: AsyncSession, clean_db):
     """Delete a user with all related data (the most important coverage gap)."""
     admin = await _make_user(session, "admin_del@test.com", is_superuser=True)
@@ -312,34 +359,55 @@ async def test_delete_user_keeps_reconciliation_history(postgres_sessions):
         # The admin owns the transaction: were it the member's, delete_user
         # would remove it and the suggestion would cascade away with it.
         acct = Account(
-            id=uuid.uuid4(), user_id=admin.id, name="Shared",
-            type="checking", balance=Decimal("0"), currency="BRL",
+            id=uuid.uuid4(),
+            user_id=admin.id,
+            name="Shared",
+            type="checking",
+            balance=Decimal("0"),
+            currency="BRL",
         )
         session.add(acct)
         await session.flush()
         txn = Transaction(
-            id=uuid.uuid4(), user_id=admin.id, account_id=acct.id,
-            description="Invoice payment", amount=Decimal("50"), date=date.today(),
-            type="credit", source="manual", currency="BRL",
+            id=uuid.uuid4(),
+            user_id=admin.id,
+            account_id=acct.id,
+            description="Invoice payment",
+            amount=Decimal("50"),
+            date=date.today(),
+            type="credit",
+            source="manual",
+            currency="BRL",
         )
         session.add(txn)
         await session.flush()
         expectation_id = uuid.uuid4()
         rule = ReconciliationRule(
-            workspace_id=acct.workspace_id, user_id=target.id,
-            node="reconciliation.match_invoice", strategy_id="same_client_exact",
+            workspace_id=acct.workspace_id,
+            user_id=target.id,
+            node="reconciliation.match_invoice",
+            strategy_id="same_client_exact",
         )
         suggestion = ReconciliationSuggestion(
-            workspace_id=acct.workspace_id, transaction_id=txn.id,
-            expectation_kind="invoice", expectation_id=expectation_id,
-            strategy_id="same_client_exact", node="reconciliation.match_invoice",
-            amount=Decimal("50"), status="accepted",
-            resolved_at=datetime.now(timezone.utc), resolved_by=target.id,
+            workspace_id=acct.workspace_id,
+            transaction_id=txn.id,
+            expectation_kind="invoice",
+            expectation_id=expectation_id,
+            strategy_id="same_client_exact",
+            node="reconciliation.match_invoice",
+            amount=Decimal("50"),
+            status="accepted",
+            resolved_at=datetime.now(timezone.utc),
+            resolved_by=target.id,
         )
         event = ReconciliationEvent(
-            workspace_id=acct.workspace_id, action="accepted", transaction_id=txn.id,
-            expectation_kind="invoice", expectation_id=expectation_id,
-            amount=Decimal("50"), user_id=target.id,
+            workspace_id=acct.workspace_id,
+            action="accepted",
+            transaction_id=txn.id,
+            expectation_kind="invoice",
+            expectation_id=expectation_id,
+            amount=Decimal("50"),
+            user_id=target.id,
         )
         session.add_all([rule, suggestion, event])
         await session.commit()
@@ -388,6 +456,7 @@ async def test_delete_user_not_found(session: AsyncSession, clean_db):
 # App settings
 # ---------------------------------------------------------------------------
 
+
 async def test_get_app_setting_not_found(session: AsyncSession, clean_db):
     result = await get_app_setting(session, "nonexistent_key")
     assert result is None
@@ -416,6 +485,7 @@ async def test_get_app_setting_found(session: AsyncSession, clean_db):
 # is_registration_enabled
 # ---------------------------------------------------------------------------
 
+
 async def test_is_registration_enabled_from_setting(session: AsyncSession, clean_db):
     await set_app_setting(session, "registration_enabled", "true")
     assert await is_registration_enabled(session) is True
@@ -429,41 +499,3 @@ async def test_is_registration_enabled_fallback_to_env(session: AsyncSession, cl
     result = await is_registration_enabled(session)
     # Should not raise; returns the env default
     assert isinstance(result, bool)
-
-
-# ---------------------------------------------------------------------------
-# use_provider_categories
-# ---------------------------------------------------------------------------
-
-
-async def test_use_provider_categories_default_true(session: AsyncSession, clean_db):
-    """Unset = on, so existing installs keep the historical sync behavior."""
-    assert await use_provider_categories(session) is True
-
-
-async def test_use_provider_categories_explicit_false(session: AsyncSession, clean_db):
-    await set_app_setting(session, "use_provider_categories", "false")
-    assert await use_provider_categories(session) is False
-
-
-async def test_use_provider_categories_explicit_true(session: AsyncSession, clean_db):
-    await set_app_setting(session, "use_provider_categories", "true")
-    assert await use_provider_categories(session) is True
-
-
-async def test_use_provider_categories_case_insensitive(session: AsyncSession, clean_db):
-    """Tolerate 'TRUE'/'False' in case the value is set via DB tooling."""
-    await set_app_setting(session, "use_provider_categories", "TRUE")
-    assert await use_provider_categories(session) is True
-    await set_app_setting(session, "use_provider_categories", "False")
-    assert await use_provider_categories(session) is False
-
-
-async def test_use_provider_categories_unknown_value_falls_back_to_false(
-    session: AsyncSession, clean_db,
-):
-    """Defensive: anything not 'true' (case-insensitive) is treated as off.
-    Prevents a stray 'maybe' / '1' from quietly turning provider mapping back
-    on when the admin meant to disable it."""
-    await set_app_setting(session, "use_provider_categories", "maybe")
-    assert await use_provider_categories(session) is False

@@ -162,15 +162,13 @@ UNIVERSAL_RULES = [
         {"field": "description", "op": "regex", "value": "SALARY|PAYROLL|DIRECT DEPOSIT"},
     ], "actions": [{"op": "set_category", "value": "salary"}], "priority": 10},
 
-    # Investment movements (aplicação/resgate, CDBs, Tesouro, funds). The target
+    # Investment movements (dividends, interest, buys/sells, funds). The target
     # category is flagged `treat_as_transfer=true` so reports exclude these
     # from income/expense — the "other side" of the movement is the Asset
     # (holding) that grew or shrank, not a real gain or cost.
-    # Patterns are PT-first since Pluggy (our primary connector) is Brazilian;
-    # they're harmless no-ops against English descriptions.
-    {"name": "Investimentos (Aplicação / Resgate)", "conditions_op": "or", "conditions": [
+    {"name": "Investments (Dividends / Trades)", "conditions_op": "or", "conditions": [
         {"field": "description", "op": "regex",
-         "value": r"APLICACAO|APLICAÇÃO|RESGATE|DEB FUNDO|CREDITO FUNDO|CRÉDITO FUNDO|COMPRA CDB|VENDA CDB|TESOURO DIRETO|RENDA FIXA|\bCDB\b|\bLCA\b|\bLCI\b|DEBENTURE|FUNDO DE INVESTIMENTO"},
+         "value": r"DIVIDEND|INTEREST PAYMENT|\bBUY\b|\bSELL\b|\bETF\b|STOCK|MUTUAL FUND|CAPITAL GAIN|REINVEST"},
     ], "actions": [{"op": "set_category", "value": "investments"}], "priority": 20},
 ]
 
@@ -638,7 +636,7 @@ async def _get_existing_rule_names(session: AsyncSession, user_id: uuid.UUID) ->
 async def create_default_rules(
     session: AsyncSession,
     user_id: uuid.UUID,
-    lang: str = "pt-BR",
+    lang: str = "en",
     workspace_id: Optional[uuid.UUID] = None,
 ) -> list[Rule]:
     """Create universal default categorization rules for a new user.
@@ -805,7 +803,7 @@ async def install_rule_pack(
     workspace_id_or_user_id: uuid.UUID,
     user_id_or_pack_code: uuid.UUID | str,
     pack_code: Optional[str] = None,
-    lang: str = "pt-BR",
+    lang: str = "en",
     create_missing_categories: bool = False,
 ) -> RulePackInstallResult:
     """Install a country-specific rule pack for a user. Skips rules whose name already exists.

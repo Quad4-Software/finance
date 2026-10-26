@@ -23,7 +23,7 @@ def _resolve_group_name(key: str, lang: str) -> str:
 async def create_default_groups(
     session: AsyncSession,
     user_id: uuid.UUID,
-    lang: str = "pt-BR",
+    lang: str = "en",
     workspace_id: Optional[uuid.UUID] = None,
 ) -> dict[str, CategoryGroup]:
     """Create default category groups for a user. Returns dict of internal_key -> group. Uses flush (not commit)."""

@@ -49,9 +49,9 @@ async def create_user(email: str, password: str) -> None:
             is_superuser=False,
             is_verified=True,
             preferences={
-                "language": "pt-BR",
-                "date_format": "DD/MM/YYYY",
-                "timezone": "America/Sao_Paulo",
+                "language": "en-US",
+                "date_format": "YYYY-MM-DD",
+                "timezone": "America/New_York",
                 "currency_display": "USD",
             },
         )

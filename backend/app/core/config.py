@@ -135,7 +135,9 @@ class Settings(BaseSettings):
     oidc_require_verified_email: bool = True
     oidc_sync_roles: bool = False
     oidc_roles_claim: str = "groups"
-    oidc_admin_roles: str = ""  # comma-separated provider roles/groups that grant Quad4 Finance admin
+    oidc_admin_roles: str = (
+        ""  # comma-separated provider roles/groups that grant Quad4 Finance admin
+    )
     oidc_workspace_role_map: str = ""  # JSON: {"provider-role": "owner|editor|viewer"}
 
     # Deploy scripts that source the .env file with a shell need values with
@@ -158,12 +160,17 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_bank_sync_interval(self):
-        if not isfinite(self.bank_sync_min_interval_hours) or self.bank_sync_min_interval_hours <= 0:
+        if (
+            not isfinite(self.bank_sync_min_interval_hours)
+            or self.bank_sync_min_interval_hours <= 0
+        ):
             raise ValueError("BANK_SYNC_MIN_INTERVAL_HOURS must be finite and positive")
         try:
             datetime.now(timezone.utc) - timedelta(hours=self.bank_sync_min_interval_hours)
         except OverflowError as exc:
-            raise ValueError("BANK_SYNC_MIN_INTERVAL_HOURS exceeds the supported date range") from exc
+            raise ValueError(
+                "BANK_SYNC_MIN_INTERVAL_HOURS exceeds the supported date range"
+            ) from exc
         return self
 
     # Reverse-proxy trust for client-IP-based rate limiting. 0 (default) means

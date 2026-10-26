@@ -22,10 +22,9 @@ async def test_list_providers(client: AsyncClient, auth_headers):
     assert response.status_code == 200
     data = response.json()
     by_name = {p["name"]: p for p in data["providers"]}
-    assert "pluggy" in by_name
-    assert by_name["pluggy"]["configured"] is False
-    assert by_name["pluggy"]["flow_type"] == "widget"
-    assert by_name["pluggy"]["supports_asset_sync"] is True
+    assert "simplefin" in by_name
+    assert by_name["simplefin"]["configured"] is False
+    assert by_name["simplefin"]["flow_type"] == "token"
     assert "enable_banking" in by_name
     assert by_name["enable_banking"]["flow_type"] == "oauth"
     assert by_name["enable_banking"]["requires_institution_select"] is True
@@ -36,9 +35,7 @@ async def test_list_providers(client: AsyncClient, auth_headers):
 
 
 @pytest.mark.asyncio
-async def test_list_connections(
-    client: AsyncClient, auth_headers, test_connection: BankConnection
-):
+async def test_list_connections(client: AsyncClient, auth_headers, test_connection: BankConnection):
     response = await client.get("/api/connections", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
@@ -71,9 +68,7 @@ async def test_oauth_url_unknown_provider(client: AsyncClient, auth_headers):
 async def test_delete_connection(
     client: AsyncClient, auth_headers, test_connection: BankConnection
 ):
-    response = await client.delete(
-        f"/api/connections/{test_connection.id}", headers=auth_headers
-    )
+    response = await client.delete(f"/api/connections/{test_connection.id}", headers=auth_headers)
     assert response.status_code == 204
 
     # Verify it's gone
@@ -116,7 +111,8 @@ async def test_detect_transfers(client: AsyncClient, auth_headers):
 @pytest.mark.asyncio
 async def test_unlink_transfer_not_found(client: AsyncClient, auth_headers):
     resp = await client.delete(
-        f"/api/connections/transfers/{uuid.uuid4()}", headers=auth_headers,
+        f"/api/connections/transfers/{uuid.uuid4()}",
+        headers=auth_headers,
     )
     assert resp.status_code == 404
 
@@ -129,7 +125,7 @@ async def test_create_connect_token_success(client: AsyncClient, auth_headers):
         mock_gp.return_value.create_connect_token = AsyncMock(return_value=mock_token)
         resp = await client.post(
             "/api/connections/connect-token",
-            json={"provider": "pluggy"},
+            json={"provider": "simplefin"},
             headers=auth_headers,
         )
         assert resp.status_code == 200
@@ -156,7 +152,7 @@ async def test_create_connect_token_server_error(client: AsyncClient, auth_heade
         )
         resp = await client.post(
             "/api/connections/connect-token",
-            json={"provider": "pluggy"},
+            json={"provider": "simplefin"},
             headers=auth_headers,
         )
         assert resp.status_code == 500
@@ -174,7 +170,7 @@ async def test_oauth_callback_success(client: AsyncClient, auth_headers):
         mock_gp.return_value.handle_oauth_callback = AsyncMock(return_value=conn_data)
         resp = await client.post(
             "/api/connections/oauth/callback",
-            json={"code": "auth-code-123", "provider": "pluggy"},
+            json={"code": "auth-code-123", "provider": "simplefin"},
             headers=auth_headers,
         )
         assert resp.status_code == 200
@@ -186,9 +182,13 @@ async def test_oauth_callback_token_reconnect_updates_existing(
     client: AsyncClient, auth_headers, session: AsyncSession, test_user: User
 ):
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=test_user.id, provider="simplefin",
-        external_id="old-simplefin", institution_name="Old SimpleFIN",
-        credentials={"access_url_enc": "old"}, status="error",
+        id=uuid.uuid4(),
+        user_id=test_user.id,
+        provider="simplefin",
+        external_id="old-simplefin",
+        institution_name="Old SimpleFIN",
+        credentials={"access_url_enc": "old"},
+        status="error",
         last_sync_at=datetime.now(timezone.utc),
         created_at=datetime.now(timezone.utc),
     )
@@ -231,7 +231,7 @@ async def test_oauth_callback_failure(client: AsyncClient, auth_headers):
         )
         resp = await client.post(
             "/api/connections/oauth/callback",
-            json={"code": "bad-code", "provider": "pluggy"},
+            json={"code": "bad-code", "provider": "simplefin"},
             headers=auth_headers,
         )
         assert resp.status_code == 400
@@ -240,15 +240,14 @@ async def test_oauth_callback_failure(client: AsyncClient, auth_headers):
 @pytest.mark.asyncio
 async def test_sync_connection_not_found(client: AsyncClient, auth_headers):
     resp = await client.post(
-        f"/api/connections/{uuid.uuid4()}/sync", headers=auth_headers,
+        f"/api/connections/{uuid.uuid4()}/sync",
+        headers=auth_headers,
     )
     assert resp.status_code == 404
 
 
 @pytest.mark.asyncio
-async def test_sync_connection_user_action_returns_conflict(
-    client: AsyncClient, auth_headers
-):
+async def test_sync_connection_user_action_returns_conflict(client: AsyncClient, auth_headers):
     with patch("app.services.connection_service.sync_connection") as mock_sync:
         mock_sync.side_effect = ProviderUserActionRequired(
             "SimpleFIN refused the request (403)",
@@ -256,7 +255,8 @@ async def test_sync_connection_user_action_returns_conflict(
             help_url="https://bridge.simplefin.org/",
         )
         resp = await client.post(
-            f"/api/connections/{uuid.uuid4()}/sync", headers=auth_headers,
+            f"/api/connections/{uuid.uuid4()}/sync",
+            headers=auth_headers,
         )
 
     assert resp.status_code == 409
@@ -268,13 +268,12 @@ async def test_sync_connection_user_action_returns_conflict(
 
 
 @pytest.mark.asyncio
-async def test_sync_connection_session_expired_returns_gone(
-    client: AsyncClient, auth_headers
-):
+async def test_sync_connection_session_expired_returns_gone(client: AsyncClient, auth_headers):
     with patch("app.services.connection_service.sync_connection") as mock_sync:
         mock_sync.side_effect = SessionExpiredError("SimpleFIN access URL is missing")
         resp = await client.post(
-            f"/api/connections/{uuid.uuid4()}/sync", headers=auth_headers,
+            f"/api/connections/{uuid.uuid4()}/sync",
+            headers=auth_headers,
         )
 
     assert resp.status_code == 410
@@ -289,12 +288,15 @@ async def test_sync_connection_success_reports_refreshed_outcome(
     mock_provider = AsyncMock()
     mock_provider.refresh_credentials = AsyncMock(return_value={"token": "fake"})
     mock_provider.get_accounts = AsyncMock(return_value=[])
-    with patch("app.services.connection_service.get_provider", return_value=mock_provider), \
-         patch("app.services.connection_service.detect_transfer_pairs", new_callable=AsyncMock), \
-         patch("app.services.connection_service.stamp_primary_amount", new_callable=AsyncMock), \
-         patch("app.services.connection_service.apply_rules_to_transaction", new_callable=AsyncMock):
+    with (
+        patch("app.services.connection_service.get_provider", return_value=mock_provider),
+        patch("app.services.connection_service.detect_transfer_pairs", new_callable=AsyncMock),
+        patch("app.services.connection_service.stamp_primary_amount", new_callable=AsyncMock),
+        patch("app.services.connection_service.apply_rules_to_transaction", new_callable=AsyncMock),
+    ):
         resp = await client.post(
-            f"/api/connections/{test_connection.id}/sync", headers=auth_headers,
+            f"/api/connections/{test_connection.id}/sync",
+            headers=auth_headers,
         )
 
     assert resp.status_code == 200
@@ -318,7 +320,8 @@ async def test_sync_connection_rate_limited_reports_outcome(
     )
     with patch("app.services.connection_service.get_provider", return_value=mock_provider):
         resp = await client.post(
-            f"/api/connections/{test_connection.id}/sync", headers=auth_headers,
+            f"/api/connections/{test_connection.id}/sync",
+            headers=auth_headers,
         )
 
     assert resp.status_code == 200
@@ -327,34 +330,41 @@ async def test_sync_connection_rate_limited_reports_outcome(
     assert body["merged_count"] == 0
     assert body["status"] == "active"
     # No fresh data was pulled, so the last sync timestamp is untouched.
-    assert datetime.fromisoformat(
-        body["last_sync_at"].replace("Z", "+00:00")
-    ) == stale_sync_at
+    assert datetime.fromisoformat(body["last_sync_at"].replace("Z", "+00:00")) == stale_sync_at
 
 
 @pytest.mark.asyncio
 async def test_reconnect_token_not_found(client: AsyncClient, auth_headers):
     resp = await client.post(
-        f"/api/connections/{uuid.uuid4()}/reconnect-token", headers=auth_headers,
+        f"/api/connections/{uuid.uuid4()}/reconnect-token",
+        headers=auth_headers,
     )
     assert resp.status_code == 404
 
 
 @pytest.mark.asyncio
 async def test_reconnect_token_no_item_id(
-    client: AsyncClient, auth_headers, session: AsyncSession, test_user: User,
+    client: AsyncClient,
+    auth_headers,
+    session: AsyncSession,
+    test_user: User,
 ):
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=test_user.id, provider="test",
-        external_id="ext-recon-no-item", institution_name="NoItem Bank",
-        credentials={}, status="active",
+        id=uuid.uuid4(),
+        user_id=test_user.id,
+        provider="test",
+        external_id="ext-recon-no-item",
+        institution_name="NoItem Bank",
+        credentials={},
+        status="active",
         last_sync_at=datetime.now(timezone.utc),
         created_at=datetime.now(timezone.utc),
     )
     session.add(conn)
     await session.commit()
     resp = await client.post(
-        f"/api/connections/{conn.id}/reconnect-token", headers=auth_headers,
+        f"/api/connections/{conn.id}/reconnect-token",
+        headers=auth_headers,
     )
     assert resp.status_code == 400
     assert "item_id" in resp.json()["detail"]
@@ -362,12 +372,19 @@ async def test_reconnect_token_no_item_id(
 
 @pytest.mark.asyncio
 async def test_reconnect_token_with_item_id(
-    client: AsyncClient, auth_headers, session: AsyncSession, test_user: User,
+    client: AsyncClient,
+    auth_headers,
+    session: AsyncSession,
+    test_user: User,
 ):
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=test_user.id, provider="test",
-        external_id="ext-recon-ok", institution_name="Recon Bank",
-        credentials={"item_id": "item-abc-123"}, status="error",
+        id=uuid.uuid4(),
+        user_id=test_user.id,
+        provider="test",
+        external_id="ext-recon-ok",
+        institution_name="Recon Bank",
+        credentials={"item_id": "item-abc-123"},
+        status="error",
         last_sync_at=datetime.now(timezone.utc),
         created_at=datetime.now(timezone.utc),
     )
@@ -379,7 +396,8 @@ async def test_reconnect_token_with_item_id(
     with patch("app.services.connection_service.get_provider") as mock_gp:
         mock_gp.return_value.create_connect_token = AsyncMock(return_value=mock_token)
         resp = await client.post(
-            f"/api/connections/{conn.id}/reconnect-token", headers=auth_headers,
+            f"/api/connections/{conn.id}/reconnect-token",
+            headers=auth_headers,
         )
         assert resp.status_code == 200
         assert resp.json()["access_token"] == "recon-token"
@@ -387,12 +405,20 @@ async def test_reconnect_token_with_item_id(
 
 @pytest.mark.asyncio
 async def test_update_settings_success(
-    client: AsyncClient, auth_headers, session: AsyncSession, test_user: User,
+    client: AsyncClient,
+    auth_headers,
+    session: AsyncSession,
+    test_user: User,
 ):
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=test_user.id, provider="test",
-        external_id="ext-settings-1", institution_name="Settings Bank",
-        credentials={}, status="active", settings={"payee_source": "auto"},
+        id=uuid.uuid4(),
+        user_id=test_user.id,
+        provider="test",
+        external_id="ext-settings-1",
+        institution_name="Settings Bank",
+        credentials={},
+        status="active",
+        settings={"payee_source": "auto"},
         last_sync_at=datetime.now(timezone.utc),
         created_at=datetime.now(timezone.utc),
     )

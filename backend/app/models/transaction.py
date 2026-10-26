@@ -80,7 +80,7 @@ class Transaction(Base):
     )
     # User-set manual override for which bill cycle this tx belongs to. Null
     # by default; only meaningful for credit-card accounts. When set, beats
-    # both Pluggy's billId and the cycle-math fallback (issue #92, the
+    # both the provider billId mapping and the cycle-math fallback (issue #92, the
     # LucasFidelis cycle_override request).
     effective_bill_date: Mapped[Optional[_date]] = mapped_column(Date, nullable=True)
     # FK to the bill this transaction belongs to (issue #92). Set during sync

@@ -75,7 +75,7 @@ def apply_effective_date(transaction, account, *, bill_due_date: Optional[date] 
     1. `transaction.effective_bill_date` — manual user override; whatever
        the user set wins, since they're hand-correcting a bucketing they
        disagree with (issue #92's LucasFidelis suggestion).
-    2. `bill_due_date` — bank-truth from Pluggy /bills (passed in by the
+    2. `bill_due_date` — bank-truth from the provider bills feed (passed in by the
        sync layer when a bill is linked).
     3. Cycle math from `account.statement_close_day` / `payment_due_day`.
 

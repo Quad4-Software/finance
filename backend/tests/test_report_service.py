@@ -954,7 +954,7 @@ async def test_net_worth_with_credit_card(session: AsyncSession, test_user, test
 
 async def _make_shared_credit_cards(session, user_id, workspace_id, balance):
     conn = BankConnection(
-        id=uuid.uuid4(), user_id=user_id, provider="pluggy",
+        id=uuid.uuid4(), user_id=user_id, provider="simplefin",
         external_id="ext-shared-line", institution_name="Shared line",
         credentials={}, status="active",
         last_sync_at=datetime.now(timezone.utc),

@@ -311,7 +311,7 @@ async def test_total_balance_by_currency(session: AsyncSession, test_user, test_
 async def test_total_balance_counts_shared_credit_balance_once(
     session, test_user, test_workspace, test_connection,
 ):
-    group = "pluggy:connection:shared-credit"
+    group = "simplefin:connection:shared-credit"
     first = await _make_account(
         session, test_user.id, "Shared Visa", acc_type="credit_card", balance="300.00",
         connection_id=test_connection.id,
@@ -335,7 +335,7 @@ async def test_total_balance_counts_shared_credit_balance_once(
 async def test_total_balance_backtracks_shared_credit_balance_across_all_cards(
     session, test_user, test_workspace, test_connection,
 ):
-    group = "pluggy:connection:shared-credit"
+    group = "simplefin:connection:shared-credit"
     first = await _make_account(
         session, test_user.id, "Shared Visa", acc_type="credit_card", balance="300.00",
         connection_id=test_connection.id,

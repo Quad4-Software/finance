@@ -1,8 +1,27 @@
 from celery import Celery
+from celery.schedules import crontab
+from celery.signals import beat_init, worker_init, worker_process_init
 
 from app.core.config import get_settings
 
 settings = get_settings()
+
+
+def _apply_sandbox_for_celery(**_kwargs) -> None:
+    """Sandbox the Celery worker/beat process at startup.
+
+    Connected to Celery's init signals rather than run at import time so
+    tests (and `celery ...` CLI helpers) that import this module stay
+    unrestricted.
+    """
+    from app.core.sandbox import apply_sandbox
+
+    apply_sandbox()
+
+
+worker_init.connect(_apply_sandbox_for_celery)
+worker_process_init.connect(_apply_sandbox_for_celery)
+beat_init.connect(_apply_sandbox_for_celery)
 
 celery_app = Celery(
     "quad4",
@@ -25,7 +44,8 @@ celery_app.conf.beat_schedule = {
     },
     "generate-recurring-daily": {
         "task": "app.tasks.recurring_tasks.generate_all_recurring",
-        "schedule": 60 * 60,  # every hour; generate_pending is idempotent (advances next_occurrence)
+        "schedule": 60
+        * 60,  # every hour; generate_pending is idempotent (advances next_occurrence)
     },
     "generate-recurring-invoices-daily": {
         "task": "app.tasks.invoice_schedule_tasks.generate_recurring_invoices",
@@ -60,6 +80,12 @@ celery_app.conf.beat_schedule = {
         # stamped with the 1:1 fallback (or left NULL) once real rates land.
         "schedule": 60 * 60 * 12,
     },
+    "scheduled-backup-daily": {
+        "task": "app.tasks.backup_tasks.scheduled_backup",
+        # Daily at BACKUP_SCHEDULE_HOUR (UTC). Archives every workspace to
+        # the configured storage and prunes past BACKUP_RETENTION_COUNT.
+        "schedule": crontab(hour=settings.backup_schedule_hour, minute=0),
+    },
 }
 
 celery_app.conf.include = [
@@ -68,6 +94,7 @@ celery_app.conf.include = [
     "app.tasks.invoice_schedule_tasks",
     "app.tasks.asset_tasks",
     "app.tasks.fx_rate_tasks",
+    "app.tasks.backup_tasks",
     # Optional agents module — registering the import is harmless when
     # AGENTS_ENABLED=false (the task just won't be dispatched).
     "app.agents.tasks.ingest",

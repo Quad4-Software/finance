@@ -44,7 +44,7 @@ from app.services.dashboard_service import (
 CATEGORY_TREND_TOP_N = 11
 
 _ACCOUNT_TYPE_COLORS: dict[str, str] = {
-    "checking": "#6366F1",
+    "checking": "#A1A1AA",
     "savings": "#3B82F6",
     "credit_card": "#F43F5E",
     "investment": "#8B5CF6",
@@ -428,7 +428,7 @@ async def get_net_worth_report(
                 key="accounts",
                 label="Accounts",
                 value=current.breakdowns.get("accounts", 0),
-                color="#6366F1",
+                color="#A1A1AA",
             ),
             ReportBreakdown(
                 key="assets",
@@ -833,7 +833,7 @@ async def get_income_expenses_report(
                 key="netIncome",
                 label="Net Income",
                 value=total_net,
-                color="#6366F1",
+                color="#A1A1AA",
             ),
         ],
     )
@@ -1755,7 +1755,7 @@ async def get_cash_flow_report(
         breakdowns=[
             ReportBreakdown(
                 key="startingBalance", label="Starting Balance",
-                value=round(current_balance, 2), color="#6366F1",
+                value=round(current_balance, 2), color="#A1A1AA",
             ),
             ReportBreakdown(
                 key="projectedIncome", label="Projected Income",

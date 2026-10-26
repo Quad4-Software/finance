@@ -211,7 +211,7 @@
 
 /* Static starfield for the auth brand panel: a few overlapping 1px dot
    grids at low white alpha over the near-black panel. Nothing animates, so
-   prefers-reduced-motion is honored by construction. Fill it inside a
+   prefers-reduced-motion is honored by construction. Meant to fill a
    relative, overflow-hidden container. */
 .quad4-starfield {
   position: absolute;

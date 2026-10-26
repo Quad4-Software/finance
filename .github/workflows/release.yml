@@ -68,7 +68,10 @@ jobs:
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          # amd64 only for now: several deps source-build on CPython 3.15
+          # (no cp315 wheels yet) and arm64 under QEMU takes hours. Re-add
+          # linux/arm64 once the wheel ecosystem catches up.
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

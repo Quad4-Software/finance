@@ -40,12 +40,7 @@ dependencies = [
     # legacy ZipCrypto scheme and cannot write an encrypted archive at all,
     # so AES-256 zips need this fork of it.
     "pyzipper>=0.4.0",
-    # Bundled multilingual embedder — only imported on demand by the
-    # agents knowledge-base path. ONNX runtime, ~120 MB model downloaded
-    # on first use to /app/data/embedding_models. Users not on the
-    # agents feature pay zero cost (the package is installed but never
-    # imported).
-    "fastembed>=0.4.0",
+    # (fastembed lives in the optional "native-embed" extra below.)
     # Resolve the host's IANA timezone when no app setting or TZ override exists.
     "tzlocal>=5.0.0",
     # Kernel-level self-sandboxing for the API and Celery processes
@@ -59,6 +54,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Bundled multilingual embedder for the agents knowledge base. Optional
+# because its onnxruntime dependency has no wheels for the newest CPython
+# (the Chainguard image runs 3.15) and cannot be built in a pip step.
+# Install the extra on bare-metal/virtualenv deploys that want the native
+# provider: pip install "quad4-backend[native-embed]". Container users can
+# point AGENTS_EMBEDDING_PROVIDER at ollama/openai/openai_compatible.
+native-embed = [
+    "fastembed>=0.9.0",
+]
+
 dev = [
     "pytest>=9.0.0",
     "pytest-asyncio>=1.0",

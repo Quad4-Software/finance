@@ -11,17 +11,27 @@ FROM cgr.dev/chainguard/python:latest-dev AS build
 
 WORKDIR /app
 
+# Wolfi is musl-based: packages without musllinux wheels (lxml and friends)
+# build from source, so the toolchain and headers live only in this stage.
+USER root
+RUN apk update && apk add --no-cache build-base libxml2-dev libxslt-dev
+USER nonroot
+
 # Dependencies come from uv.lock (the source of truth - see scripts/lock.sh).
 # The export never touches the lock (--frozen); pip then installs with hash
 # checking, so the image only ever contains the exact audited versions.
 # This layer is cached until pyproject.toml or uv.lock change.
 COPY pyproject.toml uv.lock ./
-RUN python -m venv /app/venv
-ENV PATH="/app/venv/bin:$PATH"
+RUN python -m venv /home/nonroot/venv \
+    && ln -s "$(/home/nonroot/venv/bin/python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')" /home/nonroot/pylibs
+ENV PATH="/home/nonroot/venv/bin:$PATH"
 RUN uv export --frozen --no-emit-project -o /tmp/requirements.txt \
     && pip install --no-cache-dir --require-hashes -r /tmp/requirements.txt \
     && rm /tmp/requirements.txt
 
+# /app is root-owned and setuptools writes egg-info into it during the
+# in-tree wheel build, so this step runs as root.
+USER root
 COPY . .
 # The project itself: deps are already satisfied above, so --no-deps keeps
 # this layer from re-resolving anything outside the lock.
@@ -33,7 +43,8 @@ FROM cgr.dev/chainguard/python:latest
 
 WORKDIR /app
 
-COPY --from=build /app/venv /app/venv
+COPY --from=build /home/nonroot/venv /home/nonroot/venv
+COPY --from=build /home/nonroot/pylibs /home/nonroot/pylibs
 # Runtime needs the package source (migrations, MCP server, CLI entry), not
 # the whole build context - and never the venv twice.
 COPY --from=build /app/app /app/app
@@ -44,7 +55,11 @@ COPY --from=build /app/mcp_server /app/mcp_server
 # the nonroot ownership, so the runtime user can write without any chown.
 COPY --from=build --chown=65532:65532 /app/data-skel /app/data
 
-ENV PATH="/app/venv/bin:$PATH" \
+# The Chainguard entrypoint is the absolute /usr/bin/python, so PATH alone
+# never reaches the venv: PYTHONPATH puts the locked site-packages on the
+# interpreter, and PATH still resolves console scripts (celery, alembic).
+ENV PATH="/home/nonroot/venv/bin:$PATH" \
+    PYTHONPATH=/home/nonroot/pylibs \
     PYTHONUNBUFFERED=1 \
     STORAGE_LOCAL_PATH=/app/data/attachments \
     BACKUP_LOCAL_PATH=/app/data/backups \

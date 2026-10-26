@@ -2582,7 +2582,6 @@ dependencies = [
     { name = "cryptography" },
     { name = "fastapi" },
     { name = "fastapi-users", extra = ["sqlalchemy"] },
-    { name = "fastembed" },
     { name = "httpx" },
     { name = "landlockpy" },
     { name = "ofxparse" },
@@ -2616,6 +2615,9 @@ dev = [
     { name = "ruff" },
     { name = "ty" },
 ]
+native-embed = [
+    { name = "fastembed" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -2628,7 +2630,7 @@ requires-dist = [
     { name = "cryptography", specifier = "==46.0.7" },
     { name = "fastapi", specifier = ">=0.109.0" },
     { name = "fastapi-users", extras = ["sqlalchemy"], specifier = ">=13.0.0" },
-    { name = "fastembed", specifier = ">=0.4.0" },
+    { name = "fastembed", marker = "extra == 'native-embed'", specifier = ">=0.9.0" },
     { name = "httpx", specifier = ">=0.26.0" },
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.26.0" },
     { name = "landlockpy", specifier = ">=0.2.0" },
@@ -2657,7 +2659,7 @@ requires-dist = [
     { name = "webauthn", specifier = ">=2.8.0" },
     { name = "yfinance", specifier = ">=1.3.0" },
 ]
-provides-extras = ["dev"]
+provides-extras = ["native-embed", "dev"]
 
 [[package]]
 name = "redis"

@@ -86,6 +86,10 @@ ALLOWLIST: dict[tuple[str, str], str] = {
     # A read that has to be a POST: the backup password belongs in a body,
     # not in a query string. Same read permission as GET /api/export/backup.
     ("POST", "/api/export/backup"): "exports the workspace it can already read; writes nothing",
+    # Same shape: document generation options (section allowlist, title,
+    # period) are a body, and the endpoint only reads the workspace.
+    ("POST", "/api/documents/report"): "renders a document from data it can already read; writes nothing",
+    ("POST", "/api/documents/plan"): "renders a document from data it can already read; writes nothing",
     # The agents surface, mounted only when AGENTS_ENABLED is on (the test
     # suite turns it on so these are always covered). An LLM connection is
     # the requester's own credential - scoped by `user.id`, never by
@@ -115,6 +119,7 @@ WORKSPACE_READ_ROUTES = {
     ("POST", path) for path in (
         "/api/transactions/import/preview", "/api/assets/import/preview",
         "/api/rules/preview", "/api/export/backup",
+        "/api/documents/report", "/api/documents/plan",
     )
 }
 

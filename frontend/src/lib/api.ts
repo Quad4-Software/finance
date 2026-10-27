@@ -1580,6 +1580,51 @@ export const reports = {
   },
 }
 
+// Documents
+export type DocumentKind = 'report' | 'plan'
+export type DocumentFormat = 'pdf' | 'html'
+export type DocumentPeriod = 'last_month' | 'last_quarter' | 'ytd' | 'custom'
+
+export interface DocumentGenerateRequest {
+  format: DocumentFormat
+  period: DocumentPeriod
+  start_date?: string
+  end_date?: string
+  sections?: string[]
+  title?: string
+  subtitle?: string
+  currency?: string
+}
+
+export const documents = {
+  /**
+   * Generate a styled document on the server and download it. A POST because
+   * the section allowlist and title fields belong in a body; the endpoint
+   * writes nothing.
+   */
+  download: async (kind: DocumentKind, request: DocumentGenerateRequest): Promise<void> => {
+    const { data, headers } = await api.post(`/documents/${kind}`, request, {
+      ...readOnly,
+      responseType: 'blob',
+    })
+    const mime = request.format === 'html' ? 'text/html' : 'application/pdf'
+    const blob = new Blob([data], { type: mime })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    // Prefer the server's filename (quad4-<kind>-<yyyymm>.<ext>); fall back
+    // to the same convention where the header is not readable.
+    const disposition = headers?.['content-disposition'] as string | undefined
+    const serverName = disposition?.match(/filename="([^"]+)"/)?.[1]
+    const month = new Date().toISOString().slice(0, 7).replace('-', '')
+    a.download = serverName ?? `quad4-${kind}-${month}.${request.format}`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  },
+}
+
 // Currencies
 export const currencies = {
   list: async (): Promise<{ code: string; symbol: string; name: string; flag: string }[]> => {

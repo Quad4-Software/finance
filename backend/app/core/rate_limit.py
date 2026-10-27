@@ -60,3 +60,6 @@ class RateLimiter:
 login_rate_limit = RateLimiter(max_requests=5, window_seconds=60)
 register_rate_limit = RateLimiter(max_requests=3, window_seconds=3600)
 password_reset_rate_limit = RateLimiter(max_requests=3, window_seconds=3600)
+# Document generation reads a wide slice of workspace data per call, so it
+# gets a light cap rather than none.
+document_rate_limit = RateLimiter(max_requests=12, window_seconds=60)

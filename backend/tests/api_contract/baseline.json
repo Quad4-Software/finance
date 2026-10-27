@@ -266,6 +266,8 @@
   "POST /api/connections/{connection_id}/oauth/reauth-url": 401,
   "POST /api/connections/{connection_id}/reconnect-token": 401,
   "POST /api/connections/{connection_id}/sync": 401,
+  "POST /api/documents/plan": 401,
+  "POST /api/documents/report": 401,
   "POST /api/export/backup": 401,
   "POST /api/fx-rates/refresh": 401,
   "POST /api/goals": 401,

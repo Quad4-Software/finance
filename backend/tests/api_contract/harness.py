@@ -45,7 +45,7 @@ def params_for(variants: tuple[str, ...], shard: int = 0, shards: int = 1) -> li
             if bug and not updating_baseline():
                 marks.append(pytest.mark.xfail(strict=True, reason=bug.reason))
             sqlite_gap = POSTGRES_ONLY.get((op.method, op.path))
-            if sqlite_gap and variant == VARIANT_OK:
+            if sqlite_gap and variant in (VARIANT_OK, VARIANT_VIEWER):
                 marks.append(pytest.mark.skip(reason=sqlite_gap))
             params.append(pytest.param(variant, op, id=f"{variant}:{op.key}", marks=marks))
     return params

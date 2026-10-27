@@ -7,7 +7,8 @@ says it, so these tests care less about "does an invoice show up" than
 about "does it stop showing up the moment the payment does".
 """
 import uuid
-from datetime import date, timedelta
+from datetime import timedelta
+from app.core.app_clock import app_today
 from decimal import Decimal
 
 import pytest
@@ -19,7 +20,7 @@ from app.models.account import Account
 from app.models.payee import Payee
 from app.services import invoice_forecast_service as forecast
 
-TODAY = date.today()
+TODAY = app_today()
 SOON = TODAY + timedelta(days=10)
 FAR = TODAY + timedelta(days=400)
 

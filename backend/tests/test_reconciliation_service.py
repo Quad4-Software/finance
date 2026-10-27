@@ -5,7 +5,8 @@ loads candidates and writes the result: including the direction that is
 easy to forget: an invoice issued *after* the money arrived.
 """
 import uuid
-from datetime import date, timedelta
+from datetime import timedelta
+from app.core.app_clock import app_today
 from decimal import Decimal
 
 import pytest
@@ -27,7 +28,7 @@ from app.services import (
 )
 from app.services.recurring_transaction_service import create_recurring_transaction
 
-TODAY = date.today()
+TODAY = app_today()
 
 
 @pytest_asyncio.fixture
